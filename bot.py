@@ -41,109 +41,109 @@ sawany_submenu = [
     {
         "label": "صواني شبكة اكليريك", "callback": "sawany_akerik", 
         "items": [ 
-            {"label": "صينية اكليريك موديل 1", "callback": "akerik_m1", "image": "...", "description": "صينية اكليريك: وصف المنتج الأول."},
-            {"label": "صينية اكليريك موديل 2", "callback": "akerik_m2", "image": "...", "description": "صينية اكليريك: وصف المنتج الثاني."}
+            {"label": "صينية اكليريك موديل 1", "callback": "akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية اكليريك: وصف المنتج الأول."},
+            {"label": "صينية اكليريك موديل 2", "callback": "akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية اكليريك: وصف المنتج الثاني."}
         ]
     },
     {
         "label": "صواني شبكة خشب", "callback": "sawany_khashab", 
         "items": [
-            {"label": "صينية خشب موديل 1", "callback": "khashab_m1", "image": "...", "description": "صينية خشب: وصف المنتج الأول."},
-            {"label": "صينية خشب موديل 2", "callback": "khashab_m2", "image": "...", "description": "صينية خشب: وصف المنتج الثاني."}
+            {"label": "صينية خشب موديل 1", "callback": "khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية خشب: وصف المنتج الأول."},
+            {"label": "صينية خشب موديل 2", "callback": "khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية خشب: وصف المنتج الثاني."}
         ]
     }
 ]
 taarat_submenu = [
     {
         "label": "طارات اكليريك", "callback": "taarat_akerik", "items": [
-             {"label": "طارة اكليريك موديل 1", "callback": "taarat_akerik_m1", "image": "...", "description": "وصف طارة اكليريك موديل 1"},
-             {"label": "طارة اكليريك موديل 2", "callback": "taarat_akerik_m2", "image": "...", "description": "وصف طارة اكليريك موديل 2"}
+             {"label": "طارة اكليريك موديل 1", "callback": "taarat_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة اكليريك موديل 1"},
+             {"label": "طارة اكليريك موديل 2", "callback": "taarat_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة اكليريك موديل 2"}
         ]
     },
     {
         "label": "طارات خشب", "callback": "taarat_khashab", "items": [
-            {"label": "طارة خشب موديل 1", "callback": "taarat_khashab_m1", "image": "...", "description": "وصف طارة خشب موديل 1"},
-            {"label": "طارة خشب موديل 2", "callback": "taarat_khashab_m2", "image": "...", "description": "وصف طارة خشب موديل 2"}
+            {"label": "طارة خشب موديل 1", "callback": "taarat_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 1"},
+            {"label": "طارة خشب موديل 2", "callback": "taarat_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 2"}
         ]
     }
 ]
 haram_submenu = [
     {
         "label": "هرم مكتب اكليريك", "callback": "haram_akerik", "items": [
-             {"label": "هرم اكليريك موديل 1", "callback": "haram_akerik_m1", "image": "...", "description": "وصف هرم اكليريك موديل 1"},
-             {"label": "هرم اكليريك موديل 2", "callback": "haram_akerik_m2", "image": "...", "description": "وصف هرم اكليريك موديل 2"}
+             {"label": "هرم اكليريك موديل 1", "callback": "haram_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم اكليريك موديل 1"},
+             {"label": "هرم اكليريك موديل 2", "callback": "haram_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم اكليريك موديل 2"}
         ]
     },
     {
         "label": "هرم مكتب معدن بديل", "callback": "haram_metal", "items": [
-             {"label": "هرم معدن موديل 1", "callback": "haram_metal_m1", "image": "...", "description": "وصف هرم معدن موديل 1"},
-             {"label": "هرم معدن موديل 2", "callback": "haram_metal_m2", "image": "...", "description": "وصف هرم معدن موديل 2"}
+             {"label": "هرم معدن موديل 1", "callback": "haram_metal_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم معدن موديل 1"},
+             {"label": "هرم معدن موديل 2", "callback": "haram_metal_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم معدن موديل 2"}
         ]
     },
     {
         "label": "هرم مكتب خشب", "callback": "haram_khashab", "items": [
-             {"label": "هرم خشب موديل 1", "callback": "haram_khashab_m1", "image": "...", "description": "وصف هرم خشب موديل 1"},
-             {"label": "هرم خشب موديل 2", "callback": "haram_khashab_m2", "image": "...", "description": "وصف هرم خشب موديل 2"}
+             {"label": "هرم خشب موديل 1", "callback": "haram_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم خشب موديل 1"},
+             {"label": "هرم خشب موديل 2", "callback": "haram_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم خشب موديل 2"}
         ]
     }
 ]
 doro3_submenu = [
     {
         "label": "دروع اكليريك", "callback": "doro3_akerik", "items": [
-             {"label": "درع اكليريك موديل 1", "callback": "doro3_akerik_m1", "image": "...", "description": "وصف درع اكليريك موديل 1"},
-             {"label": "درع اكليريك موديل 2", "callback": "doro3_akerik_m2", "image": "...", "description": "وصف درع اكليريك موديل 2"}
+             {"label": "درع اكليريك موديل 1", "callback": "doro3_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع اكليريك موديل 1"},
+             {"label": "درع اكليريك موديل 2", "callback": "doro3_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع اكليريك موديل 2"}
         ]
     },
     {
         "label": "دروع معدن بديل", "callback": "doro3_metal", "items": [
-             {"label": "درع معدن موديل 1", "callback": "doro3_metal_m1", "image": "...", "description": "وصف درع معدن موديل 1"},
-             {"label": "درع معدن موديل 2", "callback": "doro3_metal_m2", "image": "...", "description": "وصف درع معدن موديل 2"}
+             {"label": "درع معدن موديل 1", "callback": "doro3_metal_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع معدن موديل 1"},
+             {"label": "درع معدن موديل 2", "callback": "doro3_metal_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع معدن موديل 2"}
         ]
     },
     {
         "label": "دروع قطيفة", "callback": "doro3_qatifah", "items": [
-             {"label": "درع قطيفة موديل 1", "callback": "doro3_qatifah_m1", "image": "...", "description": "وصف درع قطيفة موديل 1"},
-             {"label": "درع قطيفة موديل 2", "callback": "doro3_qatifah_m2", "image": "...", "description": "وصف درع قطيفة موديل 2"}
+             {"label": "درع قطيفة موديل 1", "callback": "doro3_qatifah_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع قطيفة موديل 1"},
+             {"label": "درع قطيفة موديل 2", "callback": "doro3_qatifah_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع قطيفة موديل 2"}
         ]
     },
     {
         "label": "دروع خشب", "callback": "doro3_khashab", "items": [
-             {"label": "درع خشب موديل 1", "callback": "doro3_khashab_m1", "image": "...", "description": "وصف درع خشب موديل 1"},
-             {"label": "درع خشب موديل 2", "callback": "doro3_khashab_m2", "image": "...", "description": "وصف درع خشب موديل 2"}
+             {"label": "درع خشب موديل 1", "callback": "doro3_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع خشب موديل 1"},
+             {"label": "درع خشب موديل 2", "callback": "doro3_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع خشب موديل 2"}
         ]
     }
 ]
 aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", "callback": "aqlam_metal", "items": [
-             {"label": "قلم معدن موديل 1", "callback": "aqlam_metal_m1", "image": "...", "description": "وصف قلم معدن موديل 1"},
-             {"label": "قلم معدن موديل 2", "callback": "aqlam_metal_m2", "image": "...", "description": "وصف قلم معدن موديل 2"}
+             {"label": "قلم معدن موديل 1", "callback": "aqlam_metal_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف قلم معدن موديل 1"},
+             {"label": "قلم معدن موديل 2", "callback": "aqlam_metal_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف قلم معدن موديل 2"}
         ]
     },
     {
         "label": "قلم تاتش مضئ", "callback": "aqlam_luminous", "items": [
-             {"label": "قلم مضئ موديل 1", "callback": "aqlam_luminous_m1", "image": "...", "description": "وصف قلم مضئ موديل 1"},
-             {"label": "قلم مضئ موديل 2", "callback": "aqlam_luminous_m2", "image": "...", "description": "وصف قلم مضئ موديل 2"}
+             {"label": "قلم مضئ موديل 1", "callback": "aqlam_luminous_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف قلم مضئ موديل 1"},
+             {"label": "قلم مضئ موديل 2", "callback": "aqlam_luminous_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف قلم مضئ موديل 2"}
         ]
     }
 ]
 mugat_submenu = [
     {
         "label": "مج ابيض", "callback": "mugat_white", "items": [
-             {"label": "مج ابيض موديل 1", "callback": "mugat_white_m1", "image": "...", "description": "وصف مج ابيض موديل 1"},
-             {"label": "مج ابيض موديل 2", "callback": "mugat_white_m2", "image": "...", "description": "وصف مج ابيض موديل 2"}
+             {"label": "مج ابيض موديل 1", "callback": "mugat_white_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 1"},
+             {"label": "مج ابيض موديل 2", "callback": "mugat_white_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 2"}
         ]
     },
     {
         "label": "مج سحري", "callback": "mugat_magic", "items": [
-             {"label": "مج سحري موديل 1", "callback": "mugat_magic_m1", "image": "...", "description": "وصف مج سحري موديل 1"},
-             {"label": "مج سحري موديل 2", "callback": "mugat_magic_m2", "image": "...", "description": "وصف مج سحري موديل 2"}
+             {"label": "مج سحري موديل 1", "callback": "mugat_magic_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 1"},
+             {"label": "مج سحري موديل 2", "callback": "mugat_magic_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 2"}
         ]
     },
     {
         "label": "مج ديجتال", "callback": "mugat_digital", "items": [
-             {"label": "مج ديجتال موديل 1", "callback": "mugat_digital_m1", "image": "...", "description": "وصف مج ديجتال موديل 1"},
-             {"label": "مج ديجتال موديل 2", "callback": "mugat_digital_m2", "image": "...", "description": "وصف مج ديجتال موديل 2"}
+             {"label": "مج ديجتال موديل 1", "callback": "mugat_digital_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 1"},
+             {"label": "مج ديجتال موديل 2", "callback": "mugat_digital_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 2"}
         ]
     }
 ]
