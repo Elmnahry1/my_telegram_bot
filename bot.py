@@ -8,20 +8,19 @@ from urllib.parse import quote_plus
 WHATSAPP_NUMBER = "201288846355" 
 
 # --------------------
-# 1. بيانات القوائم والمنتجات (تم تحديث صواني شبكة اكليريك لتعرض منتجين)
+# 1. بيانات القوائم والمنتجات (تم تحديث جميع القوائم الفرعية)
 # --------------------
 sawany_submenu = [
     {
         "label": "صواني شبكة اكليريك", 
         "callback": "sawany_akerik", 
-        "items": [ # تعريف المنتج الأول
+        "items": [ 
             {
                 "label": "صينية اكليريك موديل 1", 
                 "callback": "akerik_m1",
                 "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
                 "description": "صينية اكليريك: وصف المنتج الأول."
             },
-            # تعريف المنتج الثاني
             {
                 "label": "صينية اكليريك موديل 2", 
                 "callback": "akerik_m2",
@@ -30,37 +29,135 @@ sawany_submenu = [
             }
         ]
     },
-    # هذا المنتج سيعرض نفسه كمنتج واحد عادي
+    # هذا المنتج بقي كما هو كمنتج واحد
     {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف صواني شبكة خشب"}
 ]
 
 taarat_submenu = [
-    {"label": "طارات اكليريك", "callback": "taarat_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارات اكليريك"},
-    {"label": "طارات خشب", "callback": "taarat_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارات خشب"}
+    {
+        "label": "طارات اكليريك", 
+        "callback": "taarat_akerik", 
+        "items": [
+            {"label": "طارة اكليريك موديل 1", "callback": "taarat_akerik_m1", "image": "path/to/taarat_akerik_m1.jpg", "description": "وصف طارة اكليريك موديل 1"},
+            {"label": "طارة اكليريك موديل 2", "callback": "taarat_akerik_m2", "image": "path/to/taarat_akerik_m2.jpg", "description": "وصف طارة اكليريك موديل 2"}
+        ]
+    },
+    {
+        "label": "طارات خشب", 
+        "callback": "taarat_khashab", 
+        "items": [
+            {"label": "طارة خشب موديل 1", "callback": "taarat_khashab_m1", "image": "path/to/taarat_khashab_m1.jpg", "description": "وصف طارة خشب موديل 1"},
+            {"label": "طارة خشب موديل 2", "callback": "taarat_khashab_m2", "image": "path/to/taarat_khashab_m2.jpg", "description": "وصف طارة خشب موديل 2"}
+        ]
+    }
 ]
 
 haram_submenu = [
-    {"label": "هرم مكتب اكليريك", "callback": "haram_akerik", "image": "path/to/haram_akerik.jpg", "description": "وصف هرم مكتب اكليريك"},
-    {"label": "هرم مكتب معدن بديل", "callback": "haram_metal", "image": "path/to/haram_metal.jpg", "description": "وصف هرم مكتب معدن بديل"},
-    {"label": "هرم مكتب خشب", "callback": "haram_khashab", "image": "path/to/haram_khashab.jpg", "description": "وصف هرم مكتب خشب"}
+    {
+        "label": "هرم مكتب اكليريك", 
+        "callback": "haram_akerik", 
+        "items": [
+            {"label": "هرم اكليريك موديل 1", "callback": "haram_akerik_m1", "image": "path/to/haram_akerik_m1.jpg", "description": "وصف هرم اكليريك موديل 1"},
+            {"label": "هرم اكليريك موديل 2", "callback": "haram_akerik_m2", "image": "path/to/haram_akerik_m2.jpg", "description": "وصف هرم اكليريك موديل 2"}
+        ]
+    },
+    {
+        "label": "هرم مكتب معدن بديل", 
+        "callback": "haram_metal", 
+        "items": [
+            {"label": "هرم معدن موديل 1", "callback": "haram_metal_m1", "image": "path/to/haram_metal_m1.jpg", "description": "وصف هرم معدن موديل 1"},
+            {"label": "هرم معدن موديل 2", "callback": "haram_metal_m2", "image": "path/to/haram_metal_m2.jpg", "description": "وصف هرم معدن موديل 2"}
+        ]
+    },
+    {
+        "label": "هرم مكتب خشب", 
+        "callback": "haram_khashab", 
+        "items": [
+            {"label": "هرم خشب موديل 1", "callback": "haram_khashab_m1", "image": "path/to/haram_khashab_m1.jpg", "description": "وصف هرم خشب موديل 1"},
+            {"label": "هرم خشب موديل 2", "callback": "haram_khashab_m2", "image": "path/to/haram_khashab_m2.jpg", "description": "وصف هرم خشب موديل 2"}
+        ]
+    }
 ]
 
 doro3_submenu = [
-    {"label": "دروع اكليريك", "callback": "doro3_akerik", "image": "path/to/doro3_akerik.jpg", "description": "وصف دروع اكليريك"},
-    {"label": "دروع معدن بديل", "callback": "doro3_metal", "image": "path/to/doro3_metal.jpg", "description": "وصف دروع معدن بديل"},
-    {"label": "دروع قطيفة", "callback": "doro3_qatifah", "image": "path/to/doro3_qatifah.jpg", "description": "وصف دروع قطيفة"},
-    {"label": "دروع خشب", "callback": "doro3_khashab", "image": "path/to/doro3_khashab.jpg", "description": "وصف دروع خشب"}
+    {
+        "label": "دروع اكليريك", 
+        "callback": "doro3_akerik", 
+        "items": [
+            {"label": "درع اكليريك موديل 1", "callback": "doro3_akerik_m1", "image": "path/to/doro3_akerik_m1.jpg", "description": "وصف درع اكليريك موديل 1"},
+            {"label": "درع اكليريك موديل 2", "callback": "doro3_akerik_m2", "image": "path/to/doro3_akerik_m2.jpg", "description": "وصف درع اكليريك موديل 2"}
+        ]
+    },
+    {
+        "label": "دروع معدن بديل", 
+        "callback": "doro3_metal", 
+        "items": [
+            {"label": "درع معدن موديل 1", "callback": "doro3_metal_m1", "image": "path/to/doro3_metal_m1.jpg", "description": "وصف درع معدن موديل 1"},
+            {"label": "درع معدن موديل 2", "callback": "doro3_metal_m2", "image": "path/to/doro3_metal_m2.jpg", "description": "وصف درع معدن موديل 2"}
+        ]
+    },
+    {
+        "label": "دروع قطيفة", 
+        "callback": "doro3_qatifah", 
+        "items": [
+            {"label": "درع قطيفة موديل 1", "callback": "doro3_qatifah_m1", "image": "path/to/doro3_qatifah_m1.jpg", "description": "وصف درع قطيفة موديل 1"},
+            {"label": "درع قطيفة موديل 2", "callback": "doro3_qatifah_m2", "image": "path/to/doro3_qatifah_m2.jpg", "description": "وصف درع قطيفة موديل 2"}
+        ]
+    },
+    {
+        "label": "دروع خشب", 
+        "callback": "doro3_khashab", 
+        "items": [
+            {"label": "درع خشب موديل 1", "callback": "doro3_khashab_m1", "image": "path/to/doro3_khashab_m1.jpg", "description": "وصف درع خشب موديل 1"},
+            {"label": "درع خشب موديل 2", "callback": "doro3_khashab_m2", "image": "path/to/doro3_khashab_m2.jpg", "description": "وصف درع خشب موديل 2"}
+        ]
+    }
 ]
 
 aqlam_submenu = [
-    {"label": "قلم تاتش معدن", "callback": "aqlam_metal", "image": "path/to/aqlam_metal.jpg", "description": "وصف قلم تاتش معدن"},
-    {"label": "قلم تاتش مضئ", "callback": "aqlam_luminous", "image": "path/to/aqlam_luminous.jpg", "description": "وصف قلم تاتش مضئ"}
+    {
+        "label": "قلم تاتش معدن", 
+        "callback": "aqlam_metal", 
+        "items": [
+            {"label": "قلم معدن موديل 1", "callback": "aqlam_metal_m1", "image": "path/to/aqlam_metal_m1.jpg", "description": "وصف قلم معدن موديل 1"},
+            {"label": "قلم معدن موديل 2", "callback": "aqlam_metal_m2", "image": "path/to/aqlam_metal_m2.jpg", "description": "وصف قلم معدن موديل 2"}
+        ]
+    },
+    {
+        "label": "قلم تاتش مضئ", 
+        "callback": "aqlam_luminous", 
+        "items": [
+            {"label": "قلم مضئ موديل 1", "callback": "aqlam_luminous_m1", "image": "path/to/aqlam_luminous_m1.jpg", "description": "وصف قلم مضئ موديل 1"},
+            {"label": "قلم مضئ موديل 2", "callback": "aqlam_luminous_m2", "image": "path/to/aqlam_luminous_m2.jpg", "description": "وصف قلم مضئ موديل 2"}
+        ]
+    }
 ]
 
 mugat_submenu = [
-    {"label": "مج ابيض", "callback": "mugat_white", "image": "path/to/mugat_white.jpg", "description": "وصف مج ابيض"},
-    {"label": "مج سحري", "callback": "mugat_magic", "image": "path/to/mugat_magic.jpg", "description": "وصف مج سحري"},
-    {"label": "مج ديجتال", "callback": "mugat_digital", "image": "path/to/mugat_digital.jpg", "description": "وصف مج ديجتال"}
+    {
+        "label": "مج ابيض", 
+        "callback": "mugat_white", 
+        "items": [
+            {"label": "مج ابيض موديل 1", "callback": "mugat_white_m1", "image": "path/to/mugat_white_m1.jpg", "description": "وصف مج ابيض موديل 1"},
+            {"label": "مج ابيض موديل 2", "callback": "mugat_white_m2", "image": "path/to/mugat_white_m2.jpg", "description": "وصف مج ابيض موديل 2"}
+        ]
+    },
+    {
+        "label": "مج سحري", 
+        "callback": "mugat_magic", 
+        "items": [
+            {"label": "مج سحري موديل 1", "callback": "mugat_magic_m1", "image": "path/to/mugat_magic_m1.jpg", "description": "وصف مج سحري موديل 1"},
+            {"label": "مج سحري موديل 2", "callback": "mugat_magic_m2", "image": "path/to/mugat_magic_m2.jpg", "description": "وصف مج سحري موديل 2"}
+        ]
+    },
+    {
+        "label": "مج ديجتال", 
+        "callback": "mugat_digital", 
+        "items": [
+            {"label": "مج ديجتال موديل 1", "callback": "mugat_digital_m1", "image": "path/to/mugat_digital_m1.jpg", "description": "وصف مج ديجتال موديل 1"},
+            {"label": "مج ديجتال موديل 2", "callback": "mugat_digital_m2", "image": "path/to/mugat_digital_m2.jpg", "description": "وصف مج ديجتال موديل 2"}
+        ]
+    }
 ]
 
 main_menu = [
@@ -89,7 +186,7 @@ all_submenus = {
 for menu_key, submenu_list in all_submenus.items():
     for item in submenu_list:
         product_to_submenu_map[item["callback"]] = menu_key
-        # 💡 يجب إضافة كل عنصر فرعي لضمان عمل زر الشراء بشكل سليم
+        # 💡 نضمن إضافة كل عنصر فرعي لضمان عمل زر الشراء بشكل سليم
         if 'items' in item:
             for sub_item in item['items']:
                 product_to_submenu_map[sub_item["callback"]] = menu_key
@@ -143,6 +240,7 @@ def show_product_page(update, product_callback_data, product_data):
     if query:
         query.answer()
 
+    # نحصل على مفتاح القائمة الفرعية الأم لزر الرجوع
     previous_submenu_key = product_to_submenu_map.get(product_callback_data, "main_menu")
 
     # تحديد المنتجات سواء كانت حزمة أو منتج واحد
@@ -169,7 +267,6 @@ def show_product_page(update, product_callback_data, product_data):
     # 1. إرسال المنتجات كرسائل منفصلة (صورة + وصف + زر شراء)
     for i, item in enumerate(products_to_show):
         # بناء لوحة المفاتيح للمنتج الحالي (زر شراء فقط)
-        # نستخدم item['callback'] لضمان ربط زر الشراء بالمنتج الصحيح
         item_keyboard = [[InlineKeyboardButton("🛒 شراء", callback_data=f"buy_{item['callback']}")]]
         item_reply_markup = InlineKeyboardMarkup(item_keyboard)
         
@@ -215,12 +312,15 @@ def button(update, context):
                 # إرسال كائن المنتج كاملاً
                 show_product_page(update, item["callback"], item)
                 return
-            # 💡 فحص إذا كان العنصر هو منتج فرعي داخل حزمة
+            # فحص إذا كان العنصر هو منتج فرعي داخل حزمة (لم يعد يحدث هذا بعد الهيكلة الجديدة)
             if 'items' in item:
                 for sub_item in item['items']:
                     if data == sub_item["callback"]:
-                        show_product_page(update, item["callback"], sub_item)
-                        return
+                        # إذا كان زر الشراء تم الضغط عليه من منتج داخل حزمة
+                        # يجب أن نرجع مفتاح القائمة الأم (item["callback"])
+                        # لكن هنا نعتبر أن الـ callback_data الذي ليس 'buy_' هو فقط للأزرار الرئيسية في القوائم الفرعية
+                        # ولذلك نعتمد على الحالة أعلاه `if data == item["callback"]:`
+                        pass
     
     # 3. حالة زر الشراء (رابط واتساب مع رابط الصورة)
     if data.startswith("buy_"):
@@ -230,9 +330,11 @@ def button(update, context):
         product_data = None
         for submenu in all_submenus.values():
             for item in submenu:
+                # إذا كان منتجاً مفرداً
                 if item.get("callback") == product_key:
                     product_data = item
                     break
+                # إذا كان منتجاً داخل حزمة
                 if 'items' in item:
                     for sub_item in item['items']:
                         if sub_item.get("callback") == product_key:
