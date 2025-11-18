@@ -11,41 +11,27 @@ WHATSAPP_NUMBER = "201288846355"
 # 1. بيانات القوائم والمنتجات (تم تحديث جميع القوائم الفرعية)
 # --------------------
 
-# --- قوائم فرعية جديدة ---
+# --- قوائم فرعية معدلة: تعرض المنتجات مباشرة ---
+# 💡 بصامات
 bsamat_submenu = [
-    {
-        "label": "بصامات متنوعة", 
-        "callback": "bsamat_all", 
-        "items": [
-            {"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 1."},
-            {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "path/to/bsamat_m2.jpg", "description": "وصف البصامة موديل 2."}
-        ]
-    }
+    {"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 1."},
+    {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "path/to/bsamat_m2.jpg", "description": "وصف البصامة موديل 2."}
 ]
 
+# 💡 مناديل كتب الكتاب
 wedding_tissues_submenu = [
-    {
-        "label": "مناديل مطبوعة", 
-        "callback": "tissues_printed", 
-        "items": [
-            {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "path/to/tissue_m1.jpg", "description": "وصف منديل كتب الكتاب موديل 1."},
-            {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "path/to/tissue_m2.jpg", "description": "وصف منديل كتب الكتاب موديل 2."}
-        ]
-    }
+    {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "path/to/tissue_m1.jpg", "description": "وصف منديل كتب الكتاب موديل 1."},
+    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "path/to/tissue_m2.jpg", "description": "وصف منديل كتب الكتاب موديل 2."}
 ]
 
+# 💡 اباجورات
 abajorat_submenu = [
-    {
-        "label": "أباجورات خشبية", 
-        "callback": "abajorat_wood", 
-        "items": [
-            {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "path/to/abajora_m1.jpg", "description": "وصف الأباجورة موديل 1."},
-            {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "path/to/abajora_m2.jpg", "description": "وصف الأباجورة موديل 2."}
-        ]
-    }
+    {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "path/to/abajora_m1.jpg", "description": "وصف الأباجورة موديل 1."},
+    {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "path/to/abajora_m2.jpg", "description": "وصف الأباجورة موديل 2."}
 ]
-# --- نهاية القوائم الفرعية الجديدة ---
+# --- نهاية القوائم الفرعية المعدلة ---
 
+# القوائم التي تحتوي على قوائم فرعية (تظل كما هي)
 sawany_submenu = [
     {
         "label": "صواني شبكة اكليريك", 
@@ -98,9 +84,7 @@ taarat_submenu = [
         "label": "طارات خشب", 
         "callback": "taarat_khashab", 
         "items": [
-            # ✅ تم تصحيح هذا السطر: إضافة المفتاح "image":
             {"label": "طارة خشب موديل 1", "callback": "taarat_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 1"},
-            # ✅ تم تصحيح هذا السطر: إضافة المفتاح "image":
             {"label": "طارة خشب موديل 2", "callback": "taarat_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 2"}
         ]
     }
@@ -217,11 +201,11 @@ mugat_submenu = [
 main_menu = [
     {"label": "💍💍 صواني شبكة", "callback": "sawany"},
     {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
-    {"label": "✋ بصامات", "callback": "bsamat"},
-    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"},
+    {"label": "✋ بصامات", "callback": "bsamat"}, 
+    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"}, 
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
-    {"label": "💡 اباجورات", "callback": "abajorat"},
+    {"label": "💡 اباجورات", "callback": "abajorat"}, 
     {"label": "✏️ اقلام", "callback": "aqlam"},
     {"label": "☕ مجات", "callback": "mugat"},
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
@@ -243,7 +227,7 @@ all_submenus = {
 for menu_key, submenu_list in all_submenus.items():
     for item in submenu_list:
         product_to_submenu_map[item["callback"]] = menu_key
-        # 💡 نضمن إضافة كل عنصر فرعي لضمان عمل زر الشراء بشكل سليم
+        # هذا الجزء يتعامل فقط مع القوائم الفرعية التي تحتوي على "items" (مثل sawany, taarat, ...)
         if 'items' in item:
             for sub_item in item['items']:
                 product_to_submenu_map[sub_item["callback"]] = menu_key
@@ -298,12 +282,13 @@ def show_product_page(update, product_callback_data, product_data):
         query.answer()
 
     # نحصل على مفتاح القائمة الفرعية الأم لزر الرجوع
+    # في حالة "bsamat" مثلاً، مفتاح الرجوع سيكون "bsamat" نفسها
     previous_submenu_key = product_to_submenu_map.get(product_callback_data, "main_menu")
 
-    # تحديد المنتجات سواء كانت حزمة أو منتج واحد
+    # تحديد المنتجات سواء كانت حزمة ('items' موجودة) أو منتج واحد (الآن يمكن أن يكون قائمة منتجات مباشرة)
     products_to_show = []
     if 'items' in product_data:
-        # إذا كانت حزمة، نستخدم الـ items
+        # إذا كانت حزمة (مثل sawany) أو قائمة تم تغليفها (مثل bsamat في دالة button)
         products_to_show = product_data['items']
         # نحذف رسالة القائمة السابقة
         if query and query.message:
@@ -312,7 +297,7 @@ def show_product_page(update, product_callback_data, product_data):
             except Exception:
                 pass 
     else:
-        # إذا كان منتج واحد، نستخدم بياناته
+        # إذا كان منتج واحد (لم يعد يستخدم هذا المسار بعد التعديل الأخير)
         products_to_show = [product_data]
         # نحذف رسالة القائمة السابقة
         if query and query.message:
@@ -337,13 +322,20 @@ def show_product_page(update, product_callback_data, product_data):
         )
     
     # 2. إرسال زر الرجوع في رسالة منفصلة أخيرة (في نهاية العرض)
-    # نستخدم callback القائمة الأم للرجوع إلى القائمة الفرعية الصحيحة
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data=previous_submenu_key)]]
+    # نستخدم "main_menu" كـ callback لـ "bsamat" و "wedding_tissues" و "abajorat" 
+    # ونستخدم القائمة الفرعية نفسها للرجوع إلى القائمة الفرعية الداخلية (مثل sawany_akerik)
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat"]:
+        back_callback = "main_menu"
+    else:
+         # هنا سيتم استخدام 'sawany_akerik' أو 'taarat_khashab' للرجوع للقائمة الفرعية
+        back_callback = previous_submenu_key
+
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data=back_callback)]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
             
     update.effective_message.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="اضغط للرجوع إلى القائمة الفرعية:",
+        text="اضغط للرجوع:",
         reply_markup=back_reply_markup
     )
 
@@ -356,25 +348,38 @@ def button(update, context):
     if data == "main_menu":
         start(update, context)
         return
-    if data in all_submenus:
+    
+    # قائمة المفاتيح التي يجب أن تعرض قائمة فرعية (Sawany, Taarat, Haram, Doro3, Aqlam, Mugat)
+    if data in ["sawany", "taarat", "haram", "doro3", "aqlam", "mugat"]:
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         clean_title = title.split()[-1] 
         show_submenu(update, context, all_submenus[data], clean_title)
         return
+        
+    # 💡 قائمة المفاتيح التي يجب أن تعرض المنتجات مباشرة (Bsamat, Wedding_Tissues, Abajorat)
+    if data in ["bsamat", "wedding_tissues", "abajorat"]:
+        # نجمع بيانات المنتجات من القائمة الفرعية ونرسلها إلى دالة show_product_page
+        product_list = all_submenus[data]
+        # نقوم بتغليف قائمة المنتجات في قاموس يحتوي على 'items' لمعالجتها في show_product_page
+        temp_product_data = {"items": product_list}
+        show_product_page(update, data, temp_product_data)
+        return
 
-    # 2. إذا اختير منتج معين (سواء كان حزمة أو مفرد)
+    # 2. إذا اختير منتج معين (سواء كان حزمة أو مفرد داخل قوائم متداخلة)
     for submenu_key, submenu in all_submenus.items():
+        # إذا كان المنتج هو قائمة فرعية متداخلة (مثل 'sawany_akerik')
         for item in submenu:
-            if data == item["callback"]:
-                # إرسال كائن المنتج كاملاً
+            if data == item.get("callback") and 'items' in item:
+                # إرسال كائن المنتج كاملاً (ليتم عرض الـ items داخله)
                 show_product_page(update, item["callback"], item)
                 return
-            # فحص إذا كان العنصر هو منتج فرعي داخل حزمة (لم يعد يحدث هذا بعد الهيكلة الجديدة)
+            
+            # إذا كان العنصر هو منتج فرعي داخل حزمة (مثل 'akerik_m1')
             if 'items' in item:
                 for sub_item in item['items']:
                     if data == sub_item["callback"]:
-                        # في الهيكلة الحالية، هذا الـ callback لن يتم الوصول إليه لأنه يتطابق مع 'buy_'
-                        # لكن يُترك الكود كما هو ليتناسب مع منطق الكود الأصلي
+                         # هذا الـ callback لن يُستخدم لأنه سيتم عرضه في show_product_page
+                         # ولكن يتم تركه لأمان الكود
                         pass
     
     # 3. حالة زر الشراء (رابط واتساب مع رابط الصورة)
@@ -385,11 +390,11 @@ def button(update, context):
         product_data = None
         for submenu in all_submenus.values():
             for item in submenu:
-                # إذا كان منتجاً مفرداً
+                # 💡 الحالة 1: المنتج هو عنصر مباشر في قائمة (مثل bsamat_m1)
                 if item.get("callback") == product_key and 'items' not in item:
                     product_data = item
                     break
-                # إذا كان منتجاً داخل حزمة
+                # الحالة 2: المنتج داخل قائمة متداخلة (مثل akerik_m1)
                 if 'items' in item:
                     for sub_item in item['items']:
                         if sub_item.get("callback") == product_key:
@@ -464,5 +469,4 @@ def main():
     updater.idle()
 
 if __name__ == '__main__':
-    # يجب أن يتم تشغيل هذا السطر لكي يبدأ البوت العمل
     main()
