@@ -6,24 +6,23 @@ from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 # القائمة الرئيسية
 # ---------------------------------------------------------
 def start(update, context):
+    user_name = update.message.from_user.first_name
+    greeting_text = f"✅ مرحباً بك {user_name} في البوت الرسمي لمصنع المناهري للحفر بالليزر وجميع مستلزمات الزفاف والسبلميشن\n\nمن فضلك اختار طلبك من القائمة:"
     keyboard = [
-        [InlineKeyboardButton("صواني شبكة", callback_data='sawany')],
-        [InlineKeyboardButton("طارات خطوبة وكتب الكتاب", callback_data='taarat')],
-        [InlineKeyboardButton("بصامات", callback_data='bsamat')],
-        [InlineKeyboardButton("هرم مكتب", callback_data='haram')],
-        [InlineKeyboardButton("دروع", callback_data='doro3')],
-        [InlineKeyboardButton("اباجورات", callback_data='abajorat')],
-        [InlineKeyboardButton("اقلام", callback_data='aqlam')],
-        [InlineKeyboardButton("مجات", callback_data='mugat')],
-        [InlineKeyboardButton("مستلزمات سبلميشن", callback_data='sublimation')],
+        [InlineKeyboardButton("💍💍 صواني شبكة", callback_data='sawany')],
+        [InlineKeyboardButton("💍 طارات خطوبة وكتب الكتاب", callback_data='taarat')],
+        [InlineKeyboardButton("✋ بصامات", callback_data='bsamat')],
+        [InlineKeyboardButton("📜 مناديل كتب الكتاب", callback_data='wedding_tissues')],
+        [InlineKeyboardButton("🗄️ هرم مكتب", callback_data='haram')],
+        [InlineKeyboardButton("🏆 دروع", callback_data='doro3')],
+        [InlineKeyboardButton("💡 اباجورات", callback_data='abajorat')],
+        [InlineKeyboardButton("✏️ اقلام", callback_data='aqlam')],
+        [InlineKeyboardButton("☕ مجات", callback_data='mugat')],
+        [InlineKeyboardButton("👝 محافظ محفورة بالاسم", callback_data='engraved_wallet')],
+        [InlineKeyboardButton("🖨️ مستلزمات سبلميشن", callback_data='sublimation')]
     ]
-
     reply_markup = InlineKeyboardMarkup(keyboard)
-
-    if update.callback_query:
-        update.callback_query.edit_message_text("اختار القسم اللي تريده:", reply_markup=reply_markup)
-    else:
-        update.message.reply_text("اختار القسم اللي تريده:", reply_markup=reply_markup)
+    update.message.reply_text(greeting_text, reply_markup=reply_markup)
 
 # ---------------------------------------------------------
 # دالة إرسال الصور + زر الرجوع
