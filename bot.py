@@ -19,37 +19,37 @@ main_menu = [
 
 # القوائم الفرعية لكل قسم مع المنتجات
 sawany_submenu = [
-    {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik"},
-    {"label": "صواني شبكة خشب", "callback": "sawany_khashab"}
+    {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "path/to/akerik_image.jpg"},
+    {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "path/to/khashab_image.jpg"}
 ]
 
 taarat_submenu = [
-    {"label": "طارات اكليريك", "callback": "taarat_akerik"},
-    {"label": "طارات خشب", "callback": "taarat_khashab"}
+    {"label": "طارات اكليريك", "callback": "taarat_akerik", "image": "path/to/taarat_akerik.jpg"},
+    {"label": "طارات خشب", "callback": "taarat_khashab", "image": "path/to/taarat_khashab.jpg"}
 ]
 
 haram_submenu = [
-    {"label": "هرم مكتب اكليريك", "callback": "haram_akerik"},
-    {"label": "هرم مكتب معدن بديل", "callback": "haram_metal"},
-    {"label": "هرم مكتب خشب", "callback": "haram_khashab"}
+    {"label": "هرم مكتب اكليريك", "callback": "haram_akerik", "image": "path/to/haram_akerik.jpg"},
+    {"label": "هرم مكتب معدن بديل", "callback": "haram_metal", "image": "path/to/haram_metal.jpg"},
+    {"label": "هرم مكتب خشب", "callback": "haram_khashab", "image": "path/to/haram_khashab.jpg"}
 ]
 
 doro3_submenu = [
-    {"label": "دروع اكليريك", "callback": "doro3_akerik"},
-    {"label": "دروع معدن بديل", "callback": "doro3_metal"},
-    {"label": "دروع قطيفة", "callback": "doro3_qatifah"},
-    {"label": "دروع خشب", "callback": "doro3_khashab"}
+    {"label": "دروع اكليريك", "callback": "doro3_akerik", "image": "path/to/doro3_akerik.jpg"},
+    {"label": "دروع معدن بديل", "callback": "doro3_metal", "image": "path/to/doro3_metal.jpg"},
+    {"label": "دروع قطيفة", "callback": "doro3_qatifah", "image": "path/to/doro3_qatifah.jpg"},
+    {"label": "دروع خشب", "callback": "doro3_khashab", "image": "path/to/doro3_khashab.jpg"}
 ]
 
 aqlam_submenu = [
-    {"label": "قلم تاتش معدن", "callback": "aqlam_metal"},
-    {"label": "قلم تاتش مضئ", "callback": "aqlam_luminous"}
+    {"label": "قلم تاتش معدن", "callback": "aqlam_metal", "image": "path/to/aqlam_metal.jpg"},
+    {"label": "قلم تاتش مضئ", "callback": "aqlam_luminous", "image": "path/to/aqlam_luminous.jpg"}
 ]
 
 mugat_submenu = [
-    {"label": "مج ابيض", "callback": "mugat_white"},
-    {"label": "مج سحري", "callback": "mugat_magic"},
-    {"label": "مج ديجتال", "callback": "mugat_digital"}
+    {"label": "مج ابيض", "callback": "mugat_white", "image": "path/to/mugat_white.jpg"},
+    {"label": "مج سحري", "callback": "mugat_magic", "image": "path/to/mugat_magic.jpg"},
+    {"label": "مج ديجتال", "callback": "mugat_digital", "image": "path/to/mugat_digital.jpg"}
 ]
 
 # دالة لعرض القائمة الرئيسية
@@ -60,75 +60,68 @@ def start(update, context):
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text(greeting_text, reply_markup=reply_markup)
 
+# دالة لعرض القوائم الفرعية
+def show_submenu(update, context, submenu, title):
+    keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in submenu]
+    # زر الرجوع للقائمة الرئيسية
+    keyboard.append([InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data="main_menu")])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.callback_query.edit_message_text(f"اختر {title}:", reply_markup=reply_markup)
+
+# دالة لعرض المنتج والصورة
+def show_product(update, context, product):
+    # زر الرجوع
+    keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back")]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    # إرسال الصورة مع النص
+    with open(product["image"], 'rb') as photo:
+        update.callback_query.message.bot.send_photo(
+            chat_id=update.callback_query.message.chat_id,
+            photo=photo,
+            caption=product["label"],
+            reply_markup=reply_markup
+        )
+
 # دالة لمعالجة الضغط على الأزرار
 def button(update, context):
     query = update.callback_query
     data = query.data
 
-    # عرض القوائم الفرعية حسب الزر الذي تم الضغط عليه
+    if data == "main_menu":
+        start(update, context)
+        return
+
+    if data == "back":
+        # العودة للقائمة الرئيسية
+        start(update, context)
+        return
+
+    # عرض القوائم الفرعية
     if data == "sawany":
-        keyboard = [[InlineKeyboardButton(product["label"], callback_data=product["callback"])] for product in sawany_submenu]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        query.edit_message_text("اختر نوع الصواني:", reply_markup=reply_markup)
-
+        show_submenu(update, context, sawany_submenu, "نوع الصواني")
+        return
     elif data == "taarat":
-        keyboard = [[InlineKeyboardButton(product["label"], callback_data=product["callback"])] for product in taarat_submenu]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        query.edit_message_text("اختر نوع الطارات:", reply_markup=reply_markup)
-
+        show_submenu(update, context, taarat_submenu, "نوع الطارات")
+        return
     elif data == "haram":
-        keyboard = [[InlineKeyboardButton(product["label"], callback_data=product["callback"])] for product in haram_submenu]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        query.edit_message_text("اختر نوع هرم المكتب:", reply_markup=reply_markup)
-
+        show_submenu(update, context, haram_submenu, "نوع هرم المكتب")
+        return
     elif data == "doro3":
-        keyboard = [[InlineKeyboardButton(product["label"], callback_data=product["callback"])] for product in doro3_submenu]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        query.edit_message_text("اختر نوع الدروع:", reply_markup=reply_markup)
-
+        show_submenu(update, context, doro3_submenu, "نوع الدروع")
+        return
     elif data == "aqlam":
-        keyboard = [[InlineKeyboardButton(product["label"], callback_data=product["callback"])] for product in aqlam_submenu]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        query.edit_message_text("اختر نوع الأقلام:", reply_markup=reply_markup)
-
+        show_submenu(update, context, aqlam_submenu, "نوع الأقلام")
+        return
     elif data == "mugat":
-        keyboard = [[InlineKeyboardButton(product["label"], callback_data=product["callback"])] for product in mugat_submenu]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        query.edit_message_text("اختر نوع المجات:", reply_markup=reply_markup)
+        show_submenu(update, context, mugat_submenu, "نوع المجات")
+        return
 
-    # عرض المنتجات عند اختيار نوع معين
-    elif data == "sawany_akerik":
-        query.edit_message_text("صور وتفاصيل صواني شبكة اكليريك هنا.")
-    elif data == "sawany_khashab":
-        query.edit_message_text("صور وتفاصيل صواني شبكة خشب هنا.")
-    elif data == "taarat_akerik":
-        query.edit_message_text("صور وتفاصيل طارات اكليريك هنا.")
-    elif data == "taarat_khashab":
-        query.edit_message_text("صور وتفاصيل طارات خشب هنا.")
-    elif data == "haram_akerik":
-        query.edit_message_text("صور وتفاصيل هرم مكتب اكليريك هنا.")
-    elif data == "haram_metal":
-        query.edit_message_text("صور وتفاصيل هرم مكتب معدن بديل هنا.")
-    elif data == "haram_khashab":
-        query.edit_message_text("صور وتفاصيل هرم مكتب خشب هنا.")
-    elif data == "doro3_akerik":
-        query.edit_message_text("صور وتفاصيل دروع اكليريك هنا.")
-    elif data == "doro3_metal":
-        query.edit_message_text("صور وتفاصيل دروع معدن بديل هنا.")
-    elif data == "doro3_qatifah":
-        query.edit_message_text("صور وتفاصيل دروع قطيفة هنا.")
-    elif data == "doro3_khashab":
-        query.edit_message_text("صور وتفاصيل دروع خشب هنا.")
-    elif data == "aqlam_metal":
-        query.edit_message_text("صور وتفاصيل قلم تاتش معدن هنا.")
-    elif data == "aqlam_luminous":
-        query.edit_message_text("صور وتفاصيل قلم تاتش مضئ هنا.")
-    elif data == "mugat_white":
-        query.edit_message_text("صور وتفاصيل مج ابيض هنا.")
-    elif data == "mugat_magic":
-        query.edit_message_text("صور وتفاصيل مج سحري هنا.")
-    elif data == "mugat_digital":
-        query.edit_message_text("صور وتفاصيل مج ديجتال هنا.")
+    # عرض المنتج مع الصورة
+    for submenu in [sawany_submenu, taarat_submenu, haram_submenu, doro3_submenu, aqlam_submenu, mugat_submenu]:
+        for item in submenu:
+            if data == item["callback"]:
+                show_product(update, context, item)
+                return
 
 # إعدادات البوت
 def main():
