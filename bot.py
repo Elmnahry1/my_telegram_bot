@@ -30,9 +30,9 @@ abajorat_submenu = [
 
 # 🛑 قائمة المحافظ الجديدة (مهمة لـ ConversationHandler)
 engraved_wallet_submenu = [
-    {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://example.com/wallet_bege.png", "description": "محفظة جلد رجالي، لون بيج (هافان)."},
-    {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://example.com/wallet_brown.png", "description": "محفظة جلد رجالي، لون بني."},
-    {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://example.com/wallet_black.png", "description": "محفظة جلد رجالي، لون أسود."}
+    {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان)."},
+    {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني."},
+    {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود."}
 ]
 
 # --- القوائم المتداخلة (مختصرة للاختصار ولكن يجب أن تدرج كاملة) ---
@@ -267,7 +267,7 @@ def receive_name_and_prepare_whatsapp(update, context):
     try:
         # اللون هو الجزء بعد كلمة "محفظة" (مثلاً "بيج (هافان)")
         color = product_label.split('محفظة ', 1)[1].strip() 
-        wallet_type = "محفظة جلد رجالي" # نوع المنتج الأساسي
+        wallet_type = "محفظة سافوكس الاصلية التقيلة" # نوع المنتج الأساسي
     except IndexError:
         color = product_label
         wallet_type = product_label
