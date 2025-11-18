@@ -111,7 +111,8 @@ def show_submenu(update, context, submenu, title):
     keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    update.effective_chat.send_message(f"اختر {title}:", reply_markup=reply_markup)
+    # 💡 تم تعديل هذا السطر لعرض رسالة "حدد اختيارك"
+    update.effective_chat.send_message("حدد اختيارك:", reply_markup=reply_markup)
 
 
 def show_product_page(update, product_callback_data, image_url, description):
@@ -174,14 +175,14 @@ def button(update, context):
             
         user_info = query.from_user
         
-        # 💡 تكوين نص الرسالة الذي سيُفتح في واتساب
+        # تكوين نص الرسالة الذي سيُفتح في واتساب
         message_body = (
             f"🔔 *طلب شراء جديد من بوت تليجرام* 🔔\n"
             f"المنتج: {product_data['label']}\n"
             f"الكود: {product_key}\n"
             f"العميل: {user_info.first_name}\n"
             f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-            f"🔗 رابط صورة المنتج: {product_data['image']}\n" # إضافة رابط الصورة هنا
+            f"🔗 رابط صورة المنتج: {product_data['image']}\n" 
             f"رابط التواصل عبر تليجرام: tg://user?id={user_info.id}"
         )
         
