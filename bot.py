@@ -12,17 +12,17 @@ DETAILS = 1
 # الأقسام والصور
 # -------------------------
 sections = {
-    "sawany": {"name": "صواني شبكة 💍", "images": ["IMAGE_URL_1", "IMAGE_URL_2"]},
-    "taarat": {"name": "طارات خطوبة وكتب الكتاب 💍", "images": ["IMAGE_URL_1"]},
-    "bsamat": {"name": "بصامات ✨", "images": ["IMAGE_URL_1", "IMAGE_URL_2"]},
-    "menadeel": {"name": "مناديل كتب الكتاب ✨", "images": ["IMAGE_URL_1"]},
-    "haram": {"name": "هرم مكتب 🏢", "images": ["IMAGE_URL_1"]},
-    "doro3": {"name": "دروع 🏆", "images": ["IMAGE_URL_1"]},
-    "abajorat": {"name": "اباجورات 💡", "images": ["IMAGE_URL_1"]},
-    "aqlam": {"name": "اقلام ✏️", "images": ["IMAGE_URL_1"]},
-    "mugat": {"name": "مجات ☕", "images": ["IMAGE_URL_1"]},
-    "mahafez": {"name": "محافظ محفورة بالاسم ☕", "images": ["IMAGE_URL_1"]},
-    "sublimation": {"name": "مستلزمات سبلميشن 🖼️", "images": ["IMAGE_URL_1"]},
+    "sawany": {"name": "صواني شبكة 💍", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
+    "taarat": {"name": "طارات خطوبة وكتب الكتاب 💍", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
+    "bsamat": {"name": "بصامات ✨", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
+    "menadeel": {"name": "مناديل كتب الكتاب ✨", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
+    "haram": {"name": "هرم مكتب 🏢", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
+    "doro3": {"name": "دروع 🏆", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
+    "abajorat": {"name": "اباجورات 💡", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
+    "aqlam": {"name": "اقلام ✏️", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
+    "mugat": {"name": "مجات ☕", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
+    "mahafez": {"name": "محافظ محفورة بالاسم ☕", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
+    "sublimation": {"name": "مستلزمات سبلميشن 🖼️", "images": ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"]},
 }
 
 # -------------------------
@@ -44,22 +44,24 @@ def start(update: Update, context: CallbackContext):
         update.message.reply_text(welcome_text, reply_markup=reply_markup)
 
 # -------------------------
-# إرسال الصور لكل قسم
+# إرسال الصور لكل قسم مع زر شراء وزر رجوع
 # -------------------------
-def send_photos(update: Update, context: CallbackContext, section_key: str):
+def send_section(update: Update, context: CallbackContext, section_key: str):
     query = update.callback_query
     query.answer()
 
     section = sections[section_key]
+
+    # إرسال كل الصور كـ media group
     media = [InputMediaPhoto(url) for url in section["images"]]
     context.bot.send_media_group(chat_id=query.message.chat_id, media=media)
 
-    # إضافة زر شراء لكل صورة
-    buy_keyboard = [[InlineKeyboardButton("🛒 شراء", callback_data=f"buy_{section_key}")]]
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data='back')]]
-    keyboard = buy_keyboard + back_keyboard
+    # لكل قسم، أضف زر شراء + زر رجوع
+    keyboard = [
+        [InlineKeyboardButton("🛒 شراء", callback_data=f"buy_{section_key}")],
+        [InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data="back")]
+    ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    
     context.bot.send_message(chat_id=query.message.chat_id, text="اختر:", reply_markup=reply_markup)
 
 # -------------------------
@@ -72,7 +74,7 @@ def button_handler(update: Update, context: CallbackContext):
     if data == "back":
         start(update, context)
         return
-    
+
     if data.startswith("buy_"):
         section_key = data.replace("buy_", "")
         context.user_data['section'] = sections[section_key]["name"]
@@ -80,7 +82,7 @@ def button_handler(update: Update, context: CallbackContext):
         return DETAILS
     
     if data in sections:
-        send_photos(update, context, data)
+        send_section(update, context, data)
 
 # -------------------------
 # استقبال تفاصيل الطلب
