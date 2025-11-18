@@ -8,30 +8,30 @@ from urllib.parse import quote_plus
 WHATSAPP_NUMBER = "201288846355" 
 
 # --------------------
-# 1. بيانات القوائم والمنتجات (تم تحديث جميع القوائم الفرعية)
+# 1. بيانات القوائم والمنتجات (تم تبسيط القوائم الثلاثة المطلوبة)
 # --------------------
 
 # --- قوائم فرعية معدلة: تعرض المنتجات مباشرة ---
-# 💡 بصامات
+# 💡 بصامات: قائمة منتجات مباشرة
 bsamat_submenu = [
     {"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 1."},
     {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "path/to/bsamat_m2.jpg", "description": "وصف البصامة موديل 2."}
 ]
 
-# 💡 مناديل كتب الكتاب
+# 💡 مناديل كتب الكتاب: قائمة منتجات مباشرة
 wedding_tissues_submenu = [
     {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "path/to/tissue_m1.jpg", "description": "وصف منديل كتب الكتاب موديل 1."},
     {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "path/to/tissue_m2.jpg", "description": "وصف منديل كتب الكتاب موديل 2."}
 ]
 
-# 💡 اباجورات
+# 💡 اباجورات: قائمة منتجات مباشرة
 abajorat_submenu = [
     {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "path/to/abajora_m1.jpg", "description": "وصف الأباجورة موديل 1."},
     {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "path/to/abajora_m2.jpg", "description": "وصف الأباجورة موديل 2."}
 ]
 # --- نهاية القوائم الفرعية المعدلة ---
 
-# القوائم التي تحتوي على قوائم فرعية (تظل كما هي)
+# القوائم التي تحتوي على قوائم فرعية متداخلة (تظل كما هي)
 sawany_submenu = [
     {
         "label": "صواني شبكة اكليريك", 
@@ -71,6 +71,7 @@ sawany_submenu = [
     }
 ]
 
+# (بقية القوائم الفرعية المتداخلة مثل taarat_submenu, haram_submenu, doro3_submenu, aqlam_submenu, mugat_submenu تظل كما هي)
 taarat_submenu = [
     {
         "label": "طارات اكليريك", 
@@ -198,6 +199,7 @@ mugat_submenu = [
     }
 ]
 
+
 main_menu = [
     {"label": "💍💍 صواني شبكة", "callback": "sawany"},
     {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
@@ -224,13 +226,20 @@ all_submenus = {
     "wedding_tissues": wedding_tissues_submenu, 
     "abajorat": abajorat_submenu       
 }
+
+# 💡 تم تعديل هذا الجزء لضمان تسجيل الـ callbacks الصحيحة لجميع المنتجات
 for menu_key, submenu_list in all_submenus.items():
-    for item in submenu_list:
-        product_to_submenu_map[item["callback"]] = menu_key
-        # هذا الجزء يتعامل فقط مع القوائم الفرعية التي تحتوي على "items" (مثل sawany, taarat, ...)
-        if 'items' in item:
-            for sub_item in item['items']:
-                product_to_submenu_map[sub_item["callback"]] = menu_key
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat"]:
+        # للقوائم المباشرة، نضيف كل منتج مباشرة
+        for product in submenu_list:
+            product_to_submenu_map[product["callback"]] = menu_key
+    else:
+        # للقوائم المتداخلة (sawany, taarat, ...)
+        for item in submenu_list:
+            product_to_submenu_map[item["callback"]] = menu_key
+            if 'items' in item:
+                for sub_item in item['items']:
+                    product_to_submenu_map[sub_item["callback"]] = menu_key
 # -----------------------------------------------------------
 
 
@@ -272,39 +281,32 @@ def show_submenu(update, context, submenu, title):
     keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    # تم تعديل هذا السطر لعرض رسالة "حدد اختيارك"
     update.effective_chat.send_message("حدد اختيارك:", reply_markup=reply_markup)
 
 
-def show_product_page(update, product_callback_data, product_data):
+def show_product_page(update, product_callback_data, product_data, is_direct_list=False):
     query = update.callback_query
     if query:
         query.answer()
 
-    # نحصل على مفتاح القائمة الفرعية الأم لزر الرجوع
-    # في حالة "bsamat" مثلاً، مفتاح الرجوع سيكون "bsamat" نفسها
-    previous_submenu_key = product_to_submenu_map.get(product_callback_data, "main_menu")
-
-    # تحديد المنتجات سواء كانت حزمة ('items' موجودة) أو منتج واحد (الآن يمكن أن يكون قائمة منتجات مباشرة)
+    # 💡 منطق تحديد المنتجات المراد عرضها
     products_to_show = []
-    if 'items' in product_data:
-        # إذا كانت حزمة (مثل sawany) أو قائمة تم تغليفها (مثل bsamat في دالة button)
+    if is_direct_list:
+        # للقوائم المباشرة (مثل bsamat)
+        products_to_show = product_data
+    elif 'items' in product_data:
+        # للقوائم المتداخلة (مثل sawany)
         products_to_show = product_data['items']
-        # نحذف رسالة القائمة السابقة
-        if query and query.message:
-            try:
-                query.message.delete()
-            except Exception:
-                pass 
     else:
-        # إذا كان منتج واحد (لم يعد يستخدم هذا المسار بعد التعديل الأخير)
+        # إذا كان منتج واحد
         products_to_show = [product_data]
-        # نحذف رسالة القائمة السابقة
-        if query and query.message:
-            try:
-                query.message.delete()
-            except Exception:
-                pass
+
+    # نحذف رسالة القائمة السابقة
+    if query and query.message:
+        try:
+            query.message.delete()
+        except Exception:
+            pass
     
     # 1. إرسال المنتجات كرسائل منفصلة (صورة + وصف + زر شراء)
     for i, item in enumerate(products_to_show):
@@ -321,21 +323,22 @@ def show_product_page(update, product_callback_data, product_data):
             parse_mode="Markdown"
         )
     
-    # 2. إرسال زر الرجوع في رسالة منفصلة أخيرة (في نهاية العرض)
-    # نستخدم "main_menu" كـ callback لـ "bsamat" و "wedding_tissues" و "abajorat" 
-    # ونستخدم القائمة الفرعية نفسها للرجوع إلى القائمة الفرعية الداخلية (مثل sawany_akerik)
+    # 2. إرسال زر الرجوع في رسالة منفصلة أخيرة
+    # 💡 إذا كان المسار هو قائمة مباشرة (بصامات/مناديل/اباجورات)، فالرجوع يكون للقائمة الرئيسية
     if product_callback_data in ["bsamat", "wedding_tissues", "abajorat"]:
         back_callback = "main_menu"
+        back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     else:
-         # هنا سيتم استخدام 'sawany_akerik' أو 'taarat_khashab' للرجوع للقائمة الفرعية
-        back_callback = previous_submenu_key
+         # إذا كان المسار هو قائمة فرعية متداخلة (مثل 'sawany_akerik')، فالرجوع يكون للقائمة الفرعية الأم
+        back_callback = product_to_submenu_map.get(product_callback_data, "main_menu")
+        back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
 
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data=back_callback)]]
+    back_keyboard = [[InlineKeyboardButton(back_text, callback_data=back_callback)]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
             
     update.effective_message.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="اضغط للرجوع:",
+        text="---", # رسالة بسيطة ليكون زر الرجوع واضحاً
         reply_markup=back_reply_markup
     )
 
@@ -358,14 +361,12 @@ def button(update, context):
         
     # 💡 قائمة المفاتيح التي يجب أن تعرض المنتجات مباشرة (Bsamat, Wedding_Tissues, Abajorat)
     if data in ["bsamat", "wedding_tissues", "abajorat"]:
-        # نجمع بيانات المنتجات من القائمة الفرعية ونرسلها إلى دالة show_product_page
-        product_list = all_submenus[data]
-        # نقوم بتغليف قائمة المنتجات في قاموس يحتوي على 'items' لمعالجتها في show_product_page
-        temp_product_data = {"items": product_list}
-        show_product_page(update, data, temp_product_data)
+        # يتم تمرير قائمة المنتجات مباشرة إلى show_product_page مع is_direct_list=True
+        product_list = all_submenus[data] 
+        show_product_page(update, data, product_list, is_direct_list=True)
         return
 
-    # 2. إذا اختير منتج معين (سواء كان حزمة أو مفرد داخل قوائم متداخلة)
+    # 2. إذا اختير منتج معين (قائمة فرعية متداخلة)
     for submenu_key, submenu in all_submenus.items():
         # إذا كان المنتج هو قائمة فرعية متداخلة (مثل 'sawany_akerik')
         for item in submenu:
@@ -373,14 +374,6 @@ def button(update, context):
                 # إرسال كائن المنتج كاملاً (ليتم عرض الـ items داخله)
                 show_product_page(update, item["callback"], item)
                 return
-            
-            # إذا كان العنصر هو منتج فرعي داخل حزمة (مثل 'akerik_m1')
-            if 'items' in item:
-                for sub_item in item['items']:
-                    if data == sub_item["callback"]:
-                         # هذا الـ callback لن يُستخدم لأنه سيتم عرضه في show_product_page
-                         # ولكن يتم تركه لأمان الكود
-                        pass
     
     # 3. حالة زر الشراء (رابط واتساب مع رابط الصورة)
     if data.startswith("buy_"):
