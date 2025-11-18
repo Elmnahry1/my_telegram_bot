@@ -41,10 +41,10 @@ def send_photos(update, context, photos):
 # ---------------------------------------------------------
 # التحكم في الأزرار
 # ---------------------------------------------------------
-def button_handler(update: Update, context: CallbackContext):
+def button_handler(update, context):
     query = update.callback_query
     data = query.data
-    
+
     if data == "back":
         start(update, context)
         return
