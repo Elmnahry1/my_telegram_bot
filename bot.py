@@ -28,14 +28,14 @@ abajorat_submenu = [
     {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2."}
 ]
 
-# 🛑 قائمة المحافظ الجديدة (مهمة لـ ConversationHandler)
+# 🛑 قائمة المحافظ الجديدة
 engraved_wallet_submenu = [
     {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان)."},
     {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني."},
     {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود."}
 ]
 
-# --- القوائم المتداخلة (مختصرة للاختصار ولكن يجب أن تدرج كاملة) ---
+# --- القوائم المتداخلة ---
 sawany_submenu = [
     {
         "label": "صواني شبكة اكليريك", "callback": "sawany_akerik", 
@@ -97,10 +97,10 @@ all_submenus = {
     "bsamat": bsamat_submenu, 
     "wedding_tissues": wedding_tissues_submenu, 
     "abajorat": abajorat_submenu,
-    "engraved_wallet": engraved_wallet_submenu # 🛑 تمت إضافة المحافظ هنا
+    "engraved_wallet": engraved_wallet_submenu
 }
 
-# بناء خريطة المنتجات (تحديث يشمل المحافظ)
+# بناء خريطة المنتجات
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
     if isinstance(submenu_list, list):
@@ -141,14 +141,13 @@ def start(update, context):
     else:
         update.effective_message.reply_text(greeting_text, reply_markup=reply_markup)
 
-# 💡 الدالة المُعدَّلة: لعرض القائمة الفرعية (خاصة المحافظ الآن)
+# دالة عرض القائمة الفرعية
 def show_submenu(update, context, submenu_list, title, back_callback="main_menu"):
     query = update.callback_query
     query.answer()
     
     keyboard = []
     
-    # تحديد رسالة العنوان بناءً على ما إذا كانت قائمة محافظ أم قائمة متداخلة أخرى
     if back_callback == "engraved_wallet":
         message_text = f"✅ *{title}*:\n\nمن فضلك اختر اللون المطلوب:"
     else:
@@ -223,7 +222,7 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
         reply_markup=back_reply_markup
     )
 
-# 🛑 دالة العودة لقائمة الألوان (لتستخدم في زر الرجوع)
+# 🛑 دالة العودة لقائمة الألوان (لتستخدم في زر الرجوع) - تم تحسينها
 def back_to_wallets_color(update, context):
     query = update.callback_query
     query.answer()
@@ -237,11 +236,7 @@ def back_to_wallets_color(update, context):
     except Exception:
         pass
 
-    # عرض قائمة الألوان مرة أخرى
-    # يمكننا استخدام دالة show_submenu مباشرة ولكن نحتاج إلى رسالة للزر نفسه، لذلك نعيد استدعاء منطق "engraved_wallet"
-    
-    # لضمان عدم حدوث خطأ "Message not modified" نرسل رسالة جديدة
-    
+    # بناء قائمة الألوان مرة أخرى
     keyboard = []
     for item in engraved_wallet_submenu:
         keyboard.append([InlineKeyboardButton(item["label"], callback_data=item["callback"])])
@@ -256,10 +251,9 @@ def back_to_wallets_color(update, context):
         parse_mode="Markdown"
     )
 
-    return ConversationHandler.END
+    return ConversationHandler.END # إنهاء المحادثة
 
-
-# 🛑 دالة المحادثة 1: تبدأ المحادثة وتطلب الاسم (تم التعديل)
+# 🛑 دالة المحادثة 1: تبدأ المحادثة وتطلب الاسم 
 def prompt_for_name(update, context):
     query = update.callback_query
     data = query.data
@@ -355,7 +349,7 @@ def receive_name_and_prepare_whatsapp(update, context):
     context.user_data.clear()
     return ConversationHandler.END
 
-# 🛑 الدالة المُعدَّلة: لمعالجة جميع ضغطات الأزرار
+# 🛑 الدالة المُعدَّلة: لمعالجة جميع ضغطات الأزرار
 def button(update, context):
     query = update.callback_query
     data = query.data
@@ -370,7 +364,7 @@ def button(update, context):
         show_submenu(update, context, engraved_wallet_submenu, "محافظ محفورة بالاسم", back_callback="main_menu")
         return 
     
-    # 2. معالجة اختيار اللون: تم نقل معالجة هذا الزر إلى ConversationHandler، لذا نمرره فقط.
+    # 2. معالجة اختيار اللون: يتم التعامل معها في ConversationHandler
     if data in [item["callback"] for item in engraved_wallet_submenu]:
         return 
 
@@ -496,8 +490,7 @@ def main():
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     
-    # 🛑 تعريف مُعالج المحادثة لـ "محافظ محفورة بالاسم"
-    # يبدأ عند الضغط على زر اختيار اللون (wallet_bege, wallet_brown, ...)
+    # 🛑 تعريف مُعالج المحادثة لـ "محافظ محفورة بالاسم" - (تم تعديل الـ fallbacks)
     engraved_wallet_handler = ConversationHandler(
         entry_points=[
             CallbackQueryHandler(
@@ -509,13 +502,14 @@ def main():
             # الحالة: استقبال الرسالة النصية (الاسم المطلوب حفره)
             GET_NAME: [
                 MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp),
-                # 🛑 إضافة معالج لزر الرجوع من داخل المحادثة
-                CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$')
             ],
         },
         fallbacks=[
             CommandHandler('start', start), # في حالة أرسل /start خلال المحادثة
-            CallbackQueryHandler(button) # في حالة ضغط أي زر آخر خلال المحادثة
+            # 🛑 هذا هو معالج زر الرجوع الذي كان يحتاج للنقل هنا
+            CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'),
+            # معالج الأزرار الأخرى التي قد يضغطها المستخدم بالخطأ خلال المحادثة
+            CallbackQueryHandler(button)
         ]
     )
 
