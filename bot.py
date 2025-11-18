@@ -98,8 +98,10 @@ taarat_submenu = [
         "label": "طارات خشب", 
         "callback": "taarat_khashab", 
         "items": [
-            {"label": "طارة خشب موديل 1", "callback": "taarat_khashab_m1", "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 1"},
-            {"label": "طارة خشب موديل 2", "callback": "taarat_khashab_m2", "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 2"}
+            # ✅ تم تصحيح هذا السطر: إضافة المفتاح "image":
+            {"label": "طارة خشب موديل 1", "callback": "taarat_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 1"},
+            # ✅ تم تصحيح هذا السطر: إضافة المفتاح "image":
+            {"label": "طارة خشب موديل 2", "callback": "taarat_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 2"}
         ]
     }
 ]
@@ -215,11 +217,11 @@ mugat_submenu = [
 main_menu = [
     {"label": "💍💍 صواني شبكة", "callback": "sawany"},
     {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
-    {"label": "✋ بصامات", "callback": "bsamat"}, # تم تعديله ليرسل إلى قائمة فرعية
-    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"}, # تم تعديله ليرسل إلى قائمة فرعية
+    {"label": "✋ بصامات", "callback": "bsamat"},
+    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"},
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
-    {"label": "💡 اباجورات", "callback": "abajorat"}, # تم تعديله ليرسل إلى قائمة فرعية
+    {"label": "💡 اباجورات", "callback": "abajorat"},
     {"label": "✏️ اقلام", "callback": "aqlam"},
     {"label": "☕ مجات", "callback": "mugat"},
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
@@ -234,9 +236,9 @@ all_submenus = {
     "doro3": doro3_submenu,
     "aqlam": aqlam_submenu,
     "mugat": mugat_submenu,
-    "bsamat": bsamat_submenu,          # 💡 إضافة القائمة الفرعية الجديدة
-    "wedding_tissues": wedding_tissues_submenu, # 💡 إضافة القائمة الفرعية الجديدة
-    "abajorat": abajorat_submenu       # 💡 إضافة القائمة الفرعية الجديدة
+    "bsamat": bsamat_submenu,          
+    "wedding_tissues": wedding_tissues_submenu, 
+    "abajorat": abajorat_submenu       
 }
 for menu_key, submenu_list in all_submenus.items():
     for item in submenu_list:
@@ -462,4 +464,5 @@ def main():
     updater.idle()
 
 if __name__ == '__main__':
+    # يجب أن يتم تشغيل هذا السطر لكي يبدأ البوت العمل
     main()
