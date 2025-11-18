@@ -1,169 +1,187 @@
 ﻿import os
-import urllib.parse
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Update
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext, ConversationHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
 
-ASK_NAME, ASK_PHONE, ASK_QTY, ASK_EXTRA = range(4)
+# رقم الواتساب اللي هيجيلك عليه الطلب
+WHATSAPP_NUMBER = "201234567890"  # ضع رقمك هنا بدون +
+WHATSAPP_URL = f"https://wa.me/{WHATSAPP_NUMBER}?text="
 
-# ---------------------------------------------------------
-MAIN_MENU = [
-    [InlineKeyboardButton("💍 صواني شبكة", callback_data='sawany')],
-    [InlineKeyboardButton("💍 طارات خطوبة وكتب الكتاب", callback_data='taarat')],
-    [InlineKeyboardButton("📛 بصامات", callback_data='bsamat')],
-    [InlineKeyboardButton("🔺 هرم مكتب", callback_data='haram')],
-    [InlineKeyboardButton("🏆 دروع", callback_data='doro3')],
-    [InlineKeyboardButton("🖊️ اقلام", callback_data='aqlam')],
-    [InlineKeyboardButton("☕ مجات", callback_data='mugat')],
-    [InlineKeyboardButton("👝 محافظ محفورة بالاسم", callback_data='wallets')],
-    [InlineKeyboardButton("🎨 مستلزمات سبلميشن", callback_data='sublimation')]
-]
-
-# ---------------------------------------------------------
-SUB_MENUS = {
-    "sawany": [
-        [InlineKeyboardButton("صواني شبكة اكليريك", callback_data="sawany_acrylic")],
-        [InlineKeyboardButton("صواني شبكة خشب", callback_data="sawany_wood")],
-        [InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data="main")]
-    ],
-    # باقي الأقسام زي المثال السابق
+# بيانات الأقسام والصور
+sections = {
+    "صواني شبكة": {
+        "subsections": {
+            "صواني شبكة اكليريك": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف1"},
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف2"}
+            ],
+            "صواني شبكة خشب": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف3"},
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف4"}
+            ]
+        }
+    },
+    "طارات خطوبة وكتب الكتاب": {
+        "subsections": {
+            "طارات خطوبة وكتب الكتاب اكليريك": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف5"}
+            ],
+            "طارات خطوبة وكتب الكتاب خشب": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف6"}
+            ]
+        }
+    },
+    "بصامات": {
+        "subsections": {
+            "مناديل كتب الكتاب": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف7"}
+            ]
+        }
+    },
+    "هرم مكتب": {
+        "subsections": {
+            "هرم مكتب اكليريك": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف8"}
+            ],
+            "هرم مكتب بديل المعدن": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف9"}
+            ],
+            "هرم مكتب خشب": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف10"}
+            ]
+        }
+    },
+    "دروع": {
+        "subsections": {
+            "دروع اكليريك": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف11"}
+            ],
+            "دروع بديل المعدن": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف12"}
+            ],
+            "دروع خشب": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف13"}
+            ]
+        }
+    },
+    "اقلام": {
+        "subsections": {
+            "قلم تاتش معدن": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف14"}
+            ],
+            "قلم تاتش مضئ": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف15"}
+            ]
+        }
+    },
+    "مجات": {
+        "subsections": {
+            "مج ابيض": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف16"}
+            ],
+            "مج سحري": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف17"}
+            ],
+            "مج ديجتال": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف18"}
+            ],
+            "محافظ محفورة بالاسم": [
+                {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف19"}
+            ]
+        }
+    }
 }
 
-PRODUCTS = {
-    "sawany_acrylic": [
-        {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف1"},
-        {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف2"}
-    ],
-    # باقي الأقسام بنفس النظام
-}
-
-PRODUCT_PARENT_MENU = {
-    "sawany_acrylic": "sawany",
-    "sawany_wood": "sawany",
-    # باقي الأقسام
-}
-
 # ---------------------------------------------------------
-user_order = {}
-
-WHATSAPP_NUMBER = "201288846355"  # ضع رقمك هنا بصيغة دولية بدون + أو 00
-
+# القائمة الرئيسية
+# ---------------------------------------------------------
 def start(update: Update, context: CallbackContext):
-    user_name = update.effective_user.first_name
-    welcome_text = f"✅ مرحباً بك {user_name} في البوت الرسمي لمصنع المناهري للحفر بالليزر وجميع مستلزمات الزفاف والسبلميشن\n\nمن فضلك اختار طلبك من القائمة:"
-    update.message.reply_text(welcome_text, reply_markup=InlineKeyboardMarkup(MAIN_MENU))
-
-def send_product_group(query, context, product_key):
-    products = PRODUCTS[product_key]
-    parent_menu = PRODUCT_PARENT_MENU.get(product_key)
-    for idx, item in enumerate(products):
-        media = InputMediaPhoto(item["photo"], caption=item["description"])
-        context.bot.send_media_group(chat_id=query.message.chat_id, media=[media])
-
-        keyboard = [
-            [InlineKeyboardButton("شراء", callback_data=f"buy_{product_key}_{idx}")]
-        ]
-        if parent_menu:
-            keyboard.append([InlineKeyboardButton("🔙 رجوع للقائمة السابقة", callback_data=parent_menu)])
-        else:
-            keyboard.append([InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data="main")])
-
-        context.bot.send_message(chat_id=query.message.chat_id, text="اختار:", reply_markup=InlineKeyboardMarkup(keyboard))
+    user_first_name = update.effective_user.first_name
+    welcome_text = f"✅ مرحباً بك {user_first_name} في البوت الرسمي لمصنع المناهري للحفر بالليزر وجميع مستلزمات الزفاف والسبلميشن\n\nمن فضلك اختار طلبك من القائمة:"
+    keyboard = []
+    for section in sections:
+        keyboard.append([InlineKeyboardButton(section, callback_data=f"section|{section}")])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text(welcome_text, reply_markup=reply_markup)
 
 # ---------------------------------------------------------
-def menu_handler(update: Update, context: CallbackContext):
+# عرض الصور ووصفها مع زر شراء وزر رجوع
+# ---------------------------------------------------------
+def show_images(update: Update, context: CallbackContext, items, parent_callback):
     query = update.callback_query
-    data = query.data
+    media_group = []
+    for item in items:
+        media_group.append(InputMediaPhoto(media=item["photo"], caption=f"{item['description']}\n\nاضغط شراء لطلب هذا المنتج"))
+    context.bot.send_media_group(chat_id=query.message.chat_id, media=media_group)
+    
+    # زر شراء + زر رجوع
+    keyboard = []
+    for idx, item in enumerate(items):
+        keyboard.append([InlineKeyboardButton(f"شراء {idx+1}", callback_data=f"buy|{parent_callback}|{idx}")])
+    keyboard.append([InlineKeyboardButton("🔙 رجوع للقائمة السابقة", callback_data=f"back|{parent_callback}")])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    context.bot.send_message(chat_id=query.message.chat_id, text="اختار:", reply_markup=reply_markup)
     query.answer()
 
-    if data == "main":
-        query.edit_message_text("اختار طلبك من القائمة:", reply_markup=InlineKeyboardMarkup(MAIN_MENU))
-        return
-
-    if data in SUB_MENUS:
-        query.edit_message_text("اختر القسم الفرعي:", reply_markup=InlineKeyboardMarkup(SUB_MENUS[data]))
-        return
-
-    if data in PRODUCTS:
-        send_product_group(query, context, data)
-        return
-
-    if data.startswith("buy_"):
-        parts = data.split("_")
-        product_key = "_".join(parts[1:-1])
-        product_idx = int(parts[-1])
-        user_order[update.effective_user.id] = {
-            "product_key": product_key,
-            "product_idx": product_idx
-        }
-        context.bot.send_message(chat_id=query.message.chat_id, text="أدخل اسمك:")
-        return ASK_NAME
+# ---------------------------------------------------------
+# التعامل مع الأزرار
+# ---------------------------------------------------------
+def button_handler(update: Update, context: CallbackContext):
+    query = update.callback_query
+    query_data = query.data
+    query.answer()
+    
+    if query_data.startswith("section|"):
+        section_name = query_data.split("|")[1]
+        subsections = sections[section_name]["subsections"]
+        keyboard = []
+        for subsec in subsections:
+            keyboard.append([InlineKeyboardButton(subsec, callback_data=f"subsec|{section_name}|{subsec}")])
+        keyboard.append([InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data="main")])
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text(f"اختر القسم الفرعي من {section_name}:", reply_markup=reply_markup)
+    
+    elif query_data.startswith("subsec|"):
+        _, section_name, subsec_name = query_data.split("|")
+        items = sections[section_name]["subsections"][subsec_name]
+        show_images(update, context, items, parent_callback=f"subsec|{section_name}")
+    
+    elif query_data.startswith("buy|"):
+        _, parent_callback, idx = query_data.split("|")
+        section_key, subsec_name = parent_callback.split("|")[1], parent_callback.split("|")[2]
+        item = sections[section_key]["subsections"][subsec_name][int(idx)]
+        text = f"طلب جديد: {item['description']}\nرابط المنتج: {item['photo']}"
+        wa_link = WHATSAPP_URL + text.replace(" ", "%20")
+        context.bot.send_message(chat_id=query.message.chat_id, text=f"اضغط هنا لإرسال الطلب على واتساب:\n{wa_link}")
+    
+    elif query_data.startswith("back|"):
+        _, parent_callback = query_data.split("|")
+        if parent_callback == "main":
+            start(update, context)
+        else:
+            section_name = parent_callback.split("|")[1]
+            subsections = sections[section_name]["subsections"]
+            keyboard = []
+            for subsec in subsections:
+                keyboard.append([InlineKeyboardButton(subsec, callback_data=f"subsec|{section_name}|{subsec}")])
+            keyboard.append([InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data="main")])
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            query.edit_message_text(f"اختر القسم الفرعي من {section_name}:", reply_markup=reply_markup)
+    
+    elif query_data == "main":
+        start(update, context)
 
 # ---------------------------------------------------------
-def ask_name(update: Update, context: CallbackContext):
-    user_id = update.effective_user.id
-    user_order[user_id]["name"] = update.message.text
-    update.message.reply_text("أدخل رقم الهاتف:")
-    return ASK_PHONE
-
-def ask_phone(update: Update, context: CallbackContext):
-    user_id = update.effective_user.id
-    user_order[user_id]["phone"] = update.message.text
-    update.message.reply_text("أدخل الكمية المطلوبة:")
-    return ASK_QTY
-
-def ask_qty(update: Update, context: CallbackContext):
-    user_id = update.effective_user.id
-    user_order[user_id]["quantity"] = update.message.text
-    update.message.reply_text("يمكنك كتابة أي تفاصيل إضافية (أو ارسل 'لا' إذا لا يوجد):")
-    return ASK_EXTRA
-
-def ask_extra(update: Update, context: CallbackContext):
-    user_id = update.effective_user.id
-    user_order[user_id]["extra"] = update.message.text
-
-    order = user_order[user_id]
-    product_info = PRODUCTS[order["product_key"]][order["product_idx"]]
-
-    text = f"طلب جديد:\nالمنتج: {order['product_key']} - {product_info['description']}\n" \
-           f"الاسم: {order['name']}\nرقم الهاتف: {order['phone']}\n" \
-           f"الكمية: {order['quantity']}\nتفاصيل إضافية: {order['extra']}\n"
-
-    msg_text = urllib.parse.quote(text)
-    photo_url = product_info["photo"]
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={msg_text}"
-
-    update.message.reply_text(f"اضغط هنا لإرسال الطلب على واتساب:\n{wa_link}")
-
-    return ConversationHandler.END
-
-def cancel(update: Update, context: CallbackContext):
-    update.message.reply_text("تم إلغاء الطلب.")
-    return ConversationHandler.END
-
+# تشغيل البوت
 # ---------------------------------------------------------
 def main():
     TOKEN = os.getenv("TOKEN")
     if not TOKEN:
         print("Error: TOKEN environment variable is not set.")
         return
-
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
-
     dp.add_handler(CommandHandler("start", start))
-    conv_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(menu_handler)],
-        states={
-            ASK_NAME: [MessageHandler(Filters.text & ~Filters.command, ask_name)],
-            ASK_PHONE: [MessageHandler(Filters.text & ~Filters.command, ask_phone)],
-            ASK_QTY: [MessageHandler(Filters.text & ~Filters.command, ask_qty)],
-            ASK_EXTRA: [MessageHandler(Filters.text & ~Filters.command, ask_extra)]
-        },
-        fallbacks=[CommandHandler('cancel', cancel)],
-        per_user=True
-    )
-    dp.add_handler(conv_handler)
-
+    dp.add_handler(CallbackQueryHandler(button_handler))
     updater.start_polling()
     updater.idle()
 
