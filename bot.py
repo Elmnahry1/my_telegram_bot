@@ -3,7 +3,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 # ---------------------------------------------------------
-#  القائمة الرئيسية
+# القائمة الرئيسية
 # ---------------------------------------------------------
 def start(update, context):
     keyboard = [
@@ -25,9 +25,8 @@ def start(update, context):
     else:
         update.message.reply_text("اختار القسم اللي تريده:", reply_markup=reply_markup)
 
-
 # ---------------------------------------------------------
-#  دالة إرسال الصور + زر الرجوع
+# دالة إرسال الصور + زر الرجوع
 # ---------------------------------------------------------
 def send_photos(update, context, photos):
     query = update.callback_query
@@ -41,9 +40,8 @@ def send_photos(update, context, photos):
 
     context.bot.send_message(chat_id=query.message.chat_id, text="اختار:", reply_markup=reply_markup)
 
-
 # ---------------------------------------------------------
-#  التحكم في الأزرار
+# التحكم في الأزرار
 # ---------------------------------------------------------
 def button_handler(update, context):
     query = update.callback_query
@@ -53,31 +51,37 @@ def button_handler(update, context):
         start(update, context)
         return
 
-    if data == "sawany":
-        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
-    elif data == "taarat":
-        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
-    elif data == "bsamat":
-        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
-    elif data == "haram":
-        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
-    elif data == "doro3":
-        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
-    elif data == "abajorat":
-        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
-    elif data == "aqlam":
-        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
-    elif data == "mugat":
-        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
-    elif data == "sublimation":
-        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
+    # روابط تجريبية للصور
+    image_url = "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"
 
+    if data == "sawany":
+        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png, https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+    elif data == "taarat":
+        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+    elif data == "bsamat":
+        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+    elif data == "haram":
+        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+    elif data == "doro3":
+        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+    elif data == "abajorat":
+        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+    elif data == "aqlam":
+        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+    elif data == "mugat":
+        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+    elif data == "sublimation":
+        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
 
 # ---------------------------------------------------------
-#  تشغيل البوت
+# تشغيل البوت
 # ---------------------------------------------------------
 def main():
-    TOKEN = os.getenv("8022967309:AAG3wK3FGIwdw3cfalisGrnngu0CrnPueqw")   # للرفع على Render أو Railway
+    TOKEN = os.getenv("TOKEN")  # يجب أن يكون موجود كـ Environment Variable على Railway
+
+    if not TOKEN:
+        print("Error: TOKEN environment variable is not set.")
+        return
 
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
