@@ -1,4 +1,5 @@
-﻿from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+﻿import os
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler
 
 # قائمة الأزرار الرئيسية
@@ -131,7 +132,8 @@ def button(update, context):
 
 # إعدادات البوت
 def main():
-    updater = Updater("YOUR_BOT_TOKEN", use_context=True)
+    TOKEN = os.getenv("TOKEN")
+    updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start))
