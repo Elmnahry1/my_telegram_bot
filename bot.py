@@ -3,7 +3,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler
 
 # --------------------
-# 1. بيانات القوائم والمنتجات (لا تغيير)
+# 1. بيانات القوائم والمنتجات (كما هي)
 # --------------------
 sawany_submenu = [
     {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف صواني شبكة اكليريك"},
@@ -53,7 +53,6 @@ main_menu = [
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
 ]
 
-# قاموس الربط لحل مشكلة الرجوع (تم إنشاؤه في التعديل السابق)
 product_to_submenu_map = {}
 all_submenus = {
     "sawany": sawany_submenu,
@@ -70,7 +69,7 @@ for menu_key, submenu_list in all_submenus.items():
 
 
 # --------------------
-# 2. الدوال المساعدة (مع إصلاح زر الرجوع)
+# 2. الدوال المساعدة (تم تطبيق منطق الحذف والإرسال الجديد)
 # --------------------
 def start(update, context):
     query = update.callback_query
@@ -86,45 +85,55 @@ def start(update, context):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if query:
-        # تعديل الرسالة لتعود إلى القائمة الرئيسية
-        reply_source.edit_message_text(greeting_text, reply_markup=reply_markup)
+        # 💡 عند العودة من قائمة فرعية، نحذف الرسالة القديمة ونرسل رسالة جديدة
+        try:
+            query.message.delete()
+        except Exception:
+            pass # نتجاهل الأخطاء
+        
+        update.effective_chat.send_message(greeting_text, reply_markup=reply_markup)
     else:
-        # إرسال رسالة جديدة لأمر /start
         update.message.reply_text(greeting_text, reply_markup=reply_markup)
 
 def show_submenu(update, context, submenu, title):
     query = update.callback_query
+    
     if query:
         query.answer()
-    
+        
+        # 💡 عند العودة من صفحة منتج، نحذف رسالة الصورة ونرسل رسالة جديدة
+        try:
+            query.message.delete()
+        except Exception:
+            pass # نتجاهل الأخطاء
+        
     keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in submenu]
-    
-    # 🔙 زر الرجوع في القائمة الفرعية يعيد إلى القائمة الرئيسية
     keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
-    
     reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    if query:
-        query.edit_message_text(f"اختر {title}:", reply_markup=reply_markup)
+
+    # 💡 نرسل رسالة نصية جديدة بدلاً من التعديل لضمان الانتقال السلس
+    update.effective_chat.send_message(f"اختر {title}:", reply_markup=reply_markup)
+
 
 def show_product_page(update, product_callback_data, image_url, description):
     query = update.callback_query
     if query:
         query.answer()
 
-    # استخدام القاموس لتحديد القائمة الفرعية للرجوع إليها
     previous_submenu_key = product_to_submenu_map.get(product_callback_data, "main_menu")
 
-    # أزرار الشراء والرجوع
     keyboard = [
         [InlineKeyboardButton("🛒 شراء", callback_data=f"buy_{product_callback_data}")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data=previous_submenu_key)] # التعديل هنا: يوجه إلى القائمة الفرعية
+        [InlineKeyboardButton("🔙 رجوع", callback_data=previous_submenu_key)]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    # يجب حذف الرسالة السابقة (التي تحتوي على أزرار القائمة الفرعية) قبل إرسال صورة
+    # نحذف الرسالة السابقة (القائمة الفرعية)
     if query and query.message:
-        query.message.delete()
+        try:
+            query.message.delete()
+        except Exception:
+            pass
         
     update.effective_message.bot.send_photo(
         chat_id=update.effective_chat.id,
@@ -138,19 +147,19 @@ def button(update, context):
     query = update.callback_query
     data = query.data
 
-    # 1. حالة العودة إلى القائمة الرئيسية (من زر "رجوع" في القائمة الفرعية)
+    # 1. حالة العودة إلى القائمة الرئيسية 
     if data == "main_menu":
         start(update, context)
         return
 
-    # 2. حالات القوائم الرئيسية أو الرجوع إلى قائمة فرعية (من زر "رجوع" في صفحة المنتج)
+    # 2. حالات القوائم الرئيسية أو الرجوع إلى قائمة فرعية (يعمل الآن من زر الرجوع في صفحة المنتج)
     if data in all_submenus:
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
-        clean_title = title.split()[-1] # إزالة الإيموجي والعناوين الزائدة
+        clean_title = title.split()[-1] 
         show_submenu(update, context, all_submenus[data], clean_title)
         return
 
-    # 3. إذا اختير منتج معين (ينتقل إلى صفحة المنتج)
+    # 3. إذا اختير منتج معين
     for submenu_key, submenu in all_submenus.items():
         for item in submenu:
             if data == item["callback"]:
@@ -165,10 +174,9 @@ def button(update, context):
 
 
 # --------------------
-# 3. إعداد البوت (معتمدًا على متغير البيئة)
+# 3. إعداد البوت 
 # --------------------
 def main():
-    # 💡 قراءة التوكن من بيئة العمل (كما طلبت)
     TOKEN = os.getenv("TOKEN") 
     
     if not TOKEN:
@@ -181,7 +189,7 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CallbackQueryHandler(button))
 
-    print("🤖 البوت يعمل الآن ويستخدم التوكن من بيئة العمل...")
+    print("🤖 البوت يعمل الآن...")
     updater.start_polling()
     updater.idle()
 
