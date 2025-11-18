@@ -8,10 +8,29 @@ from urllib.parse import quote_plus
 WHATSAPP_NUMBER = "201288846355" 
 
 # --------------------
-# 1. بيانات القوائم والمنتجات
+# 1. بيانات القوائم والمنتجات (تم تحديث صواني شبكة اكليريك لتعرض منتجين)
 # --------------------
 sawany_submenu = [
-    {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف صواني شبكة اكليريك"},
+    {
+        "label": "صواني شبكة اكليريك", 
+        "callback": "sawany_akerik", 
+        "items": [ # تعريف المنتج الأول
+            {
+                "label": "صينية اكليريك موديل 1", 
+                "callback": "akerik_m1",
+                "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
+                "description": "صينية اكليريك: وصف المنتج الأول."
+            },
+            # تعريف المنتج الثاني
+            {
+                "label": "صينية اكليريك موديل 2", 
+                "callback": "akerik_m2",
+                "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", 
+                "description": "صينية اكليريك: وصف المنتج الثاني."
+            }
+        ]
+    },
+    # هذا المنتج سيعرض نفسه كمنتج واحد عادي
     {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف صواني شبكة خشب"}
 ]
 
@@ -70,6 +89,10 @@ all_submenus = {
 for menu_key, submenu_list in all_submenus.items():
     for item in submenu_list:
         product_to_submenu_map[item["callback"]] = menu_key
+        # 💡 يجب إضافة كل عنصر فرعي لضمان عمل زر الشراء بشكل سليم
+        if 'items' in item:
+            for sub_item in item['items']:
+                product_to_submenu_map[sub_item["callback"]] = menu_key
 # -----------------------------------------------------------
 
 
@@ -111,36 +134,65 @@ def show_submenu(update, context, submenu, title):
     keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    # 💡 تم تعديل هذا السطر لعرض رسالة "حدد اختيارك"
+    # تم تعديل هذا السطر لعرض رسالة "حدد اختيارك"
     update.effective_chat.send_message("حدد اختيارك:", reply_markup=reply_markup)
 
 
-def show_product_page(update, product_callback_data, image_url, description):
+def show_product_page(update, product_callback_data, product_data):
     query = update.callback_query
     if query:
         query.answer()
 
     previous_submenu_key = product_to_submenu_map.get(product_callback_data, "main_menu")
 
-    keyboard = [
-        [InlineKeyboardButton("🛒 شراء", callback_data=f"buy_{product_callback_data}")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data=previous_submenu_key)]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    if query and query.message:
-        try:
-            query.message.delete()
-        except Exception:
-            pass
+    # تحديد المنتجات سواء كانت حزمة أو منتج واحد
+    products_to_show = []
+    if 'items' in product_data:
+        # إذا كانت حزمة، نستخدم الـ items
+        products_to_show = product_data['items']
+        # نحذف رسالة القائمة السابقة
+        if query and query.message:
+            try:
+                query.message.delete()
+            except Exception:
+                pass 
+    else:
+        # إذا كان منتج واحد، نستخدم بياناته
+        products_to_show = [product_data]
+        # نحذف رسالة القائمة السابقة
+        if query and query.message:
+            try:
+                query.message.delete()
+            except Exception:
+                pass
+    
+    # 1. إرسال المنتجات كرسائل منفصلة (صورة + وصف + زر شراء)
+    for i, item in enumerate(products_to_show):
+        # بناء لوحة المفاتيح للمنتج الحالي (زر شراء فقط)
+        # نستخدم item['callback'] لضمان ربط زر الشراء بالمنتج الصحيح
+        item_keyboard = [[InlineKeyboardButton("🛒 شراء", callback_data=f"buy_{item['callback']}")]]
+        item_reply_markup = InlineKeyboardMarkup(item_keyboard)
         
-    update.effective_message.bot.send_photo(
+        # إرسال صورة ووصف المنتج
+        update.effective_message.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=item['image'],
+            caption=f"**{item['label']}**\n\n{item['description']}",
+            reply_markup=item_reply_markup,
+            parse_mode="Markdown"
+        )
+    
+    # 2. إرسال زر الرجوع في رسالة منفصلة أخيرة (في نهاية العرض)
+    # نستخدم callback القائمة الأم للرجوع إلى القائمة الفرعية الصحيحة
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data=previous_submenu_key)]]
+    back_reply_markup = InlineKeyboardMarkup(back_keyboard)
+            
+    update.effective_message.bot.send_message(
         chat_id=update.effective_chat.id,
-        photo=image_url,
-        caption=f"**{product_callback_data.replace('_', ' ').title()}**\n\n{description}",
-        reply_markup=reply_markup,
-        parse_mode="Markdown"
+        text="اضغط للرجوع إلى القائمة الفرعية:",
+        reply_markup=back_reply_markup
     )
+
 
 def button(update, context):
     query = update.callback_query
@@ -156,18 +208,38 @@ def button(update, context):
         show_submenu(update, context, all_submenus[data], clean_title)
         return
 
-    # 2. إذا اختير منتج معين
+    # 2. إذا اختير منتج معين (سواء كان حزمة أو مفرد)
     for submenu_key, submenu in all_submenus.items():
         for item in submenu:
             if data == item["callback"]:
-                show_product_page(update, item["callback"], item["image"], item["description"])
+                # إرسال كائن المنتج كاملاً
+                show_product_page(update, item["callback"], item)
                 return
+            # 💡 فحص إذا كان العنصر هو منتج فرعي داخل حزمة
+            if 'items' in item:
+                for sub_item in item['items']:
+                    if data == sub_item["callback"]:
+                        show_product_page(update, item["callback"], sub_item)
+                        return
     
     # 3. حالة زر الشراء (رابط واتساب مع رابط الصورة)
     if data.startswith("buy_"):
         product_key = data.replace("buy_", "")
         
-        product_data = next((item for submenu in all_submenus.values() for item in submenu if item["callback"] == product_key), None)
+        # البحث عن بيانات المنتج سواء كان مفرداً أو داخل حزمة
+        product_data = None
+        for submenu in all_submenus.values():
+            for item in submenu:
+                if item.get("callback") == product_key:
+                    product_data = item
+                    break
+                if 'items' in item:
+                    for sub_item in item['items']:
+                        if sub_item.get("callback") == product_key:
+                            product_data = sub_item
+                            break
+            if product_data:
+                break
         
         if not product_data:
             query.answer(text="عذراً، لم يتم العثور على بيانات المنتج.", show_alert=True)
