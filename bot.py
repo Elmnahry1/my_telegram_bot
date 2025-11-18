@@ -2,11 +2,13 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler
 
-# بيانات المنتجات مع الصور - ضع مسارات الصور الحقيقية هنا
+# بيانات المنتجات مع الصور
 sawany_submenu = [
     {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"},
     {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"}
 ]
+
+# بقية القوائم كما هي
 taarat_submenu = [
     {"label": "طارات اكليريك", "callback": "taarat_akerik", "image": "path/to/taarat_akerik.jpg"},
     {"label": "طارات خشب", "callback": "taarat_khashab", "image": "path/to/taarat_khashab.jpg"}
@@ -49,14 +51,11 @@ main_menu = [
 
 # دالة لعرض القائمة الرئيسية
 def start(update, context):
-    # التحقق من نوع التحديث
     if hasattr(update, 'message') and update.message:
         user_name = update.message.from_user.first_name
-        chat_id = update.message.chat_id
         reply_source = update.message
     elif hasattr(update, 'callback_query') and update.callback_query:
         user_name = update.callback_query.from_user.first_name
-        chat_id = update.callback_query.message.chat_id
         reply_source = update.callback_query
     else:
         return
@@ -91,16 +90,37 @@ def show_product(update, product):
         reply_source = update.message
     else:
         return
-    # زر الرجوع
     keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    with open(product["image"], 'rb') as photo:
-        reply_source.bot.send_photo(
-            chat_id=reply_source.message.chat_id if hasattr(reply_source, 'message') else reply_source.message.chat_id,
-            photo=photo,
-            caption=product["label"],
-            reply_markup=reply_markup
-        )
+    # هنا نستخدم send_photo مع caption و زر شراء و رجوع
+    reply_source.bot.send_photo(
+        chat_id=reply_source.message.chat_id if hasattr(reply_source, 'message') else reply_source.message.chat_id,
+        photo=product["image"],
+        caption=f"{product['label']}\n\nوصف",
+        reply_markup=reply_markup
+    )
+
+# وظيفة لعرض المنتج بشكل خاص (عند اختيار "صواني شبكة اكليريك")
+def show_specific_product(update, image_url):
+    if hasattr(update, 'callback_query') and update.callback_query:
+        reply_source = update.callback_query
+    elif hasattr(update, 'message') and update.message:
+        reply_source = update.message
+    else:
+        return
+
+    # عرض الصورة مع وصف وزر شراء ورجع
+    keyboard = [
+        [InlineKeyboardButton("شراء", callback_data="buy")],
+        [InlineKeyboardButton("🔙 رجوع", callback_data="back")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    reply_source.bot.send_photo(
+        chat_id=reply_source.message.chat_id if hasattr(reply_source, 'message') else reply_source.message.chat_id,
+        photo=image_url,
+        caption="وصف",
+        reply_markup=reply_markup
+    )
 
 # معالجة الضغط على الأزرار
 def button(update, context):
@@ -130,6 +150,10 @@ def button(update, context):
         return
     elif data == "mugat":
         show_submenu(update, context, mugat_submenu, "نوع المجات")
+        return
+    elif data == "sawany_akerik":
+        # هنا نعرض الصورة الخاصة بـ "صواني شبكة اكليريك"
+        show_specific_product(update, "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png")
         return
     else:
         # البحث عن المنتج المحدد
