@@ -2,7 +2,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler
 
-# بيانات المنتجات مع الصور والأوصاف
+# بيانات المنتجات (كما هي)
 sawany_submenu = [
     {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف صواني شبكة اكليريك"},
     {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف صواني شبكة خشب"}
@@ -37,7 +37,6 @@ mugat_submenu = [
     {"label": "مج ديجتال", "callback": "mugat_digital", "image": "path/to/mugat_digital.jpg", "description": "وصف مج ديجتال"}
 ]
 
-# القائمة الرئيسية
 main_menu = [
     {"label": "💍💍 صواني شبكة", "callback": "sawany"},
     {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
@@ -80,14 +79,15 @@ def show_submenu(update, context, submenu, title, previous_callback):
         reply_source = update.message
     else:
         return
+    # نُنشئ أزرار المنتجات
     keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in submenu]
-    # زر رجوع يرجع إلى الصفحة السابقة
+    # زر رجوع يعود للصفحة السابقة
     keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data=previous_callback)])
     reply_markup = InlineKeyboardMarkup(keyboard)
     reply_source.edit_message_text(f"اختر {title}:", reply_markup=reply_markup)
 
-# دالة لعرض المنتج مع الوصف والصورة
-def show_product(update, product):
+# دالة لعرض المنتج مع وصف وصورة
+def show_product(update, product, previous_callback):
     if hasattr(update, 'callback_query') and update.callback_query:
         reply_source = update.callback_query
     elif hasattr(update, 'message') and update.message:
@@ -98,19 +98,19 @@ def show_product(update, product):
     # أزرار الشراء والرجوع
     keyboard = [
         [InlineKeyboardButton("شراء", callback_data="buy")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data=product["callback"])]  # هنا نستخدم الكود للرجوع
+        [InlineKeyboardButton("🔙 رجوع", callback_data=previous_callback)]  # الرجوع للقائمة السابقة
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     reply_source.bot.send_photo(
-        chat_id=reply_source.message.chat_id if hasattr(reply_source, 'message') else reply_source.message.chat_id,
+        chat_id=reply_source.message.chat_id,
         photo=product["image"],
         caption=f"{product['label']}\n\n{product.get('description', 'لا يوجد وصف')}",
         reply_markup=reply_markup
     )
 
-# دالة خاصة لعرض منتج معين عند الاختيار
-def show_specific_product(update, image_url, description, callback_data):
+# دالة لعرض منتج معين عند الاختيار
+def show_specific_product(update, image_url, description, previous_callback):
     if hasattr(update, 'callback_query') and update.callback_query:
         reply_source = update.callback_query
     elif hasattr(update, 'message') and update.message:
@@ -121,12 +121,12 @@ def show_specific_product(update, image_url, description, callback_data):
     # أزرار الشراء والرجوع
     keyboard = [
         [InlineKeyboardButton("شراء", callback_data="buy")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data=callback_data)]  # الرجوع هنا يحدد الصفحة
+        [InlineKeyboardButton("🔙 رجوع", callback_data=previous_callback)]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     reply_source.bot.send_photo(
-        chat_id=reply_source.message.chat_id if hasattr(reply_source, 'message') else reply_source.message.chat_id,
+        chat_id=reply_source.message.chat_id,
         photo=image_url,
         caption=f"{description}",
         reply_markup=reply_markup
@@ -141,15 +141,17 @@ def button(update, context):
     if data == "main_menu":
         start(update, context)
         return
-    # الرجوع حسب الكود المرسل
+
+    # الرجوع من صفحة منتج أو قائمة
     elif data == "back":
         start(update, context)
         return
-    # رجوع من منتج معين
+
     elif data == "back_from_product":
         start(update, context)
         return
-    # قوائم رئيسية
+
+    # حالات القوائم الرئيسية
     elif data == "sawany":
         show_submenu(update, context, sawany_submenu, "نوع الصواني", previous_callback="main_menu")
         return
@@ -169,11 +171,8 @@ def button(update, context):
         show_submenu(update, context, mugat_submenu, "نوع المجات", previous_callback="main_menu")
         return
 
-    # حالات للرجوع من القوائم الفرعية
-    if data == "back":
-        start(update, context)
-        return
-    elif data == "back_to_sawany":
+    # حالات رجوع من القوائم الفرعية
+    if data == "back_to_sawany":
         show_submenu(update, context, sawany_submenu, "نوع الصواني", previous_callback="sawany")
         return
     elif data == "back_to_taarat":
@@ -192,14 +191,14 @@ def button(update, context):
         show_submenu(update, context, mugat_submenu, "نوع المجات", previous_callback="mugat")
         return
 
-    # عند اختيار منتج محدد
+    # عند اختيار منتج معين
     for submenu in [sawany_submenu, taarat_submenu, haram_submenu, doro3_submenu, aqlam_submenu, mugat_submenu]:
         for item in submenu:
             if data == item["callback"]:
-                show_specific_product(update, item["image"], item["description"], callback_data=item["callback"])
+                show_specific_product(update, item["image"], item["description"], previous_callback=item["callback"])
                 return
 
-# إعدادات تشغيل البوت
+# إعدادات البوت
 def main():
     TOKEN = os.getenv("TOKEN")
     updater = Updater(TOKEN, use_context=True)
