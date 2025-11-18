@@ -1,14 +1,9 @@
 ﻿import os
-import telegram 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler
-from urllib.parse import quote_plus 
-
-# ⚠️ إعدادات الواتساب: استبدل بالرقم الخاص بك (كود الدولة + الرقم بدون علامة +)
-WHATSAPP_NUMBER = "201288846355" 
 
 # --------------------
-# 1. بيانات القوائم والمنتجات
+# 1. بيانات القوائم والمنتجات (كما هي)
 # --------------------
 sawany_submenu = [
     {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف صواني شبكة اكليريك"},
@@ -74,27 +69,31 @@ for menu_key, submenu_list in all_submenus.items():
 
 
 # --------------------
-# 2. الدوال المساعدة 
+# 2. الدوال المساعدة (تم تطبيق منطق الحذف والإرسال الجديد)
 # --------------------
 def start(update, context):
     query = update.callback_query
     if query:
         query.answer()
+        reply_source = query
+    else:
+        reply_source = update.message
     
-    user_name = update.effective_user.first_name
+    user_name = reply_source.from_user.first_name
     greeting_text = f"✅ مرحباً بك {user_name} في البوت الرسمي لمصنع المناهري للحفر بالليزر وجميع مستلزمات الزفاف والسبلميشن\n\nمن فضلك اختر طلبك من القائمة:"
     keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in main_menu]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if query:
+        # 💡 عند العودة من قائمة فرعية، نحذف الرسالة القديمة ونرسل رسالة جديدة
         try:
             query.message.delete()
         except Exception:
-            pass 
+            pass # نتجاهل الأخطاء
         
         update.effective_chat.send_message(greeting_text, reply_markup=reply_markup)
     else:
-        update.effective_message.reply_text(greeting_text, reply_markup=reply_markup)
+        update.message.reply_text(greeting_text, reply_markup=reply_markup)
 
 def show_submenu(update, context, submenu, title):
     query = update.callback_query
@@ -102,15 +101,17 @@ def show_submenu(update, context, submenu, title):
     if query:
         query.answer()
         
+        # 💡 عند العودة من صفحة منتج، نحذف رسالة الصورة ونرسل رسالة جديدة
         try:
             query.message.delete()
         except Exception:
-            pass 
+            pass # نتجاهل الأخطاء
         
     keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in submenu]
     keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
     reply_markup = InlineKeyboardMarkup(keyboard)
 
+    # 💡 نرسل رسالة نصية جديدة بدلاً من التعديل لضمان الانتقال السلس
     update.effective_chat.send_message(f"اختر {title}:", reply_markup=reply_markup)
 
 
@@ -127,6 +128,7 @@ def show_product_page(update, product_callback_data, image_url, description):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
+    # نحذف الرسالة السابقة (القائمة الفرعية)
     if query and query.message:
         try:
             query.message.delete()
@@ -145,68 +147,29 @@ def button(update, context):
     query = update.callback_query
     data = query.data
 
-    # 1. حالة العودة للقائمة الرئيسية أو الفرعية
+    # 1. حالة العودة إلى القائمة الرئيسية 
     if data == "main_menu":
         start(update, context)
         return
+
+    # 2. حالات القوائم الرئيسية أو الرجوع إلى قائمة فرعية (يعمل الآن من زر الرجوع في صفحة المنتج)
     if data in all_submenus:
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         clean_title = title.split()[-1] 
         show_submenu(update, context, all_submenus[data], clean_title)
         return
 
-    # 2. إذا اختير منتج معين
+    # 3. إذا اختير منتج معين
     for submenu_key, submenu in all_submenus.items():
         for item in submenu:
             if data == item["callback"]:
                 show_product_page(update, item["callback"], item["image"], item["description"])
                 return
     
-    # 3. حالة زر الشراء (رابط واتساب مع رابط الصورة)
+    # 4. حالة زر الشراء
     if data.startswith("buy_"):
         product_key = data.replace("buy_", "")
-        
-        product_data = next((item for submenu in all_submenus.values() for item in submenu if item["callback"] == product_key), None)
-        
-        if not product_data:
-            query.answer(text="عذراً، لم يتم العثور على بيانات المنتج.", show_alert=True)
-            return
-            
-        user_info = query.from_user
-        
-        # 💡 تكوين نص الرسالة الذي سيُفتح في واتساب
-        message_body = (
-            f"🔔 *طلب شراء جديد من بوت تليجرام* 🔔\n"
-            f"المنتج: {product_data['label']}\n"
-            f"الكود: {product_key}\n"
-            f"العميل: {user_info.first_name}\n"
-            f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-            f"🔗 رابط صورة المنتج: {product_data['image']}\n" # إضافة رابط الصورة هنا
-            f"رابط التواصل عبر تليجرام: tg://user?id={user_info.id}"
-        )
-        
-        # ترميز النص للرابط (URL Encoding)
-        encoded_text = quote_plus(message_body)
-        wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-        
-        query.answer(text="سيتم فتح تطبيق واتساب الآن لإرسال الطلب.", show_alert=False)
-
-        # إرسال رسالة جديدة تحتوي على زر الواتساب
-        keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-
-        # نحذف رسالة الصورة القديمة ونرسل رسالة نصية جديدة
-        try:
-            query.message.delete()
-        except Exception:
-            pass
-
-        context.bot.send_message(
-            chat_id=query.message.chat_id, 
-            text=f"شكراً لطلبك! لإنهاء عملية الشراء، اضغط على الزر التالي لإرسال تفاصيل الطلب:", 
-            reply_markup=reply_markup
-        )
-        
+        query.answer(text=f"سيتم الآن تجهيز طلب شراء للمنتج: {product_key}", show_alert=True)
         return
 
 
@@ -219,9 +182,6 @@ def main():
     if not TOKEN:
         print("❌ لم يتم العثور على التوكن (TOKEN) في بيئة العمل. يرجى التأكد من تعيينه.")
         return
-    
-    if WHATSAPP_NUMBER == "201288846355":
-        print("⚠️ يرجى استبدال WHATSAPP_NUMBER برقمك الحقيقي.")
 
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
