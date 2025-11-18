@@ -42,14 +42,14 @@ sawany_submenu = [
         "label": "صواني شبكة اكليريك", "callback": "sawany_akerik", 
         "items": [ 
             {"label": "صينية اكليريك موديل 1", "callback": "akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية اكليريك: وصف المنتج الأول."},
-            {"label": "صينية اكليريك موديل 2", "callback": "akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية اكليريك: وصف المنتج الثاني."}
+            {"label": "صينية اكليريك موديل 2", "callback": "akerik_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية اكليريك: وصف المنتج الثاني."}
         ]
     },
     {
         "label": "صواني شبكة خشب", "callback": "sawany_khashab", 
         "items": [
             {"label": "صينية خشب موديل 1", "callback": "khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية خشب: وصف المنتج الأول."},
-            {"label": "صينية خشب موديل 2", "callback": "khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية خشب: وصف المنتج الثاني."}
+            {"label": "صينية خشب موديل 2", "callback": "khashab_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية خشب: وصف المنتج الثاني."}
         ]
     }
 ]
@@ -67,6 +67,7 @@ taarat_submenu = [
         ]
     }
 ]
+# 🛑 هرم مكتب: 3 أزرار فرعية
 haram_submenu = [
     {
         "label": "هرم مكتب اكليريك", "callback": "haram_akerik", "items": [
@@ -87,6 +88,7 @@ haram_submenu = [
         ]
     }
 ]
+# 🛑 دروع: 4 أزرار فرعية
 doro3_submenu = [
     {
         "label": "دروع اكليريك", "callback": "doro3_akerik", "items": [
@@ -113,6 +115,7 @@ doro3_submenu = [
         ]
     }
 ]
+
 aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", "callback": "aqlam_metal", "items": [
@@ -127,6 +130,7 @@ aqlam_submenu = [
         ]
     }
 ]
+
 mugat_submenu = [
     {
         "label": "مج ابيض", "callback": "mugat_white", "items": [
@@ -147,6 +151,7 @@ mugat_submenu = [
         ]
     }
 ]
+
 
 # --- القائمة الرئيسية ---
 main_menu = [
@@ -201,6 +206,7 @@ for menu_key, submenu_list in all_submenus.items():
 
 def start(update, context):
     query = update.callback_query
+    # إنهاء أي محادثة جارية عند استخدام /start أو العودة للقائمة الرئيسية
     if context.user_data.get('state') == GET_NAME:
         context.user_data.clear()
         context.user_data['state'] = None
@@ -213,7 +219,7 @@ def start(update, context):
     keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in main_menu]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    # 💡 منطق عرض القائمة الرئيسية (حذف الرسالة القديمة وإرسال رسالة جديدة)
+    # منطق عرض القائمة الرئيسية (حذف الرسالة القديمة وإرسال رسالة جديدة)
     if query:
         try:
             query.message.delete()
@@ -236,17 +242,18 @@ def show_submenu(update, context, submenu_list, title, back_callback="main_menu"
         except Exception:
             pass 
         
+    # بناء الأزرار (كل زر في صف منفصل)
     keyboard = []
-    
-    message_text = f"✅ *{title}*:\n\nمن فضلك اختر طلبك من القائمة:"
-
-    # إنشاء الأزرار
     for item in submenu_list:
         keyboard.append([InlineKeyboardButton(item["label"], callback_data=item["callback"])])
 
     # إضافة زر الرجوع
     keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data=back_callback)])
+    
+    # إنشاء لوحة المفاتيح النهائية
     reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    message_text = f"✅ *{title}*:\n\nمن فضلك اختر طلبك من القائمة:"
 
     # 🛑 إرسال رسالة جديدة
     update.effective_chat.send_message(
@@ -293,15 +300,12 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     else:
-        # إذا كان المنتج من قائمة متداخلة (akerik_m1)، نعود للقائمة الفرعية (sawany_akerik)
-        # إذا كان قائمة فرعية (sawany_akerik)، نعود للقائمة الرئيسية (sawany)
         back_callback = product_to_submenu_map.get(product_callback_data, "main_menu")
         
-        # لتبسيط الأمر، نرسل المستخدم مرة أخرى إلى القائمة الأم مباشرة إذا كانت قائمة متداخلة
         if back_callback in ["sawany", "taarat", "haram", "doro3", "aqlam", "mugat"]:
              back_callback = back_callback
              back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
-        else: # اذا كان العودة للقائمة الفرعية المتداخلة
+        else:
              back_callback = back_callback
              back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
 
@@ -437,7 +441,6 @@ def button(update, context):
 
     # 🛑 2. معالجة فتح قائمة المحافظ 
     if data == "engraved_wallet":
-        # يتم تمرير اسم القائمة الأم ليكون هو الـ back_callback
         show_submenu(update, context, engraved_wallet_submenu, "محافظ محفورة بالاسم", back_callback="main_menu")
         return 
         
@@ -462,7 +465,6 @@ def button(update, context):
     if data in product_to_submenu_map:
         product_data = None
         
-        # البحث عن بيانات المنتج (نفس منطق النقطة 5 في الدالة)
         for submenu_key, submenu_list in all_submenus.items():
             for item in submenu_list:
                 # الحالة 1: المنتج هو قائمة فرعية متداخلة (مثل 'sawany_akerik')
@@ -565,7 +567,7 @@ def main():
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     
-    # 🛑 تعريف مُعالج المحادثة لـ "محافظ محفورة بالاسم"
+    # تعريف مُعالج المحادثة لـ "محافظ محفورة بالاسم"
     engraved_wallet_handler = ConversationHandler(
         entry_points=[
             CallbackQueryHandler(
@@ -581,7 +583,8 @@ def main():
         fallbacks=[
             CommandHandler('start', start),
             CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'),
-            CallbackQueryHandler(button)
+            # هذا يسبب تحذيراً (Warning) لكنه مطلوب لضمان خروج المستخدم من المحادثة عند ضغط أي زر آخر
+            CallbackQueryHandler(button) 
         ]
     )
 
@@ -597,6 +600,6 @@ def main():
     updater.idle()
 
 if __name__ == '__main__':
-    # 💡 يجب تعيين التوكن كمتغير بيئة قبل التشغيل
+    # 💡 تأكد من تعيين التوكن كمتغير بيئة قبل التشغيل
     # os.environ["TOKEN"] = "YOUR_BOT_TOKEN_HERE" 
     main()
