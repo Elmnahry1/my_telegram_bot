@@ -15,19 +15,19 @@ WHATSAPP_NUMBER = "201288846355"
 # 💡 بصامات: قائمة منتجات مباشرة
 bsamat_submenu = [
     {"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 1."},
-    {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "path/to/bsamat_m2.jpg", "description": "وصف البصامة موديل 2."}
+    {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 2."}
 ]
 
 # 💡 مناديل كتب الكتاب: قائمة منتجات مباشرة
 wedding_tissues_submenu = [
-    {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "path/to/tissue_m1.jpg", "description": "وصف منديل كتب الكتاب موديل 1."},
-    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "path/to/tissue_m2.jpg", "description": "وصف منديل كتب الكتاب موديل 2."}
+    {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 1."},
+    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 2."}
 ]
 
 # 💡 اباجورات: قائمة منتجات مباشرة
 abajorat_submenu = [
-    {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "path/to/abajora_m1.jpg", "description": "وصف الأباجورة موديل 1."},
-    {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "path/to/abajora_m2.jpg", "description": "وصف الأباجورة موديل 2."}
+    {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 1."},
+    {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2."}
 ]
 # --- نهاية القوائم الفرعية المعدلة ---
 
