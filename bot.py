@@ -34,12 +34,17 @@ mugat_submenu = [
 
 # القائمة الرئيسية
 main_menu = [
-    {"label": "الصواني", "callback": "sawany"},
-    {"label": "الطارات", "callback": "taarat"},
-    {"label": "الهرم المكتب", "callback": "haram"},
-    {"label": "الدروع", "callback": "doro3"},
-    {"label": "الأقلام", "callback": "aqlam"},
-    {"label": "المجات", "callback": "mugat"}
+    {"label": "💍💍 صواني شبكة", "callback": "sawany"},
+    {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
+    {"label": "✋ بصامات", "callback": "bsamat"},
+    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"},
+    {"label": "🗄️ هرم مكتب", "callback": "haram"},
+    {"label": "🏆 دروع", "callback": "doro3"},
+    {"label": "💡 اباجورات", "callback": "abajorat"},
+    {"label": "✏️ اقلام", "callback": "aqlam"},
+    {"label": "☕ مجات", "callback": "mugat"},
+    {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
+    {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
 ]
 
 # دالة لعرض القائمة الرئيسية
