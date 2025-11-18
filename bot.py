@@ -38,8 +38,8 @@ taarat_submenu = [
         "label": "طارات اكليريك", 
         "callback": "taarat_akerik", 
         "items": [
-            {"label": "طارة اكليريك موديل 1", "callback": "taarat_akerik_m1", "image": "path/to/taarat_akerik_m1.jpg", "description": "وصف طارة اكليريك موديل 1"},
-            {"label": "طارة اكليريك موديل 2", "callback": "taarat_akerik_m2", "image": "path/to/taarat_akerik_m2.jpg", "description": "وصف طارة اكليريك موديل 2"}
+            {"label": "طارة اكليريك موديل 1", "callback": "taarat_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة اكليريك موديل 1"},
+            {"label": "طارة اكليريك موديل 2", "callback": "taarat_akerik_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "وصف طارة اكليريك موديل 2"}
         ]
     },
     {
