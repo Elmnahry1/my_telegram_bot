@@ -37,7 +37,6 @@ def send_photos(update, context, photos):
 
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data='back')]]
     reply_markup = InlineKeyboardMarkup(back_keyboard)
-
     context.bot.send_message(chat_id=query.message.chat_id, text="اختار:", reply_markup=reply_markup)
 
 # ---------------------------------------------------------
@@ -51,27 +50,27 @@ def button_handler(update, context):
         start(update, context)
         return
 
-    # روابط تجريبية للصور
+    # روابط تجريبية للصور (حط الروابط الحقيقية بعدين)
     image_url = "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"
 
     if data == "sawany":
-        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png, https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+        send_photos(update, context, [image_url, image_url])
     elif data == "taarat":
-        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+        send_photos(update, context, [image_url])
     elif data == "bsamat":
-        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+        send_photos(update, context, [image_url])
     elif data == "haram":
-        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+        send_photos(update, context, [image_url])
     elif data == "doro3":
-        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+        send_photos(update, context, [image_url])
     elif data == "abajorat":
-        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+        send_photos(update, context, [image_url])
     elif data == "aqlam":
-        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+        send_photos(update, context, [image_url])
     elif data == "mugat":
-        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+        send_photos(update, context, [image_url])
     elif data == "sublimation":
-        send_photos(update, context, [https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png])
+        send_photos(update, context, [image_url])
 
 # ---------------------------------------------------------
 # تشغيل البوت
@@ -91,7 +90,6 @@ def main():
 
     updater.start_polling()
     updater.idle()
-
 
 if __name__ == "__main__":
     main()
