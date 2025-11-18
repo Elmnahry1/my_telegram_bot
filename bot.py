@@ -2,50 +2,30 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler
 
-# قائمة الأزرار الرئيسية
-main_menu = [
-    {"label": "💍💍 صواني شبكة", "callback": "sawany"},
-    {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
-    {"label": "✋ بصامات", "callback": "bsamat"},
-    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"},
-    {"label": "🗄️ هرم مكتب", "callback": "haram"},
-    {"label": "🏆 دروع", "callback": "doro3"},
-    {"label": "💡 اباجورات", "callback": "abajorat"},
-    {"label": "✏️ اقلام", "callback": "aqlam"},
-    {"label": "☕ مجات", "callback": "mugat"},
-    {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
-    {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
-]
-
-# القوائم الفرعية لكل قسم مع المنتجات
+# بيانات المنتجات مع الصور
 sawany_submenu = [
     {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "path/to/akerik_image.jpg"},
     {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "path/to/khashab_image.jpg"}
 ]
-
 taarat_submenu = [
     {"label": "طارات اكليريك", "callback": "taarat_akerik", "image": "path/to/taarat_akerik.jpg"},
     {"label": "طارات خشب", "callback": "taarat_khashab", "image": "path/to/taarat_khashab.jpg"}
 ]
-
 haram_submenu = [
     {"label": "هرم مكتب اكليريك", "callback": "haram_akerik", "image": "path/to/haram_akerik.jpg"},
     {"label": "هرم مكتب معدن بديل", "callback": "haram_metal", "image": "path/to/haram_metal.jpg"},
     {"label": "هرم مكتب خشب", "callback": "haram_khashab", "image": "path/to/haram_khashab.jpg"}
 ]
-
 doro3_submenu = [
     {"label": "دروع اكليريك", "callback": "doro3_akerik", "image": "path/to/doro3_akerik.jpg"},
     {"label": "دروع معدن بديل", "callback": "doro3_metal", "image": "path/to/doro3_metal.jpg"},
     {"label": "دروع قطيفة", "callback": "doro3_qatifah", "image": "path/to/doro3_qatifah.jpg"},
     {"label": "دروع خشب", "callback": "doro3_khashab", "image": "path/to/doro3_khashab.jpg"}
 ]
-
 aqlam_submenu = [
     {"label": "قلم تاتش معدن", "callback": "aqlam_metal", "image": "path/to/aqlam_metal.jpg"},
     {"label": "قلم تاتش مضئ", "callback": "aqlam_luminous", "image": "path/to/aqlam_luminous.jpg"}
 ]
-
 mugat_submenu = [
     {"label": "مج ابيض", "callback": "mugat_white", "image": "path/to/mugat_white.jpg"},
     {"label": "مج سحري", "callback": "mugat_magic", "image": "path/to/mugat_magic.jpg"},
@@ -68,8 +48,8 @@ def show_submenu(update, context, submenu, title):
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.callback_query.edit_message_text(f"اختر {title}:", reply_markup=reply_markup)
 
-# دالة لعرض المنتج والصورة
-def show_product(update, context, product):
+# دالة لعرض المنتج
+def show_product(update, product):
     # زر الرجوع
     keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -82,7 +62,7 @@ def show_product(update, context, product):
             reply_markup=reply_markup
         )
 
-# دالة لمعالجة الضغط على الأزرار
+# معالجة الضغط على الأزرار
 def button(update, context):
     query = update.callback_query
     data = query.data
@@ -90,14 +70,11 @@ def button(update, context):
     if data == "main_menu":
         start(update, context)
         return
-
-    if data == "back":
-        # العودة للقائمة الرئيسية
+    elif data == "back":
+        # رجوع للقائمة الرئيسية
         start(update, context)
         return
-
-    # عرض القوائم الفرعية
-    if data == "sawany":
+    elif data == "sawany":
         show_submenu(update, context, sawany_submenu, "نوع الصواني")
         return
     elif data == "taarat":
@@ -115,13 +92,13 @@ def button(update, context):
     elif data == "mugat":
         show_submenu(update, context, mugat_submenu, "نوع المجات")
         return
-
-    # عرض المنتج مع الصورة
-    for submenu in [sawany_submenu, taarat_submenu, haram_submenu, doro3_submenu, aqlam_submenu, mugat_submenu]:
-        for item in submenu:
-            if data == item["callback"]:
-                show_product(update, context, item)
-                return
+    else:
+        # البحث عن المنتج المحدد
+        for submenu in [sawany_submenu, taarat_submenu, haram_submenu, doro3_submenu, aqlam_submenu, mugat_submenu]:
+            for item in submenu:
+                if data == item["callback"]:
+                    show_product(update, item)
+                    return
 
 # إعدادات البوت
 def main():
