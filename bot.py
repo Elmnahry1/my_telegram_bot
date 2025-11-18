@@ -54,30 +54,30 @@ def button_handler(update, context):
         return
 
     if data == "sawany":
-        send_photos(update, context, ["PHOTO_URL_1", "PHOTO_URL_2"])
+        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
     elif data == "taarat":
-        send_photos(update, context, ["PHOTO_URL_1"])
+        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
     elif data == "bsamat":
-        send_photos(update, context, ["PHOTO_URL_1"])
+        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
     elif data == "haram":
-        send_photos(update, context, ["PHOTO_URL_1"])
+        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
     elif data == "doro3":
-        send_photos(update, context, ["PHOTO_URL_1"])
+        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
     elif data == "abajorat":
-        send_photos(update, context, ["PHOTO_URL_1"])
+        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
     elif data == "aqlam":
-        send_photos(update, context, ["PHOTO_URL_1"])
+        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
     elif data == "mugat":
-        send_photos(update, context, ["PHOTO_URL_1"])
+        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
     elif data == "sublimation":
-        send_photos(update, context, ["PHOTO_URL_1"])
+        send_photos(update, context, ["https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"])
 
 
 # ---------------------------------------------------------
 #  تشغيل البوت
 # ---------------------------------------------------------
 def main():
-    TOKEN = os.getenv("TOKEN")   # للرفع على Render أو Railway
+    TOKEN = os.getenv("8022967309:AAG3wK3FGIwdw3cfalisGrnngu0CrnPueqw")   # للرفع على Render أو Railway
 
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
