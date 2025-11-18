@@ -223,8 +223,43 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
         reply_markup=back_reply_markup
     )
 
+# 🛑 دالة العودة لقائمة الألوان (لتستخدم في زر الرجوع)
+def back_to_wallets_color(update, context):
+    query = update.callback_query
+    query.answer()
+    
+    # تنظيف حالة المحادثة أولاً
+    context.user_data.clear()
+    
+    # يجب حذف رسالة الصورة والطلب السابقة
+    try:
+        query.message.delete()
+    except Exception:
+        pass
 
-# 🛑 دالة المحادثة 1: تبدأ المحادثة وتطلب الاسم
+    # عرض قائمة الألوان مرة أخرى
+    # يمكننا استخدام دالة show_submenu مباشرة ولكن نحتاج إلى رسالة للزر نفسه، لذلك نعيد استدعاء منطق "engraved_wallet"
+    
+    # لضمان عدم حدوث خطأ "Message not modified" نرسل رسالة جديدة
+    
+    keyboard = []
+    for item in engraved_wallet_submenu:
+        keyboard.append([InlineKeyboardButton(item["label"], callback_data=item["callback"])])
+    
+    keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"✅ *محافظ محفورة بالاسم*:\n\nمن فضلك اختر اللون المطلوب:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+
+    return ConversationHandler.END
+
+
+# 🛑 دالة المحادثة 1: تبدأ المحادثة وتطلب الاسم (تم التعديل)
 def prompt_for_name(update, context):
     query = update.callback_query
     data = query.data
@@ -235,14 +270,30 @@ def prompt_for_name(update, context):
     context.user_data['wallet_data'] = selected_wallet_data
     context.user_data['state'] = GET_NAME
 
+    # 1. نحذف رسالة القائمة السابقة
     try:
         query.message.delete()
     except Exception:
         pass
 
-    # 🛑 الرسالة المطلوبة: طلب إدخال الاسم للحفر
-    update.effective_chat.send_message(
-        text=f"اختيارك: **{selected_wallet_data['label']}**.\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة الآن:",
+    # 2. بناء الرسالة الجديدة (صورة + نص + زر رجوع)
+    
+    # بناء لوحة المفاتيح: زر الرجوع إلى قائمة الألوان
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_wallets_color")]]
+    back_reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    # 🛑 إرسال صورة المحفظة ونص الطلب
+    caption_text = (
+        f"**اختيارك: {selected_wallet_data['label']}**\n\n"
+        f"من فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل.\n"
+        f"أو اضغط زر الرجوع لتغيير اللون."
+    )
+    
+    update.effective_chat.bot.send_photo(
+        chat_id=update.effective_chat.id,
+        photo=selected_wallet_data['image'],
+        caption=caption_text,
+        reply_markup=back_reply_markup,
         parse_mode="Markdown"
     )
     
@@ -313,13 +364,13 @@ def button(update, context):
         start(update, context)
         return
 
-    # 🛑 1. معالجة فتح قائمة المحافظ (الإصلاح الجديد)
+    # 🛑 1. معالجة فتح قائمة المحافظ 
     if data == "engraved_wallet":
         # عرض قائمة الألوان المطلوبة
         show_submenu(update, context, engraved_wallet_submenu, "محافظ محفورة بالاسم", back_callback="main_menu")
         return 
     
-    # 2. معالجة اختيار اللون (يتم تجاهلها هنا لتنتقل إلى ConversationHandler)
+    # 2. معالجة اختيار اللون: تم نقل معالجة هذا الزر إلى ConversationHandler، لذا نمرره فقط.
     if data in [item["callback"] for item in engraved_wallet_submenu]:
         return 
 
@@ -456,7 +507,11 @@ def main():
         ],
         states={
             # الحالة: استقبال الرسالة النصية (الاسم المطلوب حفره)
-            GET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp)],
+            GET_NAME: [
+                MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp),
+                # 🛑 إضافة معالج لزر الرجوع من داخل المحادثة
+                CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$')
+            ],
         },
         fallbacks=[
             CommandHandler('start', start), # في حالة أرسل /start خلال المحادثة
