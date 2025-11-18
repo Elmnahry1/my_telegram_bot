@@ -2,10 +2,10 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler
 
-# بيانات المنتجات مع الصور
+# بيانات المنتجات مع الصور - ضع مسارات الصور الحقيقية هنا
 sawany_submenu = [
-    {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "path/to/akerik_image.jpg"},
-    {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "path/to/khashab_image.jpg"}
+    {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"},
+    {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"}
 ]
 taarat_submenu = [
     {"label": "طارات اكليريك", "callback": "taarat_akerik", "image": "path/to/taarat_akerik.jpg"},
@@ -32,31 +32,66 @@ mugat_submenu = [
     {"label": "مج ديجتال", "callback": "mugat_digital", "image": "path/to/mugat_digital.jpg"}
 ]
 
+# القائمة الرئيسية
+main_menu = [
+    {"label": "الصواني", "callback": "sawany"},
+    {"label": "الطارات", "callback": "taarat"},
+    {"label": "الهرم المكتب", "callback": "haram"},
+    {"label": "الدروع", "callback": "doro3"},
+    {"label": "الأقلام", "callback": "aqlam"},
+    {"label": "المجات", "callback": "mugat"}
+]
+
 # دالة لعرض القائمة الرئيسية
 def start(update, context):
-    user_name = update.message.from_user.first_name
+    # التحقق من نوع التحديث
+    if hasattr(update, 'message') and update.message:
+        user_name = update.message.from_user.first_name
+        chat_id = update.message.chat_id
+        reply_source = update.message
+    elif hasattr(update, 'callback_query') and update.callback_query:
+        user_name = update.callback_query.from_user.first_name
+        chat_id = update.callback_query.message.chat_id
+        reply_source = update.callback_query
+    else:
+        return
+
     greeting_text = f"✅ مرحباً بك {user_name} في البوت الرسمي لمصنع المناهري للحفر بالليزر وجميع مستلزمات الزفاف والسبلميشن\n\nمن فضلك اختر طلبك من القائمة:"
     keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in main_menu]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text(greeting_text, reply_markup=reply_markup)
+
+    if hasattr(update, 'message') and update.message:
+        update.message.reply_text(greeting_text, reply_markup=reply_markup)
+    elif hasattr(update, 'callback_query') and update.callback_query:
+        update.callback_query.edit_message_text(greeting_text, reply_markup=reply_markup)
 
 # دالة لعرض القوائم الفرعية
 def show_submenu(update, context, submenu, title):
+    if hasattr(update, 'callback_query') and update.callback_query:
+        reply_source = update.callback_query
+    elif hasattr(update, 'message') and update.message:
+        reply_source = update.message
+    else:
+        return
     keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in submenu]
-    # زر الرجوع للقائمة الرئيسية
     keyboard.append([InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data="main_menu")])
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.callback_query.edit_message_text(f"اختر {title}:", reply_markup=reply_markup)
+    reply_source.edit_message_text(f"اختر {title}:", reply_markup=reply_markup)
 
 # دالة لعرض المنتج
 def show_product(update, product):
+    if hasattr(update, 'callback_query') and update.callback_query:
+        reply_source = update.callback_query
+    elif hasattr(update, 'message') and update.message:
+        reply_source = update.message
+    else:
+        return
     # زر الرجوع
     keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    # إرسال الصورة مع النص
     with open(product["image"], 'rb') as photo:
-        update.callback_query.message.bot.send_photo(
-            chat_id=update.callback_query.message.chat_id,
+        reply_source.bot.send_photo(
+            chat_id=reply_source.message.chat_id if hasattr(reply_source, 'message') else reply_source.message.chat_id,
             photo=photo,
             caption=product["label"],
             reply_markup=reply_markup
@@ -71,7 +106,6 @@ def button(update, context):
         start(update, context)
         return
     elif data == "back":
-        # رجوع للقائمة الرئيسية
         start(update, context)
         return
     elif data == "sawany":
