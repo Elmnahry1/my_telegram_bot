@@ -2,36 +2,39 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler
 
-# بيانات المنتجات مع الصور
+# بيانات المنتجات مع الصور والأوصاف
 sawany_submenu = [
-    {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"},
-    {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png"}
+    {"label": "صواني شبكة اكليريك", "callback": "sawany_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف صواني شبكة اكليريك"},
+    {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف صواني شبكة خشب"}
 ]
 
-# بقية القوائم كما هي
 taarat_submenu = [
-    {"label": "طارات اكليريك", "callback": "taarat_akerik", "image": "path/to/taarat_akerik.jpg"},
-    {"label": "طارات خشب", "callback": "taarat_khashab", "image": "path/to/taarat_khashab.jpg"}
+    {"label": "طارات اكليريك", "callback": "taarat_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارات اكليريك"},
+    {"label": "طارات خشب", "callback": "taarat_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارات خشب"}
 ]
+
 haram_submenu = [
-    {"label": "هرم مكتب اكليريك", "callback": "haram_akerik", "image": "path/to/haram_akerik.jpg"},
-    {"label": "هرم مكتب معدن بديل", "callback": "haram_metal", "image": "path/to/haram_metal.jpg"},
-    {"label": "هرم مكتب خشب", "callback": "haram_khashab", "image": "path/to/haram_khashab.jpg"}
+    {"label": "هرم مكتب اكليريك", "callback": "haram_akerik", "image": "path/to/haram_akerik.jpg", "description": "وصف هرم مكتب اكليريك"},
+    {"label": "هرم مكتب معدن بديل", "callback": "haram_metal", "image": "path/to/haram_metal.jpg", "description": "وصف هرم مكتب معدن بديل"},
+    {"label": "هرم مكتب خشب", "callback": "haram_khashab", "image": "path/to/haram_khashab.jpg", "description": "وصف هرم مكتب خشب"}
 ]
+
 doro3_submenu = [
-    {"label": "دروع اكليريك", "callback": "doro3_akerik", "image": "path/to/doro3_akerik.jpg"},
-    {"label": "دروع معدن بديل", "callback": "doro3_metal", "image": "path/to/doro3_metal.jpg"},
-    {"label": "دروع قطيفة", "callback": "doro3_qatifah", "image": "path/to/doro3_qatifah.jpg"},
-    {"label": "دروع خشب", "callback": "doro3_khashab", "image": "path/to/doro3_khashab.jpg"}
+    {"label": "دروع اكليريك", "callback": "doro3_akerik", "image": "path/to/doro3_akerik.jpg", "description": "وصف دروع اكليريك"},
+    {"label": "دروع معدن بديل", "callback": "doro3_metal", "image": "path/to/doro3_metal.jpg", "description": "وصف دروع معدن بديل"},
+    {"label": "دروع قطيفة", "callback": "doro3_qatifah", "image": "path/to/doro3_qatifah.jpg", "description": "وصف دروع قطيفة"},
+    {"label": "دروع خشب", "callback": "doro3_khashab", "image": "path/to/doro3_khashab.jpg", "description": "وصف دروع خشب"}
 ]
+
 aqlam_submenu = [
-    {"label": "قلم تاتش معدن", "callback": "aqlam_metal", "image": "path/to/aqlam_metal.jpg"},
-    {"label": "قلم تاتش مضئ", "callback": "aqlam_luminous", "image": "path/to/aqlam_luminous.jpg"}
+    {"label": "قلم تاتش معدن", "callback": "aqlam_metal", "image": "path/to/aqlam_metal.jpg", "description": "وصف قلم تاتش معدن"},
+    {"label": "قلم تاتش مضئ", "callback": "aqlam_luminous", "image": "path/to/aqlam_luminous.jpg", "description": "وصف قلم تاتش مضئ"}
 ]
+
 mugat_submenu = [
-    {"label": "مج ابيض", "callback": "mugat_white", "image": "path/to/mugat_white.jpg"},
-    {"label": "مج سحري", "callback": "mugat_magic", "image": "path/to/mugat_magic.jpg"},
-    {"label": "مج ديجتال", "callback": "mugat_digital", "image": "path/to/mugat_digital.jpg"}
+    {"label": "مج ابيض", "callback": "mugat_white", "image": "path/to/mugat_white.jpg", "description": "وصف مج ابيض"},
+    {"label": "مج سحري", "callback": "mugat_magic", "image": "path/to/mugat_magic.jpg", "description": "وصف مج سحري"},
+    {"label": "مج ديجتال", "callback": "mugat_digital", "image": "path/to/mugat_digital.jpg", "description": "وصف مج ديجتال"}
 ]
 
 # القائمة الرئيسية
@@ -82,7 +85,7 @@ def show_submenu(update, context, submenu, title):
     reply_markup = InlineKeyboardMarkup(keyboard)
     reply_source.edit_message_text(f"اختر {title}:", reply_markup=reply_markup)
 
-# دالة لعرض المنتج
+# دالة لعرض المنتج مع الوصف والأزرار
 def show_product(update, product):
     if hasattr(update, 'callback_query') and update.callback_query:
         reply_source = update.callback_query
@@ -90,17 +93,24 @@ def show_product(update, product):
         reply_source = update.message
     else:
         return
-    keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back")]]
+
+    # زر الرجوع يرجع للقائمة السابقة
+    keyboard = [
+        [InlineKeyboardButton("شراء", callback_data="buy")],
+        [InlineKeyboardButton("🔙 رجوع", callback_data="back")]
+    ]
     reply_markup = InlineKeyboardMarkup(keyboard)
+
+    # إرسال الصورة مع الوصف
     reply_source.bot.send_photo(
         chat_id=reply_source.message.chat_id if hasattr(reply_source, 'message') else reply_source.message.chat_id,
         photo=product["image"],
-        caption=f"{product['label']}\n\nوصف",
+        caption=f"{product['label']}\n\n{product.get('description', 'لا يوجد وصف')}",
         reply_markup=reply_markup
     )
 
 # وظيفة لعرض المنتج بشكل خاص (عند اختيار "صواني شبكة اكليريك")
-def show_specific_product(update, image_url):
+def show_specific_product(update, image_url, description="وصف"):
     if hasattr(update, 'callback_query') and update.callback_query:
         reply_source = update.callback_query
     elif hasattr(update, 'message') and update.message:
@@ -108,16 +118,17 @@ def show_specific_product(update, image_url):
     else:
         return
 
-    # زر الرجوع يرجع للقائمة الرئيسية
+    # زر الشراء والرجوع
     keyboard = [
         [InlineKeyboardButton("شراء", callback_data="buy")],
         [InlineKeyboardButton("🔙 رجوع", callback_data="back_from_product")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
+
     reply_source.bot.send_photo(
         chat_id=reply_source.message.chat_id if hasattr(reply_source, 'message') else reply_source.message.chat_id,
         photo=image_url,
-        caption="وصف",
+        caption=f"{description}",
         reply_markup=reply_markup
     )
 
@@ -154,7 +165,6 @@ def button(update, context):
         show_submenu(update, context, mugat_submenu, "نوع المجات")
         return
     elif data == "sawany_akerik":
-        # عرض صورة المنتج الخاص بـ "صواني شبكة اكليريك"
         show_specific_product(update, "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png")
         return
     else:
@@ -170,10 +180,8 @@ def main():
     TOKEN = os.getenv("TOKEN")
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
-
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CallbackQueryHandler(button))
-
     updater.start_polling()
     updater.idle()
 
