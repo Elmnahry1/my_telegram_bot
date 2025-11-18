@@ -14,9 +14,9 @@ taarat_submenu = [
 ]
 
 haram_submenu = [
-    {"label": "هرم مكتب اكليريك", "callback": "haram_akerik", "image": "path/to/haram_akerik.jpg", "description": "وصف هرم مكتب اكليريك"},
-    {"label": "هرم مكتب معدن بديل", "callback": "haram_metal", "image": "path/to/haram_metal.jpg", "description": "وصف هرم مكتب معدن بديل"},
-    {"label": "هرم مكتب خشب", "callback": "haram_khashab", "image": "path/to/haram_khashab.jpg", "description": "وصف هرم مكتب خشب"}
+    {"label": "هرم مكتب اكليريك", "callback": "haram_akerik", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم مكتب اكليريك"},
+    {"label": "هرم مكتب معدن بديل", "callback": "haram_metal", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم مكتب معدن بديل"},
+    {"label": "هرم مكتب خشب", "callback": "haram_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم مكتب خشب"}
 ]
 
 doro3_submenu = [
@@ -85,7 +85,7 @@ def show_submenu(update, context, submenu, title):
     reply_markup = InlineKeyboardMarkup(keyboard)
     reply_source.edit_message_text(f"اختر {title}:", reply_markup=reply_markup)
 
-# دالة لعرض المنتج مع الوصف والأزرار
+# دالة لعرض منتج مع الوصف والأزرار
 def show_product(update, product):
     if hasattr(update, 'callback_query') and update.callback_query:
         reply_source = update.callback_query
@@ -94,10 +94,10 @@ def show_product(update, product):
     else:
         return
 
-    # زر الرجوع يرجع للقائمة السابقة
+    # زر الرجوع يرجع للقائمة السابقة أو الرئيسية
     keyboard = [
         [InlineKeyboardButton("شراء", callback_data="buy")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data="back")]
+        [InlineKeyboardButton("🔙 رجوع", callback_data="back_from_product")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -109,7 +109,7 @@ def show_product(update, product):
         reply_markup=reply_markup
     )
 
-# وظيفة لعرض المنتج بشكل خاص (عند اختيار "صواني شبكة اكليريك")
+# دالة لعرض صورة المنتج المحدد بشكل خاص (عند اختيار منتج معين)
 def show_specific_product(update, image_url, description="وصف"):
     if hasattr(update, 'callback_query') and update.callback_query:
         reply_source = update.callback_query
@@ -165,17 +165,18 @@ def button(update, context):
         show_submenu(update, context, mugat_submenu, "نوع المجات")
         return
     elif data == "sawany_akerik":
-        show_specific_product(update, "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png")
+        show_specific_product(update, "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "صواني شبكة اكليريك")
         return
-    else:
-        # البحث عن المنتج المحدد
-        for submenu in [sawany_submenu, taarat_submenu, haram_submenu, doro3_submenu, aqlam_submenu, mugat_submenu]:
-            for item in submenu:
-                if data == item["callback"]:
-                    show_product(update, item)
-                    return
+    # أضف هنا حالات المنتجات الأخرى بشكل مماثل إذا رغبت
 
-# إعدادات البوت
+    # البحث عن المنتج المحدد
+    for submenu in [sawany_submenu, taarat_submenu, haram_submenu, doro3_submenu, aqlam_submenu, mugat_submenu]:
+        for item in submenu:
+            if data == item["callback"]:
+                show_product(update, item)
+                return
+
+# الإعدادات الأساسية للبوت
 def main():
     TOKEN = os.getenv("TOKEN")
     updater = Updater(TOKEN, use_context=True)
