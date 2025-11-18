@@ -10,6 +10,42 @@ WHATSAPP_NUMBER = "201288846355"
 # --------------------
 # 1. بيانات القوائم والمنتجات (تم تحديث جميع القوائم الفرعية)
 # --------------------
+
+# --- قوائم فرعية جديدة ---
+bsamat_submenu = [
+    {
+        "label": "بصامات متنوعة", 
+        "callback": "bsamat_all", 
+        "items": [
+            {"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 1."},
+            {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "path/to/bsamat_m2.jpg", "description": "وصف البصامة موديل 2."}
+        ]
+    }
+]
+
+wedding_tissues_submenu = [
+    {
+        "label": "مناديل مطبوعة", 
+        "callback": "tissues_printed", 
+        "items": [
+            {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "path/to/tissue_m1.jpg", "description": "وصف منديل كتب الكتاب موديل 1."},
+            {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "path/to/tissue_m2.jpg", "description": "وصف منديل كتب الكتاب موديل 2."}
+        ]
+    }
+]
+
+abajorat_submenu = [
+    {
+        "label": "أباجورات خشبية", 
+        "callback": "abajorat_wood", 
+        "items": [
+            {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "path/to/abajora_m1.jpg", "description": "وصف الأباجورة موديل 1."},
+            {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "path/to/abajora_m2.jpg", "description": "وصف الأباجورة موديل 2."}
+        ]
+    }
+]
+# --- نهاية القوائم الفرعية الجديدة ---
+
 sawany_submenu = [
     {
         "label": "صواني شبكة اكليريك", 
@@ -29,8 +65,24 @@ sawany_submenu = [
             }
         ]
     },
-    # هذا المنتج بقي كما هو كمنتج واحد
-    {"label": "صواني شبكة خشب", "callback": "sawany_khashab", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف صواني شبكة خشب"}
+    {
+        "label": "صواني شبكة خشب", 
+        "callback": "sawany_khashab", 
+        "items": [
+            {
+                "label": "صينية خشب موديل 1", 
+                "callback": "khashab_m1",
+                "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
+                "description": "صينية خشب: وصف المنتج الأول."
+            },
+            {
+                "label": "صينية خشب موديل 2", 
+                "callback": "khashab_m2",
+                "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", 
+                "description": "صينية خشب: وصف المنتج الثاني."
+            }
+        ]
+    }
 ]
 
 taarat_submenu = [
@@ -38,8 +90,8 @@ taarat_submenu = [
         "label": "طارات اكليريك", 
         "callback": "taarat_akerik", 
         "items": [
-            {"label": "طارة اكليريك موديل 1", "callback": "taarat_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة اكليريك موديل 1"},
-            {"label": "طارة اكليريك موديل 2", "callback": "taarat_akerik_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "وصف طارة اكليريك موديل 2"}
+            {"label": "طارة اكليريك موديل 1", "callback": "taarat_akerik_m1", "image": "path/to/taarat_akerik_m1.jpg", "description": "وصف طارة اكليريك موديل 1"},
+            {"label": "طارة اكليريك موديل 2", "callback": "taarat_akerik_m2", "image": "path/to/taarat_akerik_m2.jpg", "description": "وصف طارة اكليريك موديل 2"}
         ]
     },
     {
@@ -163,11 +215,11 @@ mugat_submenu = [
 main_menu = [
     {"label": "💍💍 صواني شبكة", "callback": "sawany"},
     {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
-    {"label": "✋ بصامات", "callback": "bsamat"},
-    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"},
+    {"label": "✋ بصامات", "callback": "bsamat"}, # تم تعديله ليرسل إلى قائمة فرعية
+    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"}, # تم تعديله ليرسل إلى قائمة فرعية
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
-    {"label": "💡 اباجورات", "callback": "abajorat"},
+    {"label": "💡 اباجورات", "callback": "abajorat"}, # تم تعديله ليرسل إلى قائمة فرعية
     {"label": "✏️ اقلام", "callback": "aqlam"},
     {"label": "☕ مجات", "callback": "mugat"},
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
@@ -181,7 +233,10 @@ all_submenus = {
     "haram": haram_submenu,
     "doro3": doro3_submenu,
     "aqlam": aqlam_submenu,
-    "mugat": mugat_submenu
+    "mugat": mugat_submenu,
+    "bsamat": bsamat_submenu,          # 💡 إضافة القائمة الفرعية الجديدة
+    "wedding_tissues": wedding_tissues_submenu, # 💡 إضافة القائمة الفرعية الجديدة
+    "abajorat": abajorat_submenu       # 💡 إضافة القائمة الفرعية الجديدة
 }
 for menu_key, submenu_list in all_submenus.items():
     for item in submenu_list:
@@ -316,10 +371,8 @@ def button(update, context):
             if 'items' in item:
                 for sub_item in item['items']:
                     if data == sub_item["callback"]:
-                        # إذا كان زر الشراء تم الضغط عليه من منتج داخل حزمة
-                        # يجب أن نرجع مفتاح القائمة الأم (item["callback"])
-                        # لكن هنا نعتبر أن الـ callback_data الذي ليس 'buy_' هو فقط للأزرار الرئيسية في القوائم الفرعية
-                        # ولذلك نعتمد على الحالة أعلاه `if data == item["callback"]:`
+                        # في الهيكلة الحالية، هذا الـ callback لن يتم الوصول إليه لأنه يتطابق مع 'buy_'
+                        # لكن يُترك الكود كما هو ليتناسب مع منطق الكود الأصلي
                         pass
     
     # 3. حالة زر الشراء (رابط واتساب مع رابط الصورة)
@@ -331,7 +384,7 @@ def button(update, context):
         for submenu in all_submenus.values():
             for item in submenu:
                 # إذا كان منتجاً مفرداً
-                if item.get("callback") == product_key:
+                if item.get("callback") == product_key and 'items' not in item:
                     product_data = item
                     break
                 # إذا كان منتجاً داخل حزمة
