@@ -3,12 +3,12 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
 
 # رقم الواتساب اللي هيجيلك عليه الطلب
-WHATSAPP_NUMBER = "201234567890"  # ضع رقمك هنا بدون +
+WHATSAPP_NUMBER = "201288846355"  # ضع رقمك هنا بدون +
 WHATSAPP_URL = f"https://wa.me/{WHATSAPP_NUMBER}?text="
 
 # بيانات الأقسام والصور
 sections = {
-    "صواني شبكة": {
+    "✅ صواني شبكة": {
         "subsections": {
             "صواني شبكة اكليريك": [
                 {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف1"},
@@ -20,7 +20,7 @@ sections = {
             ]
         }
     },
-    "طارات خطوبة وكتب الكتاب": {
+    "💍 طارات خطوبة وكتب الكتاب": {
         "subsections": {
             "طارات خطوبة وكتب الكتاب اكليريك": [
                 {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف5"}
@@ -30,14 +30,14 @@ sections = {
             ]
         }
     },
-    "بصامات": {
+    "📝 بصامات": {
         "subsections": {
             "مناديل كتب الكتاب": [
                 {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف7"}
             ]
         }
     },
-    "هرم مكتب": {
+    "📐 هرم مكتب": {
         "subsections": {
             "هرم مكتب اكليريك": [
                 {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف8"}
@@ -50,7 +50,7 @@ sections = {
             ]
         }
     },
-    "دروع": {
+    "🏆 دروع": {
         "subsections": {
             "دروع اكليريك": [
                 {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف11"}
@@ -63,7 +63,7 @@ sections = {
             ]
         }
     },
-    "اقلام": {
+    "🖊 اقلام": {
         "subsections": {
             "قلم تاتش معدن": [
                 {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف14"}
@@ -73,7 +73,7 @@ sections = {
             ]
         }
     },
-    "مجات": {
+    "☕ مجات": {
         "subsections": {
             "مج ابيض": [
                 {"photo": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف16"}
@@ -101,23 +101,23 @@ def start(update: Update, context: CallbackContext):
     for section in sections:
         keyboard.append([InlineKeyboardButton(section, callback_data=f"section|{section}")])
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text(welcome_text, reply_markup=reply_markup)
+    if update.callback_query:
+        update.callback_query.edit_message_text(welcome_text, reply_markup=reply_markup)
+    else:
+        update.message.reply_text(welcome_text, reply_markup=reply_markup)
 
 # ---------------------------------------------------------
-# عرض الصور ووصفها مع زر شراء وزر رجوع
+# عرض صورة واحدة + وصف + زر شراء + زر رجوع
 # ---------------------------------------------------------
-def show_images(update: Update, context: CallbackContext, items, parent_callback):
+def show_item(update: Update, context: CallbackContext, item, parent_callback):
     query = update.callback_query
-    media_group = []
-    for item in items:
-        media_group.append(InputMediaPhoto(media=item["photo"], caption=f"{item['description']}\n\nاضغط شراء لطلب هذا المنتج"))
-    context.bot.send_media_group(chat_id=query.message.chat_id, media=media_group)
+    caption = item['description']
+    context.bot.send_photo(chat_id=query.message.chat_id, photo=item['photo'], caption=caption)
     
-    # زر شراء + زر رجوع
-    keyboard = []
-    for idx, item in enumerate(items):
-        keyboard.append([InlineKeyboardButton(f"شراء {idx+1}", callback_data=f"buy|{parent_callback}|{idx}")])
-    keyboard.append([InlineKeyboardButton("🔙 رجوع للقائمة السابقة", callback_data=f"back|{parent_callback}")])
+    keyboard = [
+        [InlineKeyboardButton("شراء", callback_data=f"buy|{parent_callback}|0")],
+        [InlineKeyboardButton("🔙 رجوع للقائمة السابقة", callback_data=f"back|{parent_callback}")]
+    ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.bot.send_message(chat_id=query.message.chat_id, text="اختار:", reply_markup=reply_markup)
     query.answer()
@@ -143,22 +143,24 @@ def button_handler(update: Update, context: CallbackContext):
     elif query_data.startswith("subsec|"):
         _, section_name, subsec_name = query_data.split("|")
         items = sections[section_name]["subsections"][subsec_name]
-        show_images(update, context, items, parent_callback=f"subsec|{section_name}")
+        for idx, item in enumerate(items):
+            keyboard = [
+                [InlineKeyboardButton("شراء", callback_data=f"buy|{section_name}|{subsec_name}|{idx}")],
+                [InlineKeyboardButton("🔙 رجوع للقائمة السابقة", callback_data=f"back|section|{section_name}")]
+            ]
+            context.bot.send_photo(chat_id=query.message.chat_id, photo=item["photo"], caption=item["description"], reply_markup=InlineKeyboardMarkup(keyboard))
     
     elif query_data.startswith("buy|"):
-        _, parent_callback, idx = query_data.split("|")
-        section_key, subsec_name = parent_callback.split("|")[1], parent_callback.split("|")[2]
-        item = sections[section_key]["subsections"][subsec_name][int(idx)]
+        _, section_name, subsec_name, idx = query_data.split("|")
+        item = sections[section_name]["subsections"][subsec_name][int(idx)]
         text = f"طلب جديد: {item['description']}\nرابط المنتج: {item['photo']}"
         wa_link = WHATSAPP_URL + text.replace(" ", "%20")
         context.bot.send_message(chat_id=query.message.chat_id, text=f"اضغط هنا لإرسال الطلب على واتساب:\n{wa_link}")
     
     elif query_data.startswith("back|"):
-        _, parent_callback = query_data.split("|")
-        if parent_callback == "main":
-            start(update, context)
-        else:
-            section_name = parent_callback.split("|")[1]
+        parts = query_data.split("|")
+        if parts[1] == "section":
+            section_name = parts[2]
             subsections = sections[section_name]["subsections"]
             keyboard = []
             for subsec in subsections:
@@ -166,6 +168,8 @@ def button_handler(update: Update, context: CallbackContext):
             keyboard.append([InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data="main")])
             reply_markup = InlineKeyboardMarkup(keyboard)
             query.edit_message_text(f"اختر القسم الفرعي من {section_name}:", reply_markup=reply_markup)
+        else:
+            start(update, context)
     
     elif query_data == "main":
         start(update, context)
