@@ -40,8 +40,8 @@ def start(update, context):
         except Exception:
             pass 
         
-    user_name = update.effective_user.first_name if update.effective_user else "عميل"
-    
+    # 🛑 التعديل هنا: حذف محتوى الرسالة الترحيبية مع الإبقاء على سطر واحد فارغ
+    greeting_text = ".\n\n" 
     
     # بناء لوحة المفاتيح بزر واحد فقط
     keyboard = [[InlineKeyboardButton("ارسال شكل مختلف 🖼️", callback_data="send_custom_design")]]
