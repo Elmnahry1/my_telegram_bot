@@ -42,13 +42,13 @@ aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", 
         "callback": "aqlam_metal", 
-        "image": "https://i.imgur.com/example_metal_pen.jpg", # ضع رابط الصورة الفعلية للقلم
+        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/475773348_986832329974720_6197915277469223378_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=107&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=KrebndL4u2oQ7kNvwH3smA2&_nc_oc=AdkT6T_o5SpJKdr9FQ5OhX2vuI5Cp3WjQl0pV9vRotIn9csOIX1DX-I9dC3FpvlBLJM&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=JFYgN-MxG5oy8y3q9Os6Ew&oh=00_AfhJxajOEm9owiAqd00_zEZ4Hy4qzX7DYATV6p4tWdRxeA&oe=6923BE1B", # ضع رابط الصورة الفعلية للقلم
         "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر."
     },
     {
         "label": "قلم تاتش مضئ", 
         "callback": "aqlam_luminous", 
-        "image": "https://i.imgur.com/example_luminous_pen.jpg", # ضع رابط الصورة الفعلية للقلم
+        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/489809156_1164483322357054_6286791651911010777_n.jpg?stp=dst-jpg_s590x590_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ELb9pciSoD0Q7kNvwG_rdLE&_nc_oc=AdkDWLOZBcjZp9AbNO2Fs-zK-suPtGc1D-KC3JP7NlzhwgJB3WZeGQQfCQIsfxZgvrg&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=U5_JMOw_cSsgrQQLv77j7g&oh=00_Afg-wJrTmoGZo5m1kVVh2IU0227UQ7pUtKSjRx_YEFoGWg&oe=6923B3BA", # ضع رابط الصورة الفعلية للقلم
         "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر."
     }
 ]
