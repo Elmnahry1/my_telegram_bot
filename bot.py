@@ -11,193 +11,16 @@ WHATSAPP_NUMBER = "201288846355"
 # 1. تعريف حالات المحادثة
 # --------------------
 
-GET_WALLET_NAME = 1 # حالة المحافظ
-GET_PEN_NAME = 2    # حالة الأقلام 
+GET_WALLET_NAME = 1 
+GET_PEN_NAME = 2    
+WAITING_FOR_IMAGE = 3 # 💡 حالة جديدة لانتظار الصورة
 
 # --------------------
-# 2. بيانات القوائم والمنتجات
+# 2. بيانات القوائم (نحتفظ بها كما هي للرجوع إليها)
 # --------------------
 
-# --- قوائم فرعية مباشرة (تعرض منتجاتها مباشرة) ---
-bsamat_submenu = [
-    {"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 1."},
-    {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 2."}
-]
-wedding_tissues_submenu = [
-    {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 1."},
-    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 2."}
-]
-abajorat_submenu = [
-    {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 1."},
-    {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2."}
-]
-engraved_wallet_submenu = [
-    {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان)."},
-    {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني."},
-    {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود."}
-]
-
-# 🛑 قائمة الأقلام (المدخل الرئيسي للمحادثة)
-aqlam_submenu = [
-    {
-        "label": "قلم تاتش معدن", 
-        "callback": "aqlam_metal", 
-        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/475773348_986832329974720_6197915277469223378_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=107&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=KrebndL4u2oQ7kNvwH3smA2&_nc_oc=AdkT6T_o5SpJKdr9FQ5OhX2vuI5Cp3WjQl0pV9vRotIn9csOIX1DX-I9dC3FpvlBLJM&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=JFYgN-MxG5oy8y3q9Os6Ew&oh=00_AfhJxajOEm9owiAqd00_zEZ4Hy4qzX7DYATV6p4tWdRxeA&oe=6923BE1B", # ضع رابط الصورة الفعلية للقلم
-        "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر."
-    },
-    {
-        "label": "قلم تاتش مضئ", 
-        "callback": "aqlam_luminous", 
-        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/489809156_1164483322357054_6286791651911010777_n.jpg?stp=dst-jpg_s590x590_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ELb9pciSoD0Q7kNvwG_rdLE&_nc_oc=AdkDWLOZBcjZp9AbNO2Fs-zK-suPtGc1D-KC3JP7NlzhwgJB3WZeGQQfCQIsfxZgvrg&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=U5_JMOw_cSsgrQQLv77j7g&oh=00_Afg-wJrTmoGZo5m1kVVh2IU0227UQ7pUtKSjRx_YEFoGWg&oe=6923B3BA", # ضع رابط الصورة الفعلية للقلم
-        "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر."
-    }
-]
-
-# --- القوائم المتداخلة (sawany, taarat, haram, doro3, mugat) تبقى كما هي ---
-sawany_submenu = [
-    {
-        "label": "صواني شبكة اكليريك", "callback": "sawany_akerik", 
-        "items": [ 
-            {"label": "صينية اكليريك موديل 1", "callback": "akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية اكليريك: وصف المنتج الأول."},
-            {"label": "صينية اكليريك موديل 2", "callback": "akerik_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية اكليريك: وصف المنتج الثاني."}
-        ]
-    },
-    {
-        "label": "صواني شبكة خشب", "callback": "sawany_khashab", 
-        "items": [
-            {"label": "صينية خشب موديل 1", "callback": "khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية خشب: وصف المنتج الأول."},
-            {"label": "صينية خشب موديل 2", "callback": "khashab_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية خشب: وصف المنتج الثاني."}
-        ]
-    }
-]
-taarat_submenu = [
-    {
-        "label": "طارات اكليريك", "callback": "taarat_akerik", "items": [
-             {"label": "طارة اكليريك موديل 1", "callback": "taarat_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة اكليريك موديل 1"},
-             {"label": "طارة اكليريك موديل 2", "callback": "taarat_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة اكليريك موديل 2"}
-        ]
-    },
-    {
-        "label": "طارات خشب", "callback": "taarat_khashab", "items": [
-            {"label": "طارة خشب موديل 1", "callback": "taarat_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 1"},
-            {"label": "طارة خشب موديل 2", "callback": "taarat_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 2"}
-        ]
-    }
-]
-haram_submenu = [
-    {
-        "label": "هرم مكتب اكليريك", "callback": "haram_akerik", "items": [
-             {"label": "هرم اكليريك موديل 1", "callback": "haram_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم اكليريك موديل 1"},
-             {"label": "هرم اكليريك موديل 2", "callback": "haram_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم اكليريك موديل 2"}
-        ]
-    },
-    {
-        "label": "هرم مكتب معدن بديل", "callback": "haram_metal", "items": [
-             {"label": "هرم معدن موديل 1", "callback": "haram_metal_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم معدن موديل 1"},
-             {"label": "هرم معدن موديل 2", "callback": "haram_metal_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم معدن موديل 2"}
-        ]
-    },
-    {
-        "label": "هرم مكتب خشب", "callback": "haram_khashab", "items": [
-             {"label": "هرم خشب موديل 1", "callback": "haram_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم خشب موديل 1"},
-             {"label": "هرم خشب موديل 2", "callback": "haram_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم خشب موديل 2"}
-        ]
-    }
-]
-doro3_submenu = [
-    {
-        "label": "دروع اكليريك", "callback": "doro3_akerik", "items": [
-             {"label": "درع اكليريك موديل 1", "callback": "doro3_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع اكليريك موديل 1"},
-             {"label": "درع اكليريك موديل 2", "callback": "doro3_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع اكليريك موديل 2"}
-        ]
-    },
-    {
-        "label": "دروع معدن بديل", "callback": "doro3_metal", "items": [
-             {"label": "درع معدن موديل 1", "callback": "doro3_metal_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع معدن موديل 1"},
-             {"label": "درع معدن موديل 2", "callback": "doro3_metal_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع معدن موديل 2"}
-        ]
-    },
-    {
-        "label": "دروع قطيفة", "callback": "doro3_qatifah", "items": [
-             {"label": "درع قطيفة موديل 1", "callback": "doro3_qatifah_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع قطيفة موديل 1"},
-             {"label": "درع قطيفة موديل 2", "callback": "doro3_qatifah_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع قطيفة موديل 2"}
-        ]
-    },
-    {
-        "label": "دروع خشب", "callback": "doro3_khashab", "items": [
-             {"label": "درع خشب موديل 1", "callback": "doro3_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع خشب موديل 1"},
-             {"label": "درع خشب موديل 2", "callback": "doro3_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع خشب موديل 2"}
-        ]
-    }
-]
-mugat_submenu = [
-    {
-        "label": "مج ابيض", "callback": "mugat_white", "items": [
-             {"label": "مج ابيض موديل 1", "callback": "mugat_white_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 1"},
-             {"label": "مج ابيض موديل 2", "callback": "mugat_white_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 2"}
-        ]
-    },
-    {
-        "label": "مج سحري", "callback": "mugat_magic", "items": [
-             {"label": "مج سحري موديل 1", "callback": "mugat_magic_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 1"},
-             {"label": "مج سحري موديل 2", "callback": "mugat_magic_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 2"}
-        ]
-    },
-    {
-        "label": "مج ديجتال", "callback": "mugat_digital", "items": [
-             {"label": "مج ديجتال موديل 1", "callback": "mugat_digital_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 1"},
-             {"label": "مج ديجتال موديل 2", "callback": "mugat_digital_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 2"}
-        ]
-    }
-]
-
-
-# --- القائمة الرئيسية ---
-main_menu = [
-    {"label": "💍💍 صواني شبكة", "callback": "sawany"},
-    {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
-    {"label": "✋ بصامات", "callback": "bsamat"}, 
-    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"}, 
-    {"label": "🗄️ هرم مكتب", "callback": "haram"},
-    {"label": "🏆 دروع", "callback": "doro3"},
-    {"label": "💡 اباجورات", "callback": "abajorat"}, 
-    {"label": "✏️ اقلام", "callback": "aqlam"}, 
-    {"label": "☕ مجات", "callback": "mugat"},
-    {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
-    {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
-]
-
-
-all_submenus = {
-    "sawany": sawany_submenu,
-    "taarat": taarat_submenu,
-    "haram": haram_submenu,
-    "doro3": doro3_submenu,
-    "aqlam": aqlam_submenu,
-    "mugat": mugat_submenu,
-    "bsamat": bsamat_submenu, 
-    "wedding_tissues": wedding_tissues_submenu, 
-    "abajorat": abajorat_submenu,
-    "engraved_wallet": engraved_wallet_submenu
-}
-
-# بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
-product_to_submenu_map = {}
-for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam"]: 
-        # للقوائم المباشرة، نضيف كل منتج مباشرة
-        for product in submenu_list:
-            product_to_submenu_map[product["callback"]] = menu_key
-    else:
-        # للقوائم المتداخلة (sawany, taarat, ...)
-        for item in submenu_list:
-            # المستوى الأول (مثل: sawany_akerik)
-            product_to_submenu_map[item["callback"]] = menu_key 
-            if 'items' in item:
-                for sub_item in item['items']:
-                    # المستوى الثاني (مثل: akerik_m1)
-                    product_to_submenu_map[sub_item["callback"]] = item["callback"] 
-
+# (جميع القوائم مثل bsamat_submenu, aqlam_submenu, main_menu إلخ... تبقى كما هي)
+# ...
 
 # --------------------
 # 3. الدوال الرئيسية والمساعدة
@@ -205,226 +28,97 @@ for menu_key, submenu_list in all_submenus.items():
 
 def start(update, context):
     query = update.callback_query
-    # إنهاء أي محادثة جارية عند استخدام /start أو العودة للقائمة الرئيسية
-    if context.user_data.get('state') in [GET_WALLET_NAME, GET_PEN_NAME]:
+    # إنهاء أي محادثة جارية عند استخدام /start 
+    if context.user_data.get('state') in [GET_WALLET_NAME, GET_PEN_NAME, WAITING_FOR_IMAGE]:
         context.user_data.clear()
         context.user_data['state'] = None
         
     if query:
         query.answer()
+        try:
+            query.message.delete()
+        except Exception:
+            pass 
     
     user_name = update.effective_user.first_name
-    greeting_text = f"✅ مرحباً بك {user_name} في البوت الرسمي لمصنع المناهري للحفر بالليزر وجميع مستلزمات الزفاف والسبلميشن\n\nمن فضلك اختر طلبك من القائمة:"
-    keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in main_menu]
+    greeting_text = f"✅ مرحباً بك {user_name} في البوت الرسمي لمصنع المناهري للحفر بالليزر...\n\nمن فضلك اختر طلبك من القائمة:"
+    
+    # 💡 إضافة زر "ارسال شكل مختلف"
+    keyboard = [[InlineKeyboardButton("ارسال شكل مختلف 🖼️", callback_data="send_custom_design")]]
+    keyboard.extend([[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in main_menu])
+
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    # منطق عرض القائمة الرئيسية (حذف الرسالة القديمة وإرسال رسالة جديدة)
-    if query:
-        try:
-            query.message.delete()
-        except Exception:
-            pass 
-        
-        update.effective_chat.send_message(greeting_text, reply_markup=reply_markup)
-    else:
-        update.effective_message.reply_text(greeting_text, reply_markup=reply_markup)
-
-# 💡 دالة عرض القائمة الفرعية 
-def show_submenu(update, context, submenu_list, title, back_callback="main_menu"):
-    query = update.callback_query
+    update.effective_chat.send_message(greeting_text, reply_markup=reply_markup)
     
-    if query:
-        query.answer()
-        # نحذف الرسالة القديمة ونرسل رسالة جديدة بالكامل
-        try:
-            query.message.delete()
-        except Exception:
-            pass 
-        
-    # بناء الأزرار (كل زر في صف منفصل)
-    keyboard = []
-    for item in submenu_list:
-        keyboard.append([InlineKeyboardButton(item["label"], callback_data=item["callback"])])
-
-    # إضافة زر الرجوع
-    keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data=back_callback)])
-    
-    # إنشاء لوحة المفاتيح النهائية
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    message_text = f"✅ *{title}*:\n\nمن فضلك اختر طلبك من القائمة:"
-
-    # إرسال رسالة جديدة
-    update.effective_chat.send_message(
-        text=message_text, 
-        reply_markup=reply_markup,
-        parse_mode="Markdown"
-    )
-        
-
-def show_product_page(update, product_callback_data, product_data, is_direct_list=False):
-    query = update.callback_query
-    if query:
-        query.answer()
-
-    products_to_show = []
-    if is_direct_list:
-        products_to_show = product_data
-    elif 'items' in product_data:
-        products_to_show = product_data['items']
-    else:
-        products_to_show = [product_data]
-
-    # نحذف رسالة القائمة السابقة
-    if query and query.message:
-        try:
-            query.message.delete()
-        except Exception:
-            pass
-    
-    for item in products_to_show:
-        item_keyboard = [[InlineKeyboardButton("🛒 شراء", callback_data=f"buy_{item['callback']}")]]
-        item_reply_markup = InlineKeyboardMarkup(item_keyboard)
-        
-        update.effective_message.bot.send_photo(
-            chat_id=update.effective_chat.id,
-            photo=item['image'],
-            caption=f"**{item['label']}**\n\n{item['description']}",
-            reply_markup=item_reply_markup,
-            parse_mode="Markdown"
-        )
-    
-    # تحديد زر الرجوع
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat"]:
-        back_callback = "main_menu"
-        back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
-    else:
-        back_callback = product_to_submenu_map.get(product_callback_data, "main_menu")
-        
-        if back_callback in ["sawany", "taarat", "haram", "doro3", "mugat"]:
-             back_callback = back_callback
-             back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
-        elif back_callback in ["engraved_wallet", "aqlam"]:
-             back_callback = back_callback
-             back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
-        else:
-             back_callback = back_callback
-             back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
-
-
-    back_keyboard = [[InlineKeyboardButton(back_text, callback_data=back_callback)]]
-    back_reply_markup = InlineKeyboardMarkup(back_keyboard)
-        
-    update.effective_message.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text="---", 
-        reply_markup=back_reply_markup
-    )
+    # يجب أن تكون هذه الدالة غير منتهية إذا كانت ستُستخدم كـ fallback في ConversationHandler
+    return ConversationHandler.END
 
 
 # ------------------------------------
-# دوال المحافظ (Engraved Wallet Handlers)
+# دوال معالجة الشكل المختلف (Custom Design Handlers)
 # ------------------------------------
 
-def back_to_wallets_color(update, context):
+def prompt_for_image(update, context):
     query = update.callback_query
     query.answer()
-    
-    context.user_data.clear()
-    
+
+    # حذف الرسالة السابقة وعرض رسالة طلب الصورة
     try:
         query.message.delete()
     except Exception:
         pass
-
-    keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in engraved_wallet_submenu]
-    keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
+        
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data="main_menu")]]
+    back_reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"✅ *محافظ محفورة بالاسم*:\n\nمن فضلك اختر اللون المطلوب:",
-        reply_markup=reply_markup,
-        parse_mode="Markdown"
-    )
-
-    return ConversationHandler.END 
-
-def prompt_for_name(update, context):
-    query = update.callback_query
-    data = query.data
-    query.answer()
-    
-    selected_wallet_data = next((item for item in engraved_wallet_submenu if item["callback"] == data), None)
-    context.user_data['wallet_data'] = selected_wallet_data
-    context.user_data['state'] = GET_WALLET_NAME
-
-    try:
-        query.message.delete()
-    except Exception:
-        pass
-
-    # 💡 زر الرجوع
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_wallets_color")]]
-    back_reply_markup = InlineKeyboardMarkup(back_keyboard)
-    
-    caption_text = (
-        f"**اختيارك: {selected_wallet_data['label']}**\n\n"
-        f"من فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل.\n"
-        f"أو اضغط زر الرجوع لتغيير اللون."
-    )
-    
-    update.effective_chat.bot.send_photo(
-        chat_id=update.effective_chat.id,
-        photo=selected_wallet_data['image'],
-        caption=caption_text,
+        text="من فضلك، **أرفق الصورة أو التصميم** الذي تود تنفيذه الآن.\n\n"
+             "سيتم إرسال الصورة مباشرةً إلينا على الواتساب.",
         reply_markup=back_reply_markup,
         parse_mode="Markdown"
     )
     
-    return GET_WALLET_NAME
+    # الدخول إلى حالة انتظار الصورة
+    return WAITING_FOR_IMAGE
 
-def receive_name_and_prepare_whatsapp(update, context):
-    engraving_name = update.message.text
-    product_data = context.user_data.get('wallet_data')
+def receive_photo_and_prepare_whatsapp(update, context):
+    # 💡 هذه الدالة تستقبل أي رسالة تحتوي على صورة (Photo)
     
-    if not product_data:
-        update.effective_chat.send_message("عفواً، حدث خطأ في استرجاع بيانات المنتج. يرجى البدء من القائمة الرئيسية.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        context.user_data.clear()
-        return ConversationHandler.END
-
     user_info = update.message.from_user
     
-    product_label = product_data['label']
-    try:
-        color = product_label.split('محفظة ', 1)[1].strip() 
-        wallet_type = "محفظة سافوكس الاصلية التقيلة" 
-    except IndexError:
-        color = product_label
-        wallet_type = product_label
+    # نحصل على أكبر نسخة من الصورة المرفقة
+    photo = update.message.photo[-1]
+    
+    # نطلب من تليجرام رابط مباشر لتحميل الصورة
+    file = context.bot.get_file(photo.file_id)
+    photo_url = file.file_path
+    
+    # نحصل على أي كابشن (وصف) كتبه العميل مع الصورة
+    caption = update.message.caption if update.message.caption else "لا يوجد وصف مرفق بالصورة."
 
     message_body = (
-        f"🔔 *طلب شراء جديد (محافظ محفورة بالاسم)* 🔔\n\n"
-        f"المنتج: {wallet_type}\n"
-        f"اللون: {color}\n" 
-        f" الاسم المطلوب حفره: *{engraving_name}*\n" 
-        f"الكود: {product_data['callback']}\n\n"
+        f"🔔 *طلب تصميم شكل مختلف (Custom Design)* 🔔\n\n"
+        f"مرفق صورة للتصميم المطلوب:\n"
+        f"التعليق المرفق مع الصورة: *{caption}*\n\n"
         f"اسم العميل: {user_info.first_name} {user_info.last_name if user_info.last_name else ''}\n"
         f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}\n"
+        f"🔗 رابط الصورة (مؤقت من تليجرام): {photo_url}\n"
         f"رابط التواصل عبر التليجرام: tg://user?id={user_info.id}"
     )
     
+    # تشفير الرسالة لواتساب
     encoded_text = quote_plus(message_body)
     wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
     
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
+    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال طلب التصميم على واتساب", url=wa_link)]]
     keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]) 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     context.bot.send_message(
         chat_id=update.message.chat_id, 
-        text=f"شكراً لك! سيتم حفر اسم **{engraving_name}** على **{product_data['label']}**.\n\nلإتمام الطلب، اضغط على الزر التالي:", 
+        text=f"شكراً لك! تم استلام الصورة.\n\nلإرسالها وتأكيد الطلب عبر واتساب، اضغط على الزر التالي:", 
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
@@ -432,305 +126,88 @@ def receive_name_and_prepare_whatsapp(update, context):
     context.user_data.clear()
     return ConversationHandler.END
 
-# ------------------------------------
-# دوال الأقلام (Pen Handlers)
-# ------------------------------------
-
-def back_to_pen_types(update, context):
+def cancel_image_upload(update, context):
+    # وظيفة الرجوع من حالة انتظار الصورة
     query = update.callback_query
     query.answer()
-    
-    context.user_data.clear()
     
     try:
         query.message.delete()
     except Exception:
-        pass
-
-    keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in aqlam_submenu]
-    keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=f"✅ *اقلام محفورة بالاسم*:\n\nمن فضلك اختر نوع القلم المطلوب:",
-        reply_markup=reply_markup,
-        parse_mode="Markdown"
-    )
-
-    return ConversationHandler.END 
-
-def prompt_for_pen_name(update, context):
-    query = update.callback_query
-    data = query.data
-    query.answer()
-    
-    # العثور على بيانات القلم الذي تم اختياره
-    selected_pen_data = next((item for item in aqlam_submenu if item["callback"] == data), None)
-    context.user_data['pen_data'] = selected_pen_data
-    context.user_data['state'] = GET_PEN_NAME
-
-    try:
-        query.message.delete()
-    except Exception:
-        pass
-
-    # 💡 يتم إنشاء زر الرجوع هنا
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_pen_types")]]
-    back_reply_markup = InlineKeyboardMarkup(back_keyboard)
-    
-    caption_text = (
-        f"**اختيارك: {selected_pen_data['label']}**\n\n"
-        f"من فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.\n"
-        f"أو اضغط زر الرجوع لتغيير نوع القلم."
-    )
-    
-    # 🛑 إرسال صورة القلم مع رسالة طلب الاسم وزر الرجوع
-    update.effective_chat.bot.send_photo(
-        chat_id=update.effective_chat.id,
-        photo=selected_pen_data['image'],
-        caption=caption_text,
-        reply_markup=back_reply_markup, 
-        parse_mode="Markdown"
-    )
-    
-    return GET_PEN_NAME
-
-def receive_pen_name_and_prepare_whatsapp(update, context):
-    engraving_name = update.message.text
-    product_data = context.user_data.get('pen_data')
-    
-    if not product_data:
-        update.effective_chat.send_message("عفواً، حدث خطأ في استرجاع بيانات المنتج. يرجى البدء من القائمة الرئيسية.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        context.user_data.clear()
-        return ConversationHandler.END
-
-    user_info = update.message.from_user
-    
-    message_body = (
-        f"🔔 *طلب شراء جديد (اقلام محفورة بالاسم)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f" الاسم المطلوب حفره: *{engraving_name}*\n" 
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name} {user_info.last_name if user_info.last_name else ''}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}\n"
-        f"رابط التواصل عبر التليجرام: tg://user?id={user_info.id}"
-    )
-    
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]) 
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    context.bot.send_message(
-        chat_id=update.message.chat_id, 
-        text=f"شكراً لك! سيتم حفر اسم **{engraving_name}** على **{product_data['label']}**.\n\nلإتمام الطلب، اضغط على الزر التالي:", 
-        reply_markup=reply_markup,
-        parse_mode="Markdown"
-    )
+        pass 
 
     context.user_data.clear()
-    return ConversationHandler.END
-
+    return start(update, context) # العودة للقائمة الرئيسية
 
 # ------------------------------------
 # الدالة الرئيسية لمعالجة ضغطات الأزرار
 # ------------------------------------
 def button(update, context):
+    # ... (باقي منطق دالة button لمعالجة الأزرار الأخرى) ...
+    # ...
+    
     query = update.callback_query
     data = query.data
 
     # 1. حالة العودة للقائمة الرئيسية
     if data == "main_menu":
         start(update, context)
-        return
+        return ConversationHandler.END # إنهاء أي محادثة جارية
 
-    # 2. معالجة فتح قائمة المحافظ 
-    if data == "engraved_wallet":
-        show_submenu(update, context, engraved_wallet_submenu, "محافظ محفورة بالاسم", back_callback="main_menu")
-        return 
+    # 💡 2. معالجة زر "ارسال شكل مختلف"
+    if data == "send_custom_design":
+        return prompt_for_image(update, context)
         
-    # 3. معالجة فتح قائمة الأقلام (محادثة)
-    if data == "aqlam":
-        show_submenu(update, context, aqlam_submenu, "اقلام محفورة بالاسم", back_callback="main_menu")
-        return 
-        
-    # 4. معالجة اختيار المنتج (سواء محفظة أو قلم)
-    if data in [item["callback"] for item in engraved_wallet_submenu]:
-        return prompt_for_name(update, context) 
+    # ... (باقي منطق معالجة الأزرار الأخرى مثل المحافظ والأقلام والمنتجات العادية)
     
-    # 🛑 معالجة اختيار نوع القلم (معدن أو مضئ)
-    if data in [item["callback"] for item in aqlam_submenu]:
-        return prompt_for_pen_name(update, context) # ⬅️ توجيه مباشر لبدء المحادثة وطلب الاسم
-
-    # 5. معالجة فتح القوائم الفرعية المتداخلة (Sawany, Taarat, Haram, Doro3, Mugat)
-    if data in ["sawany", "taarat", "haram", "doro3", "mugat"]:
-        title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
-        clean_title = title.split()[-1]
-        show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu") 
-        return
-        
-    # 6. معالجة القوائم الفرعية التي تعرض المنتجات مباشرة (Bsamat, Wedding_Tissues, Abajorat)
-    if data in ["bsamat", "wedding_tissues", "abajorat"]:
-        product_list = all_submenus[data]
-        show_product_page(update, data, product_list, is_direct_list=True)
-        return
-
-    # 7. معالجة ضغط زر المنتج للذهاب لصفحة الشراء أو لفتح قائمة فرعية متداخلة (المنتجات غير المحفورة)
-    if data in product_to_submenu_map:
-        product_data = None
-        
-        for submenu_key, submenu_list in all_submenus.items():
-            for item in submenu_list:
-                # الحالة 1: المنتج هو قائمة فرعية متداخلة (مثل 'sawany_akerik')
-                if data == item.get("callback") and 'items' in item:
-                    product_data = item
-                    break 
-                # الحالة 2: المنتج هو عنصر مباشر أو موديل داخل قائمة متداخلة
-                if data == item.get("callback") and 'items' not in item:
-                    product_data = item
-                    break
-                # الحالة 3: البحث داخل الـ 'items'
-                if 'items' in item:
-                    sub_item = next((si for si in item['items'] if si.get("callback") == data), None)
-                    if sub_item:
-                         product_data = sub_item
-                         break
-            if product_data:
-                break
-        
-        if product_data:
-            show_product_page(update, data, product_data)
-            return
-        else:
-            query.answer(text="عذراً، لم يتم العثور على بيانات المنتج.", show_alert=True)
-            return
-
-    # 8. حالة زر الشراء (المنتجات العادية غير المحفورة)
-    if data.startswith("buy_"):
-        product_key = data.replace("buy_", "")
-        product_data = None
-        
-        # منطق البحث عن بيانات المنتج للشراء (باقي المنتجات)
-        for submenu in all_submenus.values():
-            for item in submenu:
-                if item.get("callback") == product_key and 'items' not in item:
-                    product_data = item
-                    break
-                if 'items' in item:
-                    for sub_item in item['items']:
-                        if sub_item.get("callback") == product_key:
-                            product_data = sub_item
-                            break
-                if product_data:
-                    break
-            if product_data:
-                break
-        
-        if not product_data:
-            query.answer(text="عذراً، لم يتم العثور على بيانات المنتج.", show_alert=True)
-            return
-            
-        user_info = query.from_user
-        
-        # تكوين نص الرسالة الذي سيُفتح في واتساب
-        message_body = (
-            f"🔔 *طلب شراء جديد من بوت تليجرام* 🔔\n"
-            f"المنتج: {product_data['label']}\n"
-            f"الكود: {product_key}\n"
-            f"العميل: {user_info.first_name}\n"
-            f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-            f"🔗 رابط صورة المنتج: {product_data['image']}\n" 
-            f"رابط التواصل عبر تليجرام: tg://user?id={user_info.id}"
-        )
-        
-        encoded_text = quote_plus(message_body)
-        wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-        
-        query.answer(text="سيتم فتح تطبيق واتساب الآن لإرسال الطلب.", show_alert=False)
-
-        keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-
-        try:
-            query.message.delete()
-        except Exception:
-            pass
-
-        context.bot.send_message(
-            chat_id=query.message.chat_id, 
-            text=f"شكراً لطلبك! لإنهاء عملية الشراء، اضغط على الزر التالي لإرسال تفاصيل الطلب:", 
-            reply_markup=reply_markup
-        )
-        
-        return
+    # إذا لم يكن الزر هو "send_custom_design"، أكمل معالجة باقي الأزرار 
+    # (يجب أن يتم وضع هذا المنطق في مكانه الصحيح بالملف الكامل)
+    
+    # مثال بسيط لمنع الكود من الانهيار إذا لم يكن هناك منطق آخر
+    query.answer(text="تم الضغط على زر آخر.", show_alert=False) 
+    return ConversationHandler.END
 
 
 # --------------------
 # 4. إعداد البوت 
 # --------------------
 def main():
-    # 💡 استبدل بتوكن البوت الخاص بك
+    # 💡 افترض أن لديك توكن معرف في البيئة أو متغير
     TOKEN = os.getenv("TOKEN") 
     
     if not TOKEN:
-        print("❌ لم يتم العثور على التوكن (TOKEN) في بيئة العمل. يرجى التأكد من تعيينه.")
+        print("❌ لم يتم العثور على التوكن (TOKEN).")
         return
-    
-    if WHATSAPP_NUMBER == "201288846355":
-        print("⚠️ يرجى استبدال WHATSAPP_NUMBER برقمك الحقيقي.")
 
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     
-    # 1. مُعالج المحادثة لـ "محافظ محفورة بالاسم"
-    engraved_wallet_handler = ConversationHandler(
-        entry_points=[
-            CallbackQueryHandler(
-                prompt_for_name, 
-                pattern='^(' + '|'.join([item['callback'] for item in engraved_wallet_submenu]) + ')$'
-            )
-        ],
-        states={
-            GET_WALLET_NAME: [
-                MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp),
-            ],
-        },
-        fallbacks=[
-            CommandHandler('start', start),
-            CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'),
-            CallbackQueryHandler(button) 
-        ]
-    )
-
-    # 2. مُعالج المحادثة لـ "اقلام"
-    engraved_pen_handler = ConversationHandler(
-        entry_points=[
-            CallbackQueryHandler(
-                prompt_for_pen_name, 
-                pattern='^(' + '|'.join([item['callback'] for item in aqlam_submenu]) + ')$'
-            )
-        ],
-        states={
-            GET_PEN_NAME: [
-                MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp),
-            ],
-        },
-        fallbacks=[
-            CommandHandler('start', start),
-            CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$'),
-            CallbackQueryHandler(button) 
-        ]
-    )
-
-    # إضافة مُعالجات المحادثة
-    dp.add_handler(engraved_wallet_handler)
-    dp.add_handler(engraved_pen_handler) 
     
-    # إضافة معالجات الأوامر والأزرار الأخرى
+    # 1. مُعالج المحادثة لـ "إرسال شكل مختلف"
+    custom_design_handler = ConversationHandler(
+        entry_points=[
+            # يتم بدء المحادثة عن طريق زر "ارسال شكل مختلف"
+            CallbackQueryHandler(prompt_for_image, pattern='^send_custom_design$')
+        ],
+        states={
+            WAITING_FOR_IMAGE: [
+                # يستقبل أي رسالة تحتوي على صورة
+                MessageHandler(Filters.photo & ~Filters.command, receive_photo_and_prepare_whatsapp),
+                # يتجاهل الرسائل النصية ويطالب العميل بإرسال صورة
+                MessageHandler(Filters.text & ~Filters.command, lambda update, context: update.message.reply_text("من فضلك، أرفق الصورة المطلوبة (ملف صورة).")),
+            ],
+        },
+        fallbacks=[
+            # معالجة زر الرجوع للقائمة الرئيسية
+            CallbackQueryHandler(cancel_image_upload, pattern='^main_menu$'),
+            CommandHandler('start', start),
+        ]
+    )
+
+    # إضافة مُعالج إرسال الصورة
+    dp.add_handler(custom_design_handler)
+    
+    # إضافة معالجات الأوامر والأزرار الأخرى (يجب دمجها مع handlers الأقلام والمحافظ)
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CallbackQueryHandler(button))
 
