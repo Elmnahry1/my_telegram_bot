@@ -123,11 +123,11 @@ def prompt_for_image(update, context):
     except Exception:
         pass
         
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع للقائمة الرئيسية", callback_data="main_menu")]]
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع ", callback_data="main_menu")]]
     
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="**الخطوة الأولى:**\nمن فضلك، **أرفق الصورة أو التصميم** الذي تود تنفيذه الآن.",
+        text="**الخطوة الأولى:**\nمن فضلك، **أرفق صورة التصميم** الذي تود تنفيذه الآن او اضغط علي زر رجوع للذهاب للقائمة السابقة.",
         reply_markup=InlineKeyboardMarkup(back_keyboard),
         parse_mode="Markdown"
     )
