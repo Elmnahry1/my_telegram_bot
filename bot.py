@@ -42,10 +42,6 @@ def start(update, context):
         
     user_name = update.effective_user.first_name if update.effective_user else "عميل"
     
-    greeting_text = (
-        f"✅ مرحباً بك {user_name} في خدمة طلبات التصميم الخاصة بنا.\n\n"
-        "من فضلك، اضغط على الزر أدناه لبدء إرسال الصورة أو التصميم الذي تود تنفيذه."
-    )
     
     # بناء لوحة المفاتيح بزر واحد فقط
     keyboard = [[InlineKeyboardButton("ارسال شكل مختلف 🖼️", callback_data="send_custom_design")]]
