@@ -90,27 +90,67 @@ taarat_submenu = [
         ]
     }
 ]
+# تمت استعادة جميع العناصر المفقودة لقائمة الأهرامات
 haram_submenu = [
     {
         "label": "هرم مكتب اكليريك", "callback": "haram_akerik", "items": [
              {"label": "هرم اكليريك موديل 1", "callback": "haram_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم اكليريك موديل 1"},
              {"label": "هرم اكليريك موديل 2", "callback": "haram_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم اكليريك موديل 2"}
         ]
+    },
+    {
+        "label": "هرم مكتب بديل معدن", "callback": "haram_metal_alt", "items": [
+             {"label": "هرم بديل معدن م 1", "callback": "haram_m_alt_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم بديل معدن موديل 1"},
+        ]
+    },
+    {
+        "label": "هرم مكتب خشب", "callback": "haram_wood", "items": [
+             {"label": "هرم خشب م 1", "callback": "haram_wood_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم خشب موديل 1"},
+        ]
     }
 ]
+
+# تم استعادة جميع العناصر المفقودة لقائمة الدروع
 doro3_submenu = [
     {
         "label": "دروع اكليريك", "callback": "doro3_akerik", "items": [
              {"label": "درع اكليريك موديل 1", "callback": "doro3_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع اكليريك موديل 1"},
              {"label": "درع اكليريك موديل 2", "callback": "doro3_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع اكليريك موديل 2"}
         ]
+    },
+    {
+        "label": "دروع قطيفة", "callback": "doro3_velvet", "items": [
+             {"label": "درع قطيفة م 1", "callback": "doro3_v_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع قطيفة موديل 1"},
+        ]
+    },
+    {
+        "label": "دروع بديل المعدن", "callback": "doro3_metal_alt", "items": [
+             {"label": "درع بديل المعدن م 1", "callback": "doro3_m_alt_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع بديل المعدن موديل 1"},
+        ]
+    },
+    {
+        "label": "دروع خشب", "callback": "doro3_wood", "items": [
+             {"label": "درع خشب م 1", "callback": "doro3_wood_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع خشب موديل 1"},
+        ]
     }
 ]
+
+# تم استعادة جميع العناصر المفقودة لقائمة المجّات
 mugat_submenu = [
     {
         "label": "مج ابيض", "callback": "mugat_white", "items": [
              {"label": "مج ابيض موديل 1", "callback": "mugat_white_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 1"},
              {"label": "مج ابيض موديل 2", "callback": "mugat_white_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 2"}
+        ]
+    },
+    {
+        "label": "مج سحري", "callback": "mugat_magic", "items": [
+             {"label": "مج سحري موديل 1", "callback": "mugat_magic_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 1"},
+        ]
+    },
+    {
+        "label": "مج ديجتال", "callback": "mugat_digital", "items": [
+             {"label": "مج ديجتال موديل 1", "callback": "mugat_digital_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 1"},
         ]
     }
 ]
@@ -167,7 +207,7 @@ for item in bsamat_submenu:
     NAMES_DATE_PRODUCT_KEYS.append(item['callback'])
 for item in wedding_tissues_submenu:
     NAMES_DATE_PRODUCT_KEYS.append(item['callback'])
-for submenu in [sawany_submenu, taarat_submenu]:
+for submenu in [sawany_submenu, taarat_submenu, haram_submenu, doro3_submenu, mugat_submenu]:
     for item in submenu:
         if 'items' in item:
             for sub_item in item['items']:
@@ -229,9 +269,12 @@ def show_submenu(update, context, submenu_list, title, back_callback="main_menu"
     )
         
 def find_product_by_callback(callback_key):
+    # البحث في القوائم المباشرة (مثل المحافظ والأقلام)
     for submenu_list in all_submenus.values():
         product = next((item for item in submenu_list if item.get("callback") == callback_key), None)
         if product: return product
+        
+        # البحث في القوائم المتداخلة (المستوى الثاني)
         for item in submenu_list:
             if 'items' in item:
                 product = next((sub_item for sub_item in item['items'] if sub_item.get("callback") == callback_key), None)
@@ -269,18 +312,19 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
             parse_mode="Markdown"
         )
     
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "aqlam"]:
+    # تحديد زر الرجوع:
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "aqlam", "engraved_wallet"]:
+        # قوائم مباشرة تعود للقائمة الرئيسية
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
+    elif product_to_submenu_map.get(product_callback_data) in ["sawany", "taarat", "haram", "doro3", "mugat"]:
+        # قوائم فرعية (مثل sawany_akerik) تعود للقائمة الرئيسية
+        back_callback = product_to_submenu_map.get(product_callback_data)
+        back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     else:
+        # قوائم متداخلة المستوى الثالث (مثل akerik_m1) تعود للقائمة الفرعية (مثل sawany_akerik)
         back_callback = product_to_submenu_map.get(product_callback_data, "main_menu")
-        
-        if back_callback in ["sawany", "taarat", "haram", "doro3", "mugat"]:
-             back_callback = product_to_submenu_map.get(product_callback_data, "main_menu")
-             back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
-        else:
-             back_callback = back_callback
-             back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
+        back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
 
 
     back_keyboard = [[InlineKeyboardButton(back_text, callback_data=back_callback)]]
@@ -500,7 +544,7 @@ def receive_box_names_and_finish(update, context):
 
 
 # ------------------------------------
-# دوال عامة (أسماء وتاريخ) لـ (صواني، طارات، بصمات، مناديل)
+# دوال عامة (أسماء وتاريخ) لـ (صواني، طارات، بصمات، مناديل، أهرام، دروع، مجّات)
 # ------------------------------------
 
 def start_names_date_purchase(update, context):
@@ -517,10 +561,17 @@ def start_names_date_purchase(update, context):
     context.user_data['names_date_product'] = selected_product
     context.user_data['state'] = GET_NAMES 
 
-    back_key = product_to_submenu_map.get(product_callback, "main_menu")
-    final_back_key = product_to_submenu_map.get(product_callback, "main_menu")
-    context.user_data['names_date_back_callback'] = final_back_key
+    # لتحديد زر الرجوع في المحادثة
+    back_key_level_1 = product_to_submenu_map.get(product_callback, "main_menu")
+    back_key_level_2 = product_to_submenu_map.get(back_key_level_1, "main_menu")
+    
+    # إذا كان المنتج من المستوى الثاني (مثل akerik_m1)، نعود للزر الأب (sawany_akerik)
+    if back_key_level_1 in all_submenus: # إذا كان الزر الأب هو قائمة رئيسية (مثل sawany)
+        final_back_key = back_key_level_1
+    else: # إذا كان الزر الأب هو قائمة فرعية (مثل sawany_akerik)
+        final_back_key = back_key_level_1
 
+    context.user_data['names_date_back_callback'] = final_back_key
 
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data=final_back_key)]] 
     reply_markup = InlineKeyboardMarkup(back_keyboard)
@@ -689,7 +740,7 @@ def button(update, context):
             query.answer()
             return start_box_purchase(update, context)
         
-        # 8. إذا لم يكن منتجاً يحتاج إلى محادثة (مثل أباجورة، هرم، درع، مج...)
+        # 8. إذا لم يكن منتجاً يحتاج إلى محادثة (مثل مستلزمات سبلميشن)
         
         product_data = find_product_by_callback(product_key)
         
@@ -697,9 +748,9 @@ def button(update, context):
             query.answer(text="عذراً، لم يتم العثور على بيانات المنتج.", show_alert=True)
             return
             
-        # إرسال طلب واتساب عادي (لأباجورات، أهرام، دروع، مجات، ومستلزمات السبلميشن إن وجدت)
+        # إرسال طلب واتساب عادي (لأي منتج لم يدخل في محادثة)
         user_info = query.from_user
-        message_body = (f"🔔 *طلب شراء جديد*\nالمنتج: {product_data['label']}\nالكود: {product_key}\nالعميل: {user_info.first_name}\n🔗 صورة: {product_data['image']}")
+        message_body = (f"🔔 *طلب شراء جديد (مستلزمات سبلميشن)*\nالمنتج: {product_data['label']}\nالكود: {product_key}\nالعميل: {user_info.first_name}\n🔗 صورة: {product_data.get('image', 'لا يوجد رابط صورة')}")
         encoded_text = quote_plus(message_body)
         wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
         
@@ -715,20 +766,18 @@ def button(update, context):
 
 
 # --------------------
-# 4. إعداد البوت والتشغيل (تم تحديثه لقراءة التوكن من بيئة العمل)
+# 4. إعداد البوت والتشغيل (تم تحديثه لإصلاح مشكلة التوكن)
 # --------------------
 def main():
-    # 🛑 تم التحديث: قراءة التوكن من متغير البيئة المسمى 'TELEGRAM_BOT_TOKEN'
-    TOKEN = os.environ.get("TOKEN") 
+    # 🚨🚨🚨 هام: قم بتغيير القيمة داخل علامتي التنصيص لتطابق اسم المتغير البيئي الذي استخدمته 🚨🚨🚨
+    TOKEN_KEY = "TOKEN" # مثال: إذا كان اسم المتغير البيئي لديك هو "TOKEN" 
+    TOKEN = os.environ.get(TOKEN_KEY) 
     
     if not TOKEN: 
-         print("❌ فشل التشغيل: يرجى التأكد من تعيين توكن البوت في متغير البيئة المسمى 'TELEGRAM_BOT_TOKEN'.")
-         # يمكنك إضافة سطر الخروج هذا إذا كنت تريد أن يتوقف البرنامج فوراً
-         # return 
-         # لكن سنستمر لطباعة أي خطأ آخر قد يظهر
-         return
+         print(f"❌ فشل التشغيل: يرجى التأكد من تعيين توكن البوت في متغير البيئة المسمى '{TOKEN_KEY}'.")
+         print("💡 ملاحظة: لا يمكنني العثور على التوكن. تأكد من أنك قمت بتعيين المتغير بنفس الاسم قبل تشغيل الكود.")
+         return 
 
-    # 💡 إذا ظهر خطأ بعد هذه النقطة، فيجب أن يكون مشكلة في الاتصال بالشبكة أو في الكود نفسه.
     try:
         updater = Updater(TOKEN, use_context=True)
         dp = updater.dispatcher
@@ -766,7 +815,7 @@ def main():
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(button)]
     )
 
-    # 4. محادثة عامة للأسماء والتاريخ (لجميع الصواني، الطارات، البصامات، المناديل)
+    # 4. محادثة عامة للأسماء والتاريخ (لجميع الصواني، الطارات، البصامات، المناديل، الأهرام، الدروع، المجّات)
     buy_names_date_pattern = '^buy_(' + '|'.join(NAMES_DATE_PRODUCT_KEYS) + ')$'
     
     names_date_handler = ConversationHandler(
