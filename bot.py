@@ -377,7 +377,8 @@ def prompt_for_name(update, context):
 
     context.user_data['wallet_product'] = selected_product
     
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_wallets_color")]] 
+    # ⚠️ تم التعديل: تغيير اسم الـ callback لزر الرجوع
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_wallets_list")]] 
     reply_markup = InlineKeyboardMarkup(back_keyboard)
     
     try:
@@ -385,7 +386,8 @@ def prompt_for_name(update, context):
     except:
         pass
         
-    caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب الاسم أو الحرف المراد حفره** في رسالة نصية بالأسفل."
+    # ⚠️ تم التعديل: نص الرسالة يطابق طلب المستخدم
+    caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب الاسم المراد حفره على المحفظة** في رسالة نصية بالأسفل."
     
     context.bot.send_photo(
         chat_id=update.effective_chat.id,
@@ -419,6 +421,7 @@ def receive_name_and_prepare_whatsapp(update, context):
     encoded_text = quote_plus(message_body)
     wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
     
+    # ⚠️ تم التعديل: إظهار زر الواتساب بعد استلام الاسم
     keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
     keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -431,7 +434,8 @@ def receive_name_and_prepare_whatsapp(update, context):
     context.user_data.clear()
     return ConversationHandler.END
 
-def back_to_wallets_color(update, context):
+# ⚠️ تم التعديل: لتصبح وظيفة الرجوع للمحافظ
+def back_to_wallets_list(update, context):
     # رجوع إلى صفحة المحافظ
     query = update.callback_query
     query.answer()
@@ -535,8 +539,9 @@ def start_box_purchase(update, context):
     
     # رسالة اختيار اللون
     color_keyboard = [
-        [InlineKeyboardButton("أسود في دهبي", callback_data="color_black")],
-        [InlineKeyboardButton("أبيض في دهبي", callback_data="color_white")],
+        [InlineKeyboardButton("أبيض", callback_data="color_white")],
+        [InlineKeyboardButton("أسود", callback_data="color_black")],
+        [InlineKeyboardButton("بيج", callback_data="color_beige")],
         [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")] # العودة لصفحة البوكس
     ]
     reply_markup = InlineKeyboardMarkup(color_keyboard)
@@ -1153,14 +1158,14 @@ def main():
     
     # 1. محافظ (ConversationHandler)
     engraved_wallet_handler = ConversationHandler(
-        # تم تصحيح prompt_for_name
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^wallet_.*')],
         states={
             GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp)]
         },
         fallbacks=[
             CommandHandler('start', start), 
-            CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'), 
+            # ⚠️ تم التعديل: لتغطية زر الرجوع الجديد
+            CallbackQueryHandler(back_to_wallets_list, pattern='^back_to_wallets_list$'), 
             CallbackQueryHandler(cancel_and_end)
         ]
     )
