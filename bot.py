@@ -362,7 +362,7 @@ def prompt_for_name(update, context):
         pass
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_wallets_color")]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
-    caption_text = (f"**اختيارك: {selected_wallet_data['label']}**\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل.\nأو اضغط زر الرجوع لتغيير اللون.")
+    caption_text = (f"**اختيارك: {selected_wallet_data['label']}**\n\n من فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة.\nأو اضغط زر الرجوع لتغيير اللون.")
     update.effective_chat.bot.send_photo(chat_id=update.effective_chat.id, photo=selected_wallet_data['image'], caption=caption_text, reply_markup=back_reply_markup, parse_mode="Markdown")
     return GET_WALLET_NAME
 
@@ -420,7 +420,7 @@ def prompt_for_pen_name(update, context):
         pass
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_pen_types")]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
-    caption_text = (f"**اختيارك: {selected_pen_data['label']}**\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.\nأو اضغط زر الرجوع لتغيير نوع القلم.")
+    caption_text = (f"**اختيارك: {selected_pen_data['label']}**\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير نوع القلم.")
     update.effective_chat.bot.send_photo(chat_id=update.effective_chat.id, photo=selected_pen_data['image'], caption=caption_text, reply_markup=back_reply_markup, parse_mode="Markdown")
     return GET_PEN_NAME
 
@@ -480,7 +480,7 @@ def save_box_color_ask_names(update, context):
         query.message.delete()
     except:
         pass
-    context.bot.send_message(chat_id=update.effective_chat.id, text=f"لقد اخترت اللون: **{color_name}**\n\nمن فضلك الآن **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل:", reply_markup=reply_markup, parse_mode="Markdown")
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f"لقد اخترت اللون: **{color_name}**\n\nمن فضلك الآن **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:", reply_markup=reply_markup, parse_mode="Markdown")
     return GET_BOX_NAMES
 
 def back_to_box_color(update, context):
@@ -554,7 +554,7 @@ def start_tray_purchase(update, context):
     context.bot.send_photo(
         chat_id=update.effective_chat.id,
         photo=selected_tray['image'],
-        caption=f"✅ **{selected_tray['label']}**\n\nمن فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل:",
+        caption=f"✅ **{selected_tray['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:",
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
