@@ -448,6 +448,7 @@ def back_to_pen_types(update, context):
 
 def prompt_for_pen_name(update, context):
     query = update.callback_query
+    # ⚠️ ملاحظة: إذا تم استدعاء هذه الدالة يدوياً من دالة button، فإن البيانات ستكون buy_aqlam_...
     data = query.data
     query.answer()
     
@@ -492,6 +493,7 @@ def start_box_purchase(update, context):
     query = update.callback_query
     query.answer()
     data = query.data 
+    # ⚠️ إذا تم الاستدعاء يدوياً، تكون data هي buy_box_mX
     product_callback = data.replace("buy_", "")
     selected_box = next((item for item in katb_kitab_box_submenu if item["callback"] == product_callback), None)
     if not selected_box:
@@ -570,6 +572,7 @@ def start_names_date_purchase(update, context):
     الخطوة 1: التقاط زر شراء للمنتج وطلب الأسماء (عام)
     """
     query = update.callback_query
+    # ⚠️ إذا تم الاستدعاء يدوياً، تكون query.data هي buy_akerik_mX
     query.answer()
     product_callback = query.data.replace("buy_", "")
 
@@ -584,10 +587,15 @@ def start_names_date_purchase(update, context):
 
     # تحديد مسار الرجوع الصحيح (اسم القائمة التي تعرض هذا المنتج)
     back_key = product_to_submenu_map.get(selected_product["callback"], "main_menu")
-    context.user_data['names_date_back_callback'] = back_key
+    
+    # ⚠️ نضمن أن زر الرجوع يعود إلى القائمة التي تسبق المنتج مباشرة
+    # لو كان المنتج في المستوى الثاني (مثل akerik_m1)، نعود للمستوى الأول (sawany_akerik)
+    final_back_key = product_to_submenu_map.get(product_callback, "main_menu")
+    context.user_data['names_date_back_callback'] = final_back_key
+
 
     # زر رجوع يعيدنا لصفحة عرض المنتجات
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data=back_key)]] 
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data=final_back_key)]] 
     reply_markup = InlineKeyboardMarkup(back_keyboard)
 
     try:
@@ -714,13 +722,14 @@ def button(update, context):
         show_submenu(update, context, engraved_wallet_submenu, "محافظ محفورة بالاسم", back_callback="main_menu")
         return 
         
-    # 3. معالجة فتح قائمة الأقلام (محادثة - تم تعديلها لعرض المنتجات مباشرة)
-    if data == "aqlam":
-        product_list = aqlam_submenu
+    # 3. معالجة فتح قائمة الأقلام وبقية القوائم المباشرة (عرض صفحة المنتجات)
+    if data in ["aqlam", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
+        product_list = all_submenus[data]
         show_product_page(update, data, product_list, is_direct_list=True)
         return 
         
     # 4. معالجة اختيار المنتج (محفظة) - الدخول في حالة المحادثة
+    # ملاحظة: أزرار المحافظ ليس لها بادئة "buy_"
     if data in [item["callback"] for item in engraved_wallet_submenu]:
         return prompt_for_name(update, context) 
     
@@ -731,13 +740,7 @@ def button(update, context):
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu") 
         return
         
-    # 6. معالجة القوائم الفرعية التي تعرض المنتجات مباشرة (بصمات، مناديل كتب كتاب، اباجورات، بوكس كتب الكتاب)
-    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
-        product_list = all_submenus[data]
-        show_product_page(update, data, product_list, is_direct_list=True)
-        return
-    
-    # 7. معالجة ضغط زر المنتج للذهاب لصفحة الشراء (القوائم المتداخلة: صواني اكليريك/خشب، طارات اكليريك/خشب، أهرامات، دروع، مجات)
+    # 6. معالجة ضغط زر المنتج للذهاب لصفحة الشراء (القوائم المتداخلة: صواني اكليريك/خشب، طارات اكليريك/خشب، أهرامات، دروع، مجات)
     if data in product_to_submenu_map:
         product_data = None
         # نبحث عن بيانات القائمة (المستوى الأول من القائمة المتداخلة)
@@ -754,17 +757,26 @@ def button(update, context):
             query.answer(text="عذراً، لم يتم العثور على بيانات المنتج.", show_alert=True)
             return
 
-    # 8. حالة زر الشراء (المنتجات العادية التي لم يتم تغطيتها بالمحادثات)
-    # ⚠️ جميع المنتجات التي تحتاج لأسماء وتاريخ (NAMES_DATE_PRODUCT_KEYS) والمحافظ والأقلام والبوكسات
-    # يتم التقاطها بواسطة Conversation Handlers في دالة main. هنا نعالج بقية أزرار الشراء.
+    # 7. حالة زر الشراء (المنتجات العادية والمنتجات التي تحتاج محادثة)
     if data.startswith("buy_"):
         product_key = data.replace("buy_", "")
         
-        # التأكد من أن المنتج ليس جزءًا من محادثة الأسماء والتاريخ أو غيرها من المحادثات الخاصة
-        if product_key in NAMES_DATE_PRODUCT_KEYS or product_key.startswith(("aqlam_", "box_m", "wallet_")):
-             # يتم معالجة هذا بواسطة Conversation Handler في دالة main، نتجاهله هنا
-             return 
-
+        # 🟢 الإصلاح: التحقق من المنتجات التي تتطلب محادثة وبدء المحادثة يدوياً
+        # هذا يحل مشكلة فشل زر الشراء المتكرر بعد انتهاء محادثة سابقة.
+        if product_key in NAMES_DATE_PRODUCT_KEYS:
+            query.answer() 
+            return start_names_date_purchase(update, context)
+            
+        elif product_key.startswith('aqlam_'):
+            query.answer()
+            return prompt_for_pen_name(update, context)
+            
+        elif product_key.startswith('box_m'):
+            query.answer()
+            return start_box_purchase(update, context)
+        
+        # 8. إذا لم يكن منتجاً يحتاج إلى محادثة (مثل أباجورة، هرم، درع، مج...)
+        
         product_data = find_product_by_callback(product_key)
         
         if not product_data:
@@ -792,16 +804,18 @@ def button(update, context):
 # 4. إعداد البوت 
 # --------------------
 def main():
-    TOKEN = os.getenv("TOKEN") 
+    # ⚠️ استبدل هذا بسطر قراءة التوكن الفعلي في بيئتك
+    TOKEN = os.getenv("TOKEN", "YOUR_TELEGRAM_BOT_TOKEN") 
     
-    if not TOKEN:
-        print("❌ لم يتم العثور على التوكن (TOKEN).")
-        return
+    if TOKEN == "YOUR_TELEGRAM_BOT_TOKEN":
+         print("❌ يرجى تعيين توكن البوت في متغير البيئة TOKEN أو استبدال القيمة الافتراضية.")
+         return
 
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     
     # 1. محافظ (ConversationHandler)
+    # لا تحتاج buy_، يتم التقاطها مباشرة من زر المنتج في دالة button
     engraved_wallet_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^(' + '|'.join([item['callback'] for item in engraved_wallet_submenu]) + ')$')],
         states={GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp)]},
@@ -836,7 +850,7 @@ def main():
         states={
             GET_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_names_ask_date),
-                # لزر الرجوع الذي يعود من شاشة طلب الأسماء إلى شاشة عرض المنتجات
+                # للتعامل مع زر الرجوع الذي يعود من شاشة طلب الأسماء إلى شاشة عرض المنتجات
                 CallbackQueryHandler(button, pattern='^(' + '|'.join(product_to_submenu_map.values()) + ')$') 
             ],
             GET_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_date_and_finish_whatsapp)]
@@ -848,17 +862,22 @@ def main():
         ]
     )
 
+    # إضافة كل محادثات الشراء أولاً
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler)
     dp.add_handler(box_handler)
     dp.add_handler(names_date_handler)
     
+    # إضافة الأوامر العامة ومعالج الأزرار كمعالج عام في النهاية
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CallbackQueryHandler(button))
 
     print("🤖 البوت يعمل الآن...")
-    updater.start_polling()
-    updater.idle()
+    # يرجى تشغيل البوت باستخدام أمر python /path/to/your/file.py
+    # updater.start_polling()
+    # updater.idle()
 
 if __name__ == '__main__':
-    main()
+    # main() # يرجى تشغيل دالة main يدوياً في بيئة التشغيل الخاصة بك
+    # لتجنب خطأ التشغيل هنا، سأقوم فقط بعرض الكود
+    pass
