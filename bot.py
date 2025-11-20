@@ -329,11 +329,6 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
 
 
 # --- [دوال المحادثات: لم يطرأ عليها تغيير، تم الحفاظ على التصحيحات السابقة] ---
-# ...
-# ... الدوال المحادثات (محافظ، أقلام، بوكس، صواني اكليريك، صواني خشب، طارات اكليريك، طارات خشب)
-# ...
-# --- [نهاية دوال المحادثات] ---
-
 # دوال المحافظ (للاختصار، تُركت هنا للتأكيد على الفولباك)
 def back_to_wallets_color(update, context):
     query = update.callback_query
@@ -1008,28 +1003,27 @@ def button(update, context):
         return
         
     # 4. معالجة عرض صفحات المنتجات مباشرة (جميع القوائم التي تعرض صور المنتجات)
-    # تشمل: (bsamat, wedding_tissues, katb_kitab_box, abajorat) + جميع قوائم المستوى الثاني (sawany_akerik, taarat_khashab, etc.)
-    
+    # **مفاتيح الطارات موجودة هنا وهي تعمل بنفس طريقة الصواني**
     product_list_keys = [
         # قوائم المستوى الأول المباشرة
         "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box",
         # قوائم المستوى الثاني (التي يتم عرض محتواها كمنتجات)
         "sawany_akerik", "sawany_khashab", 
-        "taarat_akerik", "taarat_khashab",
+        "taarat_akerik", "taarat_khashab", # المفاتيح التي أبلغت عن مشكلتها
         "haram_akerik", "haram_metal", "haram_khashab",
         "doro3_akerik", "doro3_metal", "doro3_qatifah", "doro3_khashab",
         "mugat_white", "mugat_magic", "mugat_digital"
     ]
     
     if data in product_list_keys:
-        products_list = []
+        products_list = [] # تهيئة قائمة المنتجات
         is_direct_list = data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]
         
         if is_direct_list:
              # إذا كانت قائمة مباشرة من المستوى الأول
-             products_list = all_submenus.get(data)
+             products_list = all_submenus.get(data) or []
         else:
-            # إذا كانت قائمة من المستوى الثاني (مثل sawany_akerik)
+            # إذا كانت قائمة من المستوى الثاني (مثل sawany_akerik أو taarat_akerik)
             for parent_submenu in all_submenus.values():
                 for item in parent_submenu:
                     if item.get("callback") == data and 'items' in item:
@@ -1043,8 +1037,7 @@ def button(update, context):
             return
 
     # إذا لم يطابق أي من الحالات أعلاه، نعتبره خطأ في التنقل
-    # (هذه هي الرسالة التي كنت تتلقاها)
-    context.bot.send_message(chat_id=update.effective_chat.id, text="عذراً، حدث خطأ في التنقل.", parse_mode="Markdown")
+    context.bot.send_message(chat_id=update.effective_chat.id, text="عذراً، حدث خطأ عام في التنقل.", parse_mode="Markdown")
     return
 
 
