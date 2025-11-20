@@ -1134,7 +1134,7 @@ def button(update, context):
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu") 
         return
         
-    # 6. معالجة القوائم الفرعية التي تعرض المنتجات مباشرة
+    # 6. معالجة القوائم الفرعية التي تعرض المنتجات مباشرة (بصمات، مناديل، بوكسات، أباجورات)
     if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
         product_list = all_submenus[data]
         show_product_page(update, data, product_list, is_direct_list=True)
@@ -1191,9 +1191,9 @@ def button(update, context):
             return
 
     # 8. حالة زر الشراء (المنتجات العادية)
-    # ⚠️ هام: نستثني هنا البوكسات والصواني والطارات لأن لهم ConversationHandler خاص
     if data.startswith("buy_"):
-        # فحص إذا كان المنتج من الصواني (akerik_m, khashab_m) أو الطارات (taarat_akerik_m, taarat_khashab_m)
+        # ⚠️ هام: نستثني هنا البوكسات والصواني والطارات لأن لهم ConversationHandler خاص
+        # هذه القائمة هنا لتعمل كـ "safeguard" إذا فشل الـ ConversationHandler في التقاط الحدث.
         if "akerik_m" in data or "khashab_m" in data or "taarat_akerik_m" in data or "taarat_khashab_m" in data: 
              # يتم التقاطها بواسطة ConversationHandler
              query.answer()
@@ -1308,9 +1308,9 @@ def main():
         ]
     )
 
-    # 🆕 6. طارات اكليريك
+    # 🆕 6. طارات اكليريك - 🔴 تم تعديل النمط هنا
     akerik_taarat_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(start_akerik_taarat_purchase, pattern='^buy_taarat_akerik_.*')],
+        entry_points=[CallbackQueryHandler(start_akerik_taarat_purchase, pattern=r'^buy_taarat_akerik_m\d+$')],
         states={
             GET_AKRILIK_TAARAT_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_akerik_taarat_names_ask_date),
@@ -1325,9 +1325,9 @@ def main():
         ]
     )
     
-    # 🆕 7. طارات خشب
+    # 🆕 7. طارات خشب - 🔴 تم تعديل النمط هنا
     khashab_taarat_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(start_khashab_taarat_purchase, pattern='^buy_taarat_khashab_.*')],
+        entry_points=[CallbackQueryHandler(start_khashab_taarat_purchase, pattern=r'^buy_taarat_khashab_m\d+$')],
         states={
             GET_KHASHAB_TAARAT_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_khashab_taarat_names_ask_date),
