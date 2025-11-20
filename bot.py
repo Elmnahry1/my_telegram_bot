@@ -215,8 +215,30 @@ for menu_key, submenu_list in all_submenus.items():
 
 
 # --------------------
-# 3. الدوال الرئيسية والمساعدة (لا تغيير في وظيفتها الأساسية)
+# 3. الدوال الرئيسية والمساعدة
 # --------------------
+
+# 🛑 الدالة الجديدة: لإلغاء أي محادثة جارية والعودة للقائمة الرئيسية
+def cancel_and_end(update, context):
+    query = update.callback_query
+    if query:
+        # إشعار سريع للمستخدم
+        query.answer("تم إلغاء العملية الحالية. يرجى اختيار طلبك مرة أخرى.", show_alert=True)
+        # محاولة حذف الرسالة القديمة لتجنب ارتباك المستخدم
+        try:
+            query.message.delete()
+        except Exception:
+            pass
+    
+    # مسح حالة المحادثة المؤقتة
+    context.user_data.clear()
+    
+    # العودة للقائمة الرئيسية لبدء عملية جديدة نظيفة
+    start(update, context) 
+    
+    # إنهاء المحادثة بشكل صريح
+    return ConversationHandler.END
+
 
 def start(update, context):
     query = update.callback_query
@@ -328,8 +350,8 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     )
 
 
-# --- [دوال المحادثات: لم يطرأ عليها تغيير، تم الحفاظ على التصحيحات السابقة] ---
-# دوال المحافظ (للاختصار، تُركت هنا للتأكيد على الفولباك)
+# --- [دوال المحادثات: لم يطرأ عليها تغيير في الوظيفة، تم تحديث Fallbacks فقط] ---
+# دوال المحافظ
 def back_to_wallets_color(update, context):
     query = update.callback_query
     query.answer()
@@ -385,7 +407,7 @@ def receive_name_and_prepare_whatsapp(update, context):
     context.user_data.clear()
     return ConversationHandler.END
 
-# دوال الأقلام (للاختصار، تُركت هنا للتأكيد على الفولباك)
+# دوال الأقلام
 def back_to_pen_types(update, context):
     query = update.callback_query
     query.answer()
@@ -975,12 +997,12 @@ def handle_generic_buy(update, context):
 
 
 # ------------------------------------
-# الدالة الرئيسية لمعالجة ضغطات الأزرار (للملاحة فقط) - تم تعديل هيكلتها
+# الدالة الرئيسية لمعالجة ضغطات الأزرار (للملاحة فقط)
 # ------------------------------------
 def button(update, context):
     query = update.callback_query
     data = query.data
-    query.answer() # يجب الإجابة على الكويري أولاً
+    query.answer() 
 
     # 1. حالة العودة للقائمة الرئيسية
     if data == "main_menu":
@@ -1003,13 +1025,12 @@ def button(update, context):
         return
         
     # 4. معالجة عرض صفحات المنتجات مباشرة (جميع القوائم التي تعرض صور المنتجات)
-    # **مفاتيح الطارات موجودة هنا وهي تعمل بنفس طريقة الصواني**
     product_list_keys = [
         # قوائم المستوى الأول المباشرة
         "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box",
         # قوائم المستوى الثاني (التي يتم عرض محتواها كمنتجات)
         "sawany_akerik", "sawany_khashab", 
-        "taarat_akerik", "taarat_khashab", # المفاتيح التي أبلغت عن مشكلتها
+        "taarat_akerik", "taarat_khashab", 
         "haram_akerik", "haram_metal", "haram_khashab",
         "doro3_akerik", "doro3_metal", "doro3_qatifah", "doro3_khashab",
         "mugat_white", "mugat_magic", "mugat_digital"
@@ -1036,8 +1057,9 @@ def button(update, context):
             show_product_page(update, data, products_list, is_direct_list=is_direct_list)
             return
 
-    # إذا لم يطابق أي من الحالات أعلاه، نعتبره خطأ في التنقل
-    context.bot.send_message(chat_id=update.effective_chat.id, text="عذراً، حدث خطأ عام في التنقل.", parse_mode="Markdown")
+    # إذا لم يطابق أي من الحالات أعلاه (وهو زر غير معروف)، نعتبره خطأ في التنقل ونعود للقائمة الرئيسية
+    context.bot.send_message(chat_id=update.effective_chat.id, text="عذراً، حدث خطأ عام في التنقل. الرجاء البدء مجدداً.", parse_mode="Markdown")
+    start(update, context) # نعود للقائمة الرئيسية كإجراء وقائي
     return
 
 
@@ -1054,31 +1076,31 @@ def main():
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     
-    # 1. محافظ (ConversationHandler)
+    # 1. محافظ (ConversationHandler) - تم تحديث Fallbacks
     engraved_wallet_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^(' + '|'.join([item['callback'] for item in engraved_wallet_submenu]) + ')$')],
         states={GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp)]},
-        fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'), CallbackQueryHandler(button)]
+        fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'), CallbackQueryHandler(cancel_and_end)] # ⬅️ تم التحديث
     )
 
-    # 2. اقلام (ConversationHandler)
+    # 2. اقلام (ConversationHandler) - تم تحديث Fallbacks
     engraved_pen_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^(' + '|'.join([item['callback'] for item in aqlam_submenu]) + ')$')],
         states={GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)]},
-        fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$'), CallbackQueryHandler(button)]
+        fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$'), CallbackQueryHandler(cancel_and_end)] # ⬅️ تم التحديث
     )
 
-    # 3. بوكس كتب الكتاب (ConversationHandler)
+    # 3. بوكس كتب الكتاب (ConversationHandler) - تم تحديث Fallbacks
     box_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_box_purchase, pattern='^buy_box_.*')],
         states={
             GET_BOX_COLOR: [CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*|katb_kitab_box$')],
             GET_BOX_NAMES: [MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish)]
         },
-        fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(button)]
+        fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(cancel_and_end)] # ⬅️ تم التحديث
     )
 
-    # 4. صواني شبكة اكليريك (ConversationHandler)
+    # 4. صواني شبكة اكليريك (ConversationHandler) - تم تحديث Fallbacks
     tray_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_tray_purchase, pattern=r'^buy_akerik_m\d+$')],
         states={
@@ -1091,11 +1113,11 @@ def main():
         fallbacks=[
             CommandHandler('start', start),
             CallbackQueryHandler(back_to_tray_names, pattern='^back_to_tray_names$'),
-            CallbackQueryHandler(button)
+            CallbackQueryHandler(cancel_and_end) # ⬅️ تم التحديث
         ]
     )
     
-    # 5. صواني شبكة خشب (ConversationHandler)
+    # 5. صواني شبكة خشب (ConversationHandler) - تم تحديث Fallbacks
     khashab_tray_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_khashab_tray_purchase, pattern=r'^buy_khashab_m\d+$')],
         states={
@@ -1108,11 +1130,11 @@ def main():
         fallbacks=[
             CommandHandler('start', start),
             CallbackQueryHandler(back_to_khashab_tray_names, pattern='^back_to_khashab_tray_names$'),
-            CallbackQueryHandler(button)
+            CallbackQueryHandler(cancel_and_end) # ⬅️ تم التحديث
         ]
     )
 
-    # 6. طارات اكليريك (ConversationHandler)
+    # 6. طارات اكليريك (ConversationHandler) - تم تحديث Fallbacks
     akerik_taarat_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_akerik_taarat_purchase, pattern=r'^buy_taarat_akerik_m\d+$')],
         states={
@@ -1125,11 +1147,11 @@ def main():
         fallbacks=[
             CommandHandler('start', start),
             CallbackQueryHandler(back_to_akerik_taarat_names, pattern='^back_to_akerik_taarat_names$'),
-            CallbackQueryHandler(button)
+            CallbackQueryHandler(cancel_and_end) # ⬅️ تم التحديث
         ]
     )
     
-    # 7. طارات خشب (ConversationHandler)
+    # 7. طارات خشب (ConversationHandler) - تم تحديث Fallbacks
     khashab_taarat_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_khashab_taarat_purchase, pattern=r'^buy_taarat_khashab_m\d+$')],
         states={
@@ -1142,7 +1164,7 @@ def main():
         fallbacks=[
             CommandHandler('start', start),
             CallbackQueryHandler(back_to_khashab_taarat_names, pattern='^back_to_khashab_taarat_names$'),
-            CallbackQueryHandler(button)
+            CallbackQueryHandler(cancel_and_end) # ⬅️ تم التحديث
         ]
     )
 
@@ -1159,7 +1181,6 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     
     # 9. معالج أزرار الشراء العامة (للمنتجات التي لا تحتاج محادثة)
-    # هذا المعالج يلتقط أي زر يبدأ بـ 'buy_' لم يتم التقاطه بواسطة ConversationHandler
     dp.add_handler(CallbackQueryHandler(handle_generic_buy, pattern='^buy_.*')) 
     
     # 10. معالج الأزرار المتبقية (للملاحة بين القوائم)
