@@ -343,27 +343,52 @@ def back_to_wallets_color(update, context):
         query.message.delete()
     except Exception:
         pass
-    keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in engraved_wallet_submenu]
-    keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ *محافظ محفورة بالاسم*:\n\nمن فضلك اختر اللون المطلوب:", reply_markup=reply_markup, parse_mode="Markdown")
+    # نستخدم نفس دالة عرض القائمة الفرعية لعرض المحافظ مرة أخرى
+    show_submenu(update, context, engraved_wallet_submenu, "محافظ محفورة بالاسم", back_callback="main_menu")
     return ConversationHandler.END 
 
 def prompt_for_name(update, context):
+    """
+    ⚠️ تم التعديل هنا لتبسيط رسالة المطالبة وإبقاء زر الرجوع فقط
+    """
     query = update.callback_query
     data = query.data
     query.answer()
+    
     selected_wallet_data = next((item for item in engraved_wallet_submenu if item["callback"] == data), None)
+    
+    if not selected_wallet_data:
+        query.answer("خطأ في بيانات المنتج.", show_alert=True)
+        return ConversationHandler.END
+
     context.user_data['wallet_data'] = selected_wallet_data
     context.user_data['state'] = GET_WALLET_NAME
+    
     try:
-        query.message.delete()
+        # حذف رسالة قائمة المحافظ السابقة
+        query.message.delete() 
     except Exception:
         pass
+        
+    # زر الرجوع يعود بنا إلى قائمة المحافظ (الالوان)
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_wallets_color")]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
-    caption_text = (f"**اختيارك: {selected_wallet_data['label']}**\n\n من فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة.\nأو اضغط زر الرجوع لتغيير اللون.")
-    update.effective_chat.bot.send_photo(chat_id=update.effective_chat.id, photo=selected_wallet_data['image'], caption=caption_text, reply_markup=back_reply_markup, parse_mode="Markdown")
+    
+    # ⚠️ التعديل: تبسيط نص المطالبة إلى ما طلبه المستخدم
+    caption_text = (
+        f"**اختيارك: {selected_wallet_data['label']}**\n\n"
+        f"اكتب الاسم المراد حفره علي المحفظة"
+    )
+    
+    # إرسال صورة المحفظة مع النص الجديد وزر الرجوع
+    update.effective_chat.bot.send_photo(
+        chat_id=update.effective_chat.id, 
+        photo=selected_wallet_data['image'], 
+        caption=caption_text, 
+        reply_markup=back_reply_markup, 
+        parse_mode="Markdown"
+    )
+    
     return GET_WALLET_NAME
 
 def receive_name_and_prepare_whatsapp(update, context):
@@ -383,6 +408,7 @@ def receive_name_and_prepare_whatsapp(update, context):
     message_body = (f"🔔 *طلب شراء جديد (محافظ)* 🔔\n\nالمنتج: {wallet_type}\nاللون: {color}\n الاسم المطلوب حفره: *{engraving_name}*\nالكود: {product_data['callback']}\n\nاسم العميل: {user_info.first_name}\nاليوزر: @{user_info.username}\n🔗 صورة: {product_data['image']}")
     encoded_text = quote_plus(message_body)
     wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
+    # ⚠️ يظهر زر الواتساب بعد كتابة الاسم
     keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)], [InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.bot.send_message(chat_id=update.message.chat_id, text=f"شكراً لك! سيتم حفر اسم **{engraving_name}** على **{product_data['label']}**.\n\nلإتمام الطلب، اضغط على الزر التالي:", reply_markup=reply_markup, parse_mode="Markdown")
@@ -390,7 +416,7 @@ def receive_name_and_prepare_whatsapp(update, context):
     return ConversationHandler.END
 
 # ------------------------------------
-# دوال الأقلام (تم تعديلها بناءً على طلب المستخدم)
+# دوال الأقلام (تم تعديلها بناءً على طلب المستخدم السابق)
 # ------------------------------------
 
 def back_to_pen_types(update, context):
@@ -424,7 +450,7 @@ def prompt_for_pen_name(update, context):
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_pen_types")]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
     
-    # ⚠️ تعديل: نص الرسالة بناءً على طلب المستخدم
+    # ⚠️ تعديل: نص الرسالة بناءً على طلب المستخدم السابق
     caption_text = (f"**اختيارك: {selected_pen_data['label']}**\n\nاكتب الاسم المراد حفره علي القلم او اضغط زر رجوع للعودة للقائمة السابقة")
     
     update.effective_chat.bot.send_photo(chat_id=update.effective_chat.id, photo=selected_pen_data['image'], caption=caption_text, reply_markup=back_reply_markup, parse_mode="Markdown")
@@ -681,7 +707,7 @@ def button(update, context):
         show_product_page(update, data, product_list, is_direct_list=True)
         return 
         
-    # 4. معالجة اختيار المنتج (سواء محفظة)
+    # 4. معالجة اختيار المنتج (محفظة) - الدخول في حالة المحادثة
     if data in [item["callback"] for item in engraved_wallet_submenu]:
         return prompt_for_name(update, context) 
     
@@ -735,7 +761,7 @@ def button(update, context):
             return
 
     # 8. حالة زر الشراء (المنتجات العادية)
-    # ⚠️ هام: نستثني هنا البوكسات وصواني الاكليريك والأقلام لأن لهم ConversationHandler خاص
+    # ⚠️ هام: نستثني هنا البوكسات وصواني الاكليريك والأقلام والمحافظ لأن لهم ConversationHandler خاص
     if data.startswith("buy_"):
         # فحص إذا كان المنتج من صواني الاكليريك (akerik_m1, akerik_m2) أو الأقلام (aqlam_metal, aqlam_luminous)
         if "akerik_m" in data or "aqlam_" in data: 
