@@ -13,6 +13,8 @@ WHATSAPP_NUMBER = "201288846355"
 
 GET_WALLET_NAME = 1 # حالة المحافظ
 GET_PEN_NAME = 2    # حالة الأقلام 
+GET_BOX_COLOR = 3   # 🆕 حالة اختيار لون البوكس
+GET_BOX_NAMES = 4   # 🆕 حالة كتابة أسماء العرسان
 
 # --------------------
 # 2. بيانات القوائم والمنتجات
@@ -44,7 +46,7 @@ engraved_wallet_submenu = [
     {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود."}
 ]
 
-# 🛑 قائمة الأقلام (المدخل الرئيسي للمحادثة)
+# 🛑 قائمة الأقلام 
 aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", 
@@ -165,7 +167,7 @@ main_menu = [
     {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
     {"label": "✋ بصامات", "callback": "bsamat"}, 
     {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"},
-    {"label": "🎁 بوكس كتب الكتاب", "callback": "katb_kitab_box"}, # 🆕 تمت الاضافة هنا
+    {"label": "🎁 بوكس كتب الكتاب", "callback": "katb_kitab_box"},
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
@@ -185,7 +187,7 @@ all_submenus = {
     "mugat": mugat_submenu,
     "bsamat": bsamat_submenu, 
     "wedding_tissues": wedding_tissues_submenu,
-    "katb_kitab_box": katb_kitab_box_submenu, # 🆕 تمت اضافة القائمة هنا
+    "katb_kitab_box": katb_kitab_box_submenu,
     "abajorat": abajorat_submenu,
     "engraved_wallet": engraved_wallet_submenu
 }
@@ -193,7 +195,6 @@ all_submenus = {
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    # 🆕 تمت اضافة katb_kitab_box للقائمة هنا
     if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box"]: 
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
@@ -216,7 +217,7 @@ for menu_key, submenu_list in all_submenus.items():
 def start(update, context):
     query = update.callback_query
     # إنهاء أي محادثة جارية عند استخدام /start أو العودة للقائمة الرئيسية
-    if context.user_data.get('state') in [GET_WALLET_NAME, GET_PEN_NAME]:
+    if context.user_data.get('state') in [GET_WALLET_NAME, GET_PEN_NAME, GET_BOX_COLOR, GET_BOX_NAMES]:
         context.user_data.clear()
         context.user_data['state'] = None
         
@@ -305,7 +306,6 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
         )
     
     # تحديد زر الرجوع
-    # 🆕 تمت اضافة katb_kitab_box هنا للتأكد من أن زر الرجوع يذهب للقائمة الرئيسية
     if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
@@ -546,6 +546,164 @@ def receive_pen_name_and_prepare_whatsapp(update, context):
     context.user_data.clear()
     return ConversationHandler.END
 
+# ------------------------------------
+# 🆕 دوال بوكس كتب الكتاب (Katb Kitab Box Handlers)
+# ------------------------------------
+
+def start_box_purchase(update, context):
+    """
+    الخطوة 1: عند الضغط على زر شراء للبوكس
+    """
+    query = update.callback_query
+    query.answer()
+    data = query.data # مثال: buy_box_m1
+    
+    product_callback = data.replace("buy_", "")
+    
+    # البحث عن المنتج المختار
+    selected_box = next((item for item in katb_kitab_box_submenu if item["callback"] == product_callback), None)
+    
+    if not selected_box:
+         query.answer("خطأ في العثور على المنتج", show_alert=True)
+         return ConversationHandler.END
+
+    # حفظ المنتج في context
+    context.user_data['box_product'] = selected_box
+    context.user_data['state'] = GET_BOX_COLOR
+
+    # أزرار اختيار اللون
+    keyboard = [
+        [InlineKeyboardButton("اسود في دهبي", callback_data="color_black_gold")],
+        [InlineKeyboardButton("ابيض في دهبي", callback_data="color_white_gold")],
+        [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")] # يرجع لقائمة البوكسات
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"✅ **{selected_box['label']}**\n\nمن فضلك اختر **لون البوكس**:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_BOX_COLOR
+
+def save_box_color_ask_names(update, context):
+    """
+    الخطوة 2: حفظ اللون وطلب الأسماء
+    """
+    query = update.callback_query
+    query.answer()
+    data = query.data # مثال: color_black_gold
+
+    # معالجة زر الرجوع للقائمة السابقة
+    if data == "katb_kitab_box":
+        show_product_page(update, "katb_kitab_box", katb_kitab_box_submenu, is_direct_list=True)
+        context.user_data.clear()
+        return ConversationHandler.END
+
+    # تحديد اسم اللون بالعربي
+    color_name = "أسود في ذهبي" if data == "color_black_gold" else "أبيض في ذهبي"
+    context.user_data['box_color'] = color_name
+    
+    # زر رجوع (يعيدنا لخطوة اختيار اللون)
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_box_color")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+
+    try:
+        query.message.delete()
+    except:
+        pass
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"لقد اخترت اللون: **{color_name}**\n\nمن فضلك الآن **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_BOX_NAMES
+
+def back_to_box_color(update, context):
+    """
+    دالة مساعدة للرجوع من خطوة الأسماء إلى خطوة الألوان
+    """
+    query = update.callback_query
+    query.answer()
+    
+    selected_box = context.user_data.get('box_product')
+    if not selected_box:
+        # في حالة فقدان البيانات نعود للقائمة الرئيسية
+        start(update, context)
+        return ConversationHandler.END
+        
+    # إعادة عرض أزرار الألوان
+    keyboard = [
+        [InlineKeyboardButton("اسود في دهبي", callback_data="color_black_gold")],
+        [InlineKeyboardButton("ابيض في دهبي", callback_data="color_white_gold")],
+        [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"✅ **{selected_box['label']}**\n\nمن فضلك اختر **لون البوكس**:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_BOX_COLOR
+
+
+def receive_box_names_and_finish(update, context):
+    """
+    الخطوة 3: استلام الأسماء وإنهاء الطلب
+    """
+    names_text = update.message.text
+    product_data = context.user_data.get('box_product')
+    color_name = context.user_data.get('box_color')
+
+    if not product_data or not color_name:
+        update.effective_chat.send_message("حدث خطأ، يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
+        return ConversationHandler.END
+        
+    user_info = update.message.from_user
+
+    # تجهيز رسالة الواتساب
+    message_body = (
+        f"🔔 *طلب شراء جديد (بوكس كتب الكتاب)* 🔔\n\n"
+        f"المنتج: {product_data['label']}\n"
+        f"اللون المختار: {color_name}\n"
+        f"الأسماء المطلوبة: *{names_text}*\n"
+        f"الكود: {product_data['callback']}\n\n"
+        f"اسم العميل: {user_info.first_name}\n"
+        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
+        f"🔗 رابط صورة المنتج: {product_data['image']}"
+    )
+
+    encoded_text = quote_plus(message_body)
+    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
+
+    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
+    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text=f"شكراً لك! البيانات المسجلة:\n\n📦 المنتج: {product_data['label']}\n🎨 اللون: {color_name}\n✍️ الأسماء: {names_text}\n\nلإتمام الطلب، اضغط على الزر التالي:",
+        reply_markup=reply_markup
+    )
+
+    context.user_data.clear()
+    return ConversationHandler.END
+
 
 # ------------------------------------
 # الدالة الرئيسية لمعالجة ضغطات الأزرار
@@ -622,6 +780,7 @@ def button(update, context):
             return
 
     # 8. حالة زر الشراء (المنتجات العادية غير المحفورة)
+    # ⚠️ ملاحظة: تم استثناء بوكس كتب الكتاب من هنا لأنه يتم التعامل معه عبر ConversationHandler
     if data.startswith("buy_"):
         product_key = data.replace("buy_", "")
         product_data = None
@@ -738,9 +897,31 @@ def main():
         ]
     )
 
+    # 🆕 3. مُعالج المحادثة لـ "بوكس كتب الكتاب"
+    box_handler = ConversationHandler(
+        entry_points=[
+            # التقاط زر الشراء الخاص بالبوكسات فقط (يبدأ بـ buy_box_)
+            CallbackQueryHandler(start_box_purchase, pattern='^buy_box_.*')
+        ],
+        states={
+            GET_BOX_COLOR: [
+                CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*|katb_kitab_box$')
+            ],
+            GET_BOX_NAMES: [
+                MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish)
+            ]
+        },
+        fallbacks=[
+             CommandHandler('start', start),
+             CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'),
+             CallbackQueryHandler(button)
+        ]
+    )
+
     # إضافة مُعالجات المحادثة
     dp.add_handler(engraved_wallet_handler)
-    dp.add_handler(engraved_pen_handler) 
+    dp.add_handler(engraved_pen_handler)
+    dp.add_handler(box_handler) # 🆕 تم تسجيل المعالج هنا
     
     # إضافة معالجات الأوامر والأزرار الأخرى
     dp.add_handler(CommandHandler("start", start))
