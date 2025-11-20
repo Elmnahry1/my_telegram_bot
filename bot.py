@@ -3,6 +3,7 @@ import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
 from urllib.parse import quote_plus 
+import re # تم إضافة استيراد مكتبة re
 
 # ⚠️ إعدادات الواتساب: استبدل بالرقم الخاص بك
 WHATSAPP_NUMBER = "201288846355" 
@@ -202,6 +203,14 @@ for menu_key, submenu_list in all_submenus.items():
                 for sub_item in item['items']:
                     product_to_submenu_map[sub_item["callback"]] = item["callback"] 
 
+
+# 🆕 تعريف قائمة الأكواد للمنتجات التي تحتاج محادثة (صواني وطارات)
+TRAY_PRODUCT_KEYS = (
+    [item["callback"] for item in sawany_submenu[0]['items']] + 
+    [item["callback"] for item in sawany_submenu[1]['items']] + 
+    [item["callback"] for item in taarat_submenu[0]['items']] + 
+    [item["callback"] for item in taarat_submenu[1]['items']]
+)
 
 # --------------------
 # 3. الدوال الرئيسية والمساعدة
@@ -684,6 +693,7 @@ def button(update, context):
         show_product_page(update, data, product_list, is_direct_list=True)
         return
     
+    # معالجات لفتح صفحات المنتجات المتداخلة (الصواني والطارات)
     if data == "sawany_akerik":
         products = sawany_submenu[0]['items']
         show_product_page(update, "sawany_akerik", products, is_direct_list=True)
@@ -726,13 +736,19 @@ def button(update, context):
 
     # 8. حالة زر الشراء (المنتجات العادية)
     if data.startswith("buy_"):
-        # استثناء المنتجات التي لها محادثة خاصة (الصواني، الطارات، بوكس كتب الكتاب)
-        if data.startswith("buy_box_"): return
-        if "taarat" in data: return 
-        if data.startswith("buy_akerik_"): return
-        if data.startswith("buy_khashab_"): return
-
         product_key = data.replace("buy_", "")
+        
+        # استثناء المنتجات التي لها محادثة خاصة (بوكس كتب الكتاب والصواني والطارات)
+        if data.startswith("buy_box_"): 
+            return # بوكس كتب الكتاب لديه مُعالج منفصل ولكن يبدأ بنفس البداية، يُعالج بواسطة box_handler
+
+        # ⚠️ التعديل هنا: استثناء صواني/طارات اكليريك وخشب باستخدام القائمة المحددة
+        if product_key in TRAY_PRODUCT_KEYS:
+            # إذا كان الزر من ضمن المنتجات المخصصة، نتجاهله هنا للسماح لـ tray_handler بمعالجته
+            return
+            
+        # استمرار منطق الشراء للمنتجات العادية
+        
         product_data = None
         
         for submenu in all_submenus.values():
@@ -807,7 +823,7 @@ def main():
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(button)]
     )
 
-    # 4. صواني وطارات (اكليريك وخشب) - تم تغيير الـ Regex لضمان التقاط الأزرار بشكل سليم
+    # 4. صواني وطارات (اكليريك وخشب) - تم الإبقاء على الـ Regex الصحيح
     tray_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_tray_purchase, 
             pattern=r'^(buy_akerik_m|buy_khashab_m|buy_taarat_akerik_m|buy_taarat_khashab_m).*$')],
