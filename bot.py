@@ -90,6 +90,8 @@ taarat_submenu = [
         ]
     }
 ]
+
+# --- القوائم المتداخلة (زر شراء مباشر) ---
 haram_submenu = [
     {
         "label": "هرم مكتب اكليريك", "callback": "haram_akerik", "items": [
@@ -108,8 +110,6 @@ haram_submenu = [
         ]
     }
 ]
-
-# --- القوائم المتداخلة (تحتاج زر شراء مباشر) ---
 doro3_submenu = [
     {
         "label": "دروع اكليريك", "callback": "doro3_akerik", "items": [
@@ -199,15 +199,15 @@ for menu_key, submenu_list in all_submenus.items():
                     product_to_submenu_map[sub_item["callback"]] = item["callback"] 
 
 
-# تحديد جميع مفاتيح المنتجات التي تتطلب محادثة (أسماء وتاريخ) - تم استثناء الدروع والمجات بناءً على طلب المستخدم
+# تحديد جميع مفاتيح المنتجات التي تتطلب محادثة (أسماء وتاريخ)
 NAMES_DATE_PRODUCT_KEYS = []
 for item in bsamat_submenu:
     NAMES_DATE_PRODUCT_KEYS.append(item['callback'])
 for item in wedding_tissues_submenu:
     NAMES_DATE_PRODUCT_KEYS.append(item['callback'])
 
-# المنتجات التي تتطلب أسماء وتاريخ: صواني، طارات، أهرام
-for submenu in [sawany_submenu, taarat_submenu, haram_submenu]: 
+# المنتجات التي تتطلب أسماء وتاريخ: صواني، طارات فقط (تم استثناء الدروع، المجات، والأهرام)
+for submenu in [sawany_submenu, taarat_submenu]: 
     for item in submenu:
         if 'items' in item:
             for sub_item in item['items']:
@@ -433,15 +433,25 @@ def prompt_for_pen_name(update, context):
     data = query.data
     query.answer()
     
-    product_callback = data.replace("buy_", "")
+    product_callback = data.replace("buy_", "") if data.startswith("buy_") else data # يجب أن يكون buy_aqlam_*
     
     selected_pen_data = next((item for item in aqlam_submenu if item["callback"] == product_callback), None)
+    
+    if not selected_pen_data:
+        # إذا تم استدعاء الدالة من زر شراء مباشر، يجب أن نجد المنتج
+        selected_pen_data = find_product_by_callback(product_callback)
+        if not selected_pen_data:
+             query.answer("خطأ في بيانات المنتج.", show_alert=True)
+             return ConversationHandler.END
+             
     context.user_data['pen_data'] = selected_pen_data
     context.user_data['state'] = GET_PEN_NAME
+    
     try:
         query.message.delete()
     except Exception:
         pass
+        
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_pen_types")]]
     reply_markup = InlineKeyboardMarkup(back_keyboard)
     
@@ -544,7 +554,7 @@ def receive_box_names_and_finish(update, context):
 
 
 # ------------------------------------
-# دوال عامة (أسماء وتاريخ) لـ (صواني، طارات، بصمات، مناديل، أهرام)
+# دوال عامة (أسماء وتاريخ) لـ (صواني، طارات، بصمات، مناديل)
 # ------------------------------------
 
 def start_names_date_purchase(update, context):
@@ -690,6 +700,7 @@ def button(update, context):
         
     # 4. معالجة اختيار المنتج (محفظة) - الدخول في حالة المحادثة
     if data in [item["callback"] for item in engraved_wallet_submenu]:
+        # نستخدم دالة بدء المحادثة مباشرةً
         return prompt_for_name(update, context) 
     
     # 5. معالجة فتح القوائم الفرعية المتداخلة (Sawany, Taarat, Haram, Doro3, Mugat)
@@ -730,7 +741,14 @@ def button(update, context):
             query.answer()
             return start_box_purchase(update, context)
         
-        # 8. إذا لم يكن منتجاً يحتاج إلى محادثة (مثل مستلزمات سبلميشن، دروع، مجات، أو أقلام)
+        # 🟢 التحقق من الأقلام (لها محادثة خاصة)
+        pen_callbacks = [item['callback'] for item in aqlam_submenu]
+        if product_key in pen_callbacks:
+             query.answer()
+             # يجب أن يتم استدعاء دالة بدء المحادثة هنا للدخول في حالة ConversationHandler
+             return prompt_for_pen_name(update, context)
+
+        # 8. إذا لم يكن منتجاً يحتاج إلى محادثة (مثل دروع، مجات، أهرام، أو مستلزمات سبلميشن)
         
         product_data = find_product_by_callback(product_key)
         
@@ -738,7 +756,7 @@ def button(update, context):
             query.answer(text="عذراً، لم يتم العثور على بيانات المنتج.", show_alert=True)
             return
             
-        # إرسال طلب واتساب مباشر (للدروع، المجات، الأقلام، والسبلميشن)
+        # إرسال طلب واتساب مباشر (للدروع، المجات، الأهرام، والسبلميشن)
         user_info = query.from_user
         message_body = (f"🔔 *طلب شراء جديد* 🔔\n\nالمنتج: {product_data['label']}\nالكود: {product_key}\n\nاسم العميل: {user_info.first_name}\nاليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n🔗 رابط صورة المنتج: {product_data.get('image', 'لا يوجد رابط صورة')}")
         encoded_text = quote_plus(message_body)
@@ -779,22 +797,26 @@ def main():
         return
     
     # 1. محافظ (ConversationHandler)
+    wallet_callbacks = [item['callback'] for item in engraved_wallet_submenu]
     engraved_wallet_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^(' + '|'.join([item['callback'] for item in engraved_wallet_submenu]) + ')$')],
+        # Entry point: الضغط على زر المحفظة (اللون)
+        entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^(' + '|'.join(wallet_callbacks) + ')$')],
         states={GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp)]},
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'), CallbackQueryHandler(button)],
         per_message=True
     )
 
-    # 2. اقلام (ConversationHandler) - تم الاعتماد عليه بالكامل لحل مشكلة عمله
-    pen_callbacks = [item['callback'] for item in aqlam_submenu] 
-    buy_pen_callbacks_pattern = '^buy_(' + '|'.join(pen_callbacks) + ')$'
+    # 2. اقلام (ConversationHandler)
+    # تم حل المشكلة ببدء المحادثة من دالة button() مباشرة 
+    buy_pen_callbacks_pattern = '^buy_(' + '|'.join([item['callback'] for item in aqlam_submenu]) + ')$'
     
     engraved_pen_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern=buy_pen_callbacks_pattern)],
+        # يتم ترك entry_points فارغة لأن المحادثة تبدأ من دالة button()
+        entry_points=[CallbackQueryHandler(lambda update, context: ConversationHandler.WAITING, pattern='^aqlam_never_match_entry$')],
         states={GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)]},
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$'), CallbackQueryHandler(button)],
-        per_message=True
+        per_message=True,
+        allow_reentry=True 
     )
 
     # 3. بوكس كتب الكتاب (ConversationHandler)
@@ -829,7 +851,7 @@ def main():
         per_message=True
     )
 
-    # إضافة كل محادثات الشراء أولاً (ترتيب ضروري)
+    # إضافة كل محادثات الشراء أولاً
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler)
     dp.add_handler(box_handler)
