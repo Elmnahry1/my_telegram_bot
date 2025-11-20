@@ -1072,13 +1072,15 @@ def button(update, context):
     if data in product_list_keys:
         products_list = [] # تهيئة قائمة المنتجات
         
+        # ⚠️ (تم تعديل منطق البحث ليكون أكثر وضوحاً وتجنب أي دمج غير مقصود)
         # إذا كانت قائمة من المستوى الثاني
+        found_item = None
         for parent_submenu in all_submenus.values():
-            for item in parent_submenu:
-                if item.get("callback") == data and 'items' in item:
-                    products_list = item['items']
-                    break
-            if products_list:
+            # البحث باستخدام دالة next داخل كل قائمة فرعية
+            found_item = next((item for item in parent_submenu if item.get("callback") == data and 'items' in item), None)
+            
+            if found_item:
+                products_list = found_item['items']
                 break
         
         if products_list:
