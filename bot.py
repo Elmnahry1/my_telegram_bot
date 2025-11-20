@@ -719,7 +719,7 @@ def button(update, context):
 # --------------------
 def main():
     # 🛑 تم التحديث: قراءة التوكن من متغير البيئة المسمى 'TELEGRAM_BOT_TOKEN'
-    TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN") 
+    TOKEN = os.environ.get("TOKEN") 
     
     if not TOKEN: 
          print("❌ فشل التشغيل: يرجى التأكد من تعيين توكن البوت في متغير البيئة المسمى 'TELEGRAM_BOT_TOKEN'.")
