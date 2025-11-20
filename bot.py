@@ -541,6 +541,7 @@ def start_tray_purchase(update, context):
     context.user_data['tray_back_callback'] = back_cb
     context.user_data['state'] = GET_TRAY_NAMES
 
+    # تم تعديل زر الرجوع ليعود للقائمة الفرعية التي تحتوي على المنتج
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data=back_cb)]] 
     reply_markup = InlineKeyboardMarkup(back_keyboard)
 
@@ -740,7 +741,8 @@ def button(update, context):
         
         # استثناء المنتجات التي لها محادثة خاصة (بوكس كتب الكتاب والصواني والطارات)
         if data.startswith("buy_box_"): 
-            return # بوكس كتب الكتاب لديه مُعالج منفصل ولكن يبدأ بنفس البداية، يُعالج بواسطة box_handler
+            # يُعالج بواسطة box_handler
+            return 
 
         # ⚠️ استثناء صواني/طارات اكليريك وخشب باستخدام القائمة المحددة
         if product_key in TRAY_PRODUCT_KEYS:
@@ -825,20 +827,18 @@ def main():
     
     # 4. صواني وطارات (اكليريك وخشب) - تحديث النمط لضمان التقاط جميع أزرار الشراء 
     
-    # حساب النمط الصريح لأكواد أزرار الشراء الخاصة بالصواني والطارات
-    # (مثال: buy_akerik_m1, buy_khashab_m2, buy_taarat_akerik_m1...)
-    tray_buy_callbacks = [f"buy_{key}" for key in TRAY_PRODUCT_KEYS]
-    # يضمن هذا النمط الدقيق (باستخدام ^ و $) مطابقة الزر المطلوب فقط
-    tray_entry_pattern = '^(' + '|'.join(re.escape(cb) for cb in tray_buy_callbacks) + ')$'
-    
+    # 💡 النمط الموحد والصريح لجميع أكواد الشراء الثمانية (buy_...)
+    TRAY_BUY_PATTERN = '^buy_(akerik_m[12]|khashab_m[12]|taarat_akerik_m[12]|taarat_khashab_m[12])$'
+
     tray_handler = ConversationHandler(
         entry_points=[
-            # 💡 تم استبدال النمط السابق بالنمط الدقيق tray_entry_pattern
-            CallbackQueryHandler(start_tray_purchase, pattern=tray_entry_pattern)
+            # 💡 تم استخدام النمط الصريح والموحد الجديد
+            CallbackQueryHandler(start_tray_purchase, pattern=TRAY_BUY_PATTERN)
         ],
         states={
             GET_TRAY_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_tray_names_ask_date),
+                # نمط الرجوع للقوائم الفرعية
                 CallbackQueryHandler(button, pattern='^(sawany_akerik|sawany_khashab|taarat_akerik|taarat_khashab)$')
             ],
             GET_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tray_date_and_finish)]
@@ -856,6 +856,7 @@ def main():
     dp.add_handler(tray_handler)
     
     dp.add_handler(CommandHandler("start", start))
+    # يجب أن يكون هذا آخر معالج لضمان أن جميع معالجات المحادثات تعمل أولاً
     dp.add_handler(CallbackQueryHandler(button))
 
     print("🤖 البوت يعمل الآن...")
