@@ -740,9 +740,16 @@ def button(update, context):
     # 8. حالة زر الشراء (المنتجات العادية)
     # ⚠️ هام: نستثني هنا البوكسات وصواني الاكليريك والخشب والطارات لأن لهم ConversationHandler خاص
     if data.startswith("buy_"):
-        # نتجاهل اكليريك وخشب (يغطي الصواني والطارات)
-        if "akerik" in data or "khashab" in data: 
+        
+        # استثناء البوكسات
+        if data.startswith("buy_box_"):
              return
+             
+        # استثناء الصواني والطارات (اكليريك وخشب)
+        # لأنها تبدأ بـ buy_akerik, buy_khashab, buy_taarat
+        if data.startswith("buy_akerik_"): return
+        if data.startswith("buy_khashab_"): return
+        if data.startswith("buy_taarat_"): return
 
         product_key = data.replace("buy_", "")
         product_data = None
