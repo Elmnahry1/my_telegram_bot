@@ -713,29 +713,6 @@ def button(update, context):
         return
 
     # 7. معالجة ضغط زر المنتج للذهاب لصفحة الشراء 
-    if data in product_to_submenu_map:
-        product_data = None
-        for submenu_key, submenu_list in all_submenus.items():
-            for item in submenu_list:
-                if data == item.get("callback") and 'items' not in item:
-                    product_data = item
-                    break
-                if 'items' in item:
-                    sub_item = next((si for si in item['items'] if si.get("callback") == data), None)
-                    if sub_item:
-                         product_data = sub_item
-                         break
-            if product_data:
-                break
-        
-        if product_data:
-            show_product_page(update, data, product_data)
-            return
-        else:
-            query.answer(text="عذراً، لم يتم العثور على بيانات المنتج.", show_alert=True)
-            return
-
-    # 8. حالة زر الشراء (المنتجات العادية)
     if data.startswith("buy_"):
         product_key = data.replace("buy_", "")
         
@@ -788,9 +765,34 @@ def button(update, context):
         return
 
 
-# --------------------
-# 4. إعداد البوت 
-# --------------------
+    # ------------------------------------
+    # 8. معالجة زر الشراء لمنتجات الصواني والطارات (داخل القوائم المخصصة)
+    # ------------------------------------
+    # نمط المنتجات التي تحتاج لمعالجة خاصة
+    if data.startswith("buy_sawany_") or data.startswith("buy_taarat_"):
+        if data.startswith("buy_sawany_"):
+            if "akerik" in data:
+                show_product_page(update, data, sawany_submenu[0]['items'], is_direct_list=True)
+            elif "khashab" in data:
+                show_product_page(update, data, sawany_submenu[1]['items'], is_direct_list=True)
+        elif data.startswith("buy_taarat_"):
+            if "akerik" in data:
+                show_product_page(update, data, taarat_submenu[0]['items'], is_direct_list=True)
+            elif "khashab" in data:
+                show_product_page(update, data, taarat_submenu[1]['items'], is_direct_list=True)
+        return
+
+    # حالة زر الرجوع
+    if data == "back_to_tray_names":
+        back_to_tray_names(update, context)
+        return
+
+    # حالات أخرى
+    # إذا لم يتم التعرف على الزر، يمكن إهماله أو إظهار رسالة
+    query.answer(text="زر غير معروف أو غير مخصص لهذا الإجراء.", show_alert=True)
+
+#... (بقية الكود كما هو)
+
 def main():
     TOKEN = os.getenv("TOKEN") 
     
@@ -825,20 +827,16 @@ def main():
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(button)]
     )
     
-    # 4. صواني وطارات (اكليريك وخشب) - تحديث النمط لضمان التقاط جميع أزرار الشراء 
-    
-    # 💡 النمط الموحد والصريح لجميع أكواد الشراء الثمانية (buy_...)
+    # 4. صواني وطارات (اكليريك وخشب)
     TRAY_BUY_PATTERN = '^buy_(akerik_m[12]|khashab_m[12]|taarat_akerik_m[12]|taarat_khashab_m[12])$'
 
     tray_handler = ConversationHandler(
         entry_points=[
-            # 💡 تم استخدام النمط الصريح والموحد الجديد
             CallbackQueryHandler(start_tray_purchase, pattern=TRAY_BUY_PATTERN)
         ],
         states={
             GET_TRAY_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_tray_names_ask_date),
-                # نمط الرجوع للقوائم الفرعية
                 CallbackQueryHandler(button, pattern='^(sawany_akerik|sawany_khashab|taarat_akerik|taarat_khashab)$')
             ],
             GET_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tray_date_and_finish)]
