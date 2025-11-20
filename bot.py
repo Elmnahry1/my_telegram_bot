@@ -535,8 +535,8 @@ def start_box_purchase(update, context):
     
     # رسالة اختيار اللون
     color_keyboard = [
-        [InlineKeyboardButton("أسود في دهبي", callback_data="color_white")],
-        [InlineKeyboardButton("أبيض في دهبي", callback_data="color_black")],
+        [InlineKeyboardButton("أسود في دهبي", callback_data="color_black")],
+        [InlineKeyboardButton("أبيض في دهبي", callback_data="color_white")],
         [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")] # العودة لصفحة البوكس
     ]
     reply_markup = InlineKeyboardMarkup(color_keyboard)
