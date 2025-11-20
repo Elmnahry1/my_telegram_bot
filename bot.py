@@ -1,19 +1,18 @@
 ﻿import os
-import telegram
+import telegram 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus 
 
 # ⚠️ إعدادات الواتساب: استبدل بالرقم الخاص بك
-WHATSAPP_NUMBER = "201288846355"
+WHATSAPP_NUMBER = "201288846355" 
 
 # --------------------
 # 1. تعريف حالات المحادثة
 # --------------------
 
 GET_WALLET_NAME = 1 # حالة المحافظ
-GET_PEN_NAME = 2    # حالة الأقلام
-GET_BOX_NAMES = 3   # حالة بوكس كتب الكتاب
+GET_PEN_NAME = 2    # حالة الأقلام 
 
 # --------------------
 # 2. بيانات القوائم والمنتجات
@@ -41,15 +40,15 @@ engraved_wallet_submenu = [
 # 🛑 قائمة الأقلام (المدخل الرئيسي للمحادثة)
 aqlam_submenu = [
     {
-        "label": "قلم تاتش معدن",
-        "callback": "aqlam_metal",
-        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/475773348_986832329974720_6197915277469223378_n.jpg",
+        "label": "قلم تاتش معدن", 
+        "callback": "aqlam_metal", 
+        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/475773348_986832329974720_6197915277469223378_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=107&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=KrebndL4u2oQ7kNvwH3smA2&_nc_oc=AdkT6T_o5SpJKdr9FQ5OhX2vuI5Cp3WjQl0pV9vRotIn9csOIX1DX-I9dC3FpvlBLJM&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=JFYgN-MxG5oy8y3q9Os6Ew&oh=00_AfhJxajOEm9owiAqd00_zEZ4Hy4qzX7DYATV6p4tWdRxeA&oe=6923BE1B", # ضع رابط الصورة الفعلية للقلم
         "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر."
     },
     {
-        "label": "قلم تاتش مضئ",
-        "callback": "aqlam_luminous",
-        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/489809156_1164483322357054_6286791651911010777_n.jpg",
+        "label": "قلم تاتش مضئ", 
+        "callback": "aqlam_luminous", 
+        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/489809156_1164483322357054_6286791651911010777_n.jpg?stp=dst-jpg_s590x590_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ELb9pciSoD0Q7kNvwG_rdLE&_nc_oc=AdkDWLOZBcjZp9AbNO2Fs-zK-suPtGc1D-KC3JP7NlzhwgJB3WZeGQQfCQIsfxZgvrg&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=U5_JMOw_cSsgrQQLv77j7g&oh=00_Afg-wJrTmoGZo5m1kVVh2IU0227UQ7pUtKSjRx_YEFoGWg&oe=6923B3BA", # ضع رابط الصورة الفعلية للقلم
         "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر."
     }
 ]
@@ -57,14 +56,14 @@ aqlam_submenu = [
 # --- القوائم المتداخلة (sawany, taarat, haram, doro3, mugat) تبقى كما هي ---
 sawany_submenu = [
     {
-        "label": "صواني شبكة اكليريك", "callback": "sawany_akerik",
+        "label": "صواني شبكة اكليريك", "callback": "sawany_akerik", 
         "items": [ 
             {"label": "صينية اكليريك موديل 1", "callback": "akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية اكليريك: وصف المنتج الأول."},
             {"label": "صينية اكليريك موديل 2", "callback": "akerik_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية اكليريك: وصف المنتج الثاني."}
         ]
     },
     {
-        "label": "صواني شبكة خشب", "callback": "sawany_khashab",
+        "label": "صواني شبكة خشب", "callback": "sawany_khashab", 
         "items": [
             {"label": "صينية خشب موديل 1", "callback": "khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية خشب: وصف المنتج الأول."},
             {"label": "صينية خشب موديل 2", "callback": "khashab_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية خشب: وصف المنتج الثاني."}
@@ -152,12 +151,29 @@ mugat_submenu = [
     }
 ]
 
+# ======= إضافة بوكس كتب الكتاب =======
+box_kitab_alkitab_submenu = [
+    {
+        "label": "بوكس كتب الكتاب موديل 1",
+        "callback": "box_kitab_alkitab_m1",
+        "image": "https://via.placeholder.com/300.png?text=Box+Model+1",
+        "description": "وصف بوكس كتب الكتاب موديل 1."
+    },
+    {
+        "label": "بوكس كتب الكتاب موديل 2",
+        "callback": "box_kitab_alkitab_m2",
+        "image": "https://via.placeholder.com/300.png?text=Box+Model+2",
+        "description": "وصف بوكس كتب الكتاب موديل 2."
+    }
+]
+
 # --- القائمة الرئيسية ---
 main_menu = [
     {"label": "💍💍 صواني شبكة", "callback": "sawany"},
     {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
     {"label": "✋ بصامات", "callback": "bsamat"}, 
     {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"}, 
+    {"label": "📦 بوكس كتب الكتاب", "callback": "box_kitab_alkitab"},   # إضافي هنا
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
@@ -166,7 +182,6 @@ main_menu = [
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
 ]
-
 
 all_submenus = {
     "sawany": sawany_submenu,
@@ -178,13 +193,14 @@ all_submenus = {
     "bsamat": bsamat_submenu, 
     "wedding_tissues": wedding_tissues_submenu, 
     "abajorat": abajorat_submenu,
-    "engraved_wallet": engraved_wallet_submenu
+    "engraved_wallet": engraved_wallet_submenu,
+    "box_kitab_alkitab": box_kitab_alkitab_submenu  # إضافة القائمة الجديدة
 }
 
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam"]:
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "box_kitab_alkitab"]: 
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             product_to_submenu_map[product["callback"]] = menu_key
@@ -206,7 +222,7 @@ for menu_key, submenu_list in all_submenus.items():
 def start(update, context):
     query = update.callback_query
     # إنهاء أي محادثة جارية عند استخدام /start أو العودة للقائمة الرئيسية
-    if context.user_data.get('state') in [GET_WALLET_NAME, GET_PEN_NAME, GET_BOX_NAMES]:
+    if context.user_data.get('state') in [GET_WALLET_NAME, GET_PEN_NAME]:
         context.user_data.clear()
         context.user_data['state'] = None
         
@@ -214,9 +230,7 @@ def start(update, context):
         query.answer()
     
     user_name = update.effective_user.first_name
-    greeting_text = f"✅ مرحباً بك {user_name} في البوت الرسمي لمصنع المناهري للحفر بالليزر وجميع مستلزمات الزفاف والسبلميشن
-
-من فضلك اختر طلبك من القائمة:"
+    greeting_text = f"✅ مرحباً بك {user_name} في البوت الرسمي لمصنع المناهري للحفر بالليزر وجميع مستلزمات الزفاف والسبلميشن\n\nمن فضلك اختر طلبك من القائمة:"
     keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in main_menu]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -254,9 +268,7 @@ def show_submenu(update, context, submenu_list, title, back_callback="main_menu"
     # إنشاء لوحة المفاتيح النهائية
     reply_markup = InlineKeyboardMarkup(keyboard)
     
-    message_text = f"✅ *{title}*:
-
-من فضلك اختر طلبك من القائمة:"
+    message_text = f"✅ *{title}*:\n\nمن فضلك اختر طلبك من القائمة:"
 
     # إرسال رسالة جديدة
     update.effective_chat.send_message(
@@ -293,15 +305,13 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
         update.effective_message.bot.send_photo(
             chat_id=update.effective_chat.id,
             photo=item['image'],
-            caption=f"**{item['label']}**
-
-{item['description']}",
+            caption=f"**{item['label']}**\n\n{item['description']}",
             reply_markup=item_reply_markup,
             parse_mode="Markdown"
         )
     
     # تحديد زر الرجوع
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat"]:
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "box_kitab_alkitab"]:
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     else:
@@ -349,9 +359,7 @@ def back_to_wallets_color(update, context):
 
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"✅ *محافظ محفورة بالاسم*:
-
-من فضلك اختر اللون المطلوب:",
+        text=f"✅ *محافظ محفورة بالاسم*:\n\nمن فضلك اختر اللون المطلوب:",
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
@@ -377,11 +385,8 @@ def prompt_for_name(update, context):
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
     
     caption_text = (
-        f"**اختيارك: {selected_wallet_data['label']}**
-
-"
-        f"من فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل.
-"
+        f"**اختيارك: {selected_wallet_data['label']}**\n\n"
+        f"من فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل.\n"
         f"أو اضغط زر الرجوع لتغيير اللون."
     )
     
@@ -415,24 +420,14 @@ def receive_name_and_prepare_whatsapp(update, context):
         wallet_type = product_label
 
     message_body = (
-        f"🔔 *طلب شراء جديد (محافظ محفورة بالاسم)* 🔔
-
-"
-        f"المنتج: {wallet_type}
-"
-        f"اللون: {color}
-" 
-        f" الاسم المطلوب حفره: *{engraving_name}*
-" 
-        f"الكود: {product_data['callback']}
-
-"
-        f"اسم العميل: {user_info.first_name} {user_info.last_name if user_info.last_name else ''}
-"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}
-"
-        f"🔗 رابط صورة المنتج: {product_data['image']}
-"
+        f"🔔 *طلب شراء جديد (محافظ محفورة بالاسم)* 🔔\n\n"
+        f"المنتج: {wallet_type}\n"
+        f"اللون: {color}\n" 
+        f" الاسم المطلوب حفره: *{engraving_name}*\n" 
+        f"الكود: {product_data['callback']}\n\n"
+        f"اسم العميل: {user_info.first_name} {user_info.last_name if user_info.last_name else ''}\n"
+        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
+        f"🔗 رابط صورة المنتج: {product_data['image']}\n"
         f"رابط التواصل عبر التليجرام: tg://user?id={user_info.id}"
     )
     
@@ -445,9 +440,7 @@ def receive_name_and_prepare_whatsapp(update, context):
 
     context.bot.send_message(
         chat_id=update.message.chat_id, 
-        text=f"شكراً لك! سيتم حفر اسم **{engraving_name}** على **{product_data['label']}**.
-
-لإتمام الطلب، اضغط على الزر التالي:", 
+        text=f"شكراً لك! سيتم حفر اسم **{engraving_name}** على **{product_data['label']}**.\n\nلإتمام الطلب، اضغط على الزر التالي:", 
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
@@ -476,9 +469,7 @@ def back_to_pen_types(update, context):
 
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"✅ *اقلام محفورة بالاسم*:
-
-من فضلك اختر نوع القلم المطلوب:",
+        text=f"✅ *اقلام محفورة بالاسم*:\n\nمن فضلك اختر نوع القلم المطلوب:",
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
@@ -505,11 +496,8 @@ def prompt_for_pen_name(update, context):
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
     
     caption_text = (
-        f"**اختيارك: {selected_pen_data['label']}**
-
-"
-        f"من فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.
-"
+        f"**اختيارك: {selected_pen_data['label']}**\n\n"
+        f"من فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.\n"
         f"أو اضغط زر الرجوع لتغيير نوع القلم."
     )
     
@@ -536,22 +524,13 @@ def receive_pen_name_and_prepare_whatsapp(update, context):
     user_info = update.message.from_user
     
     message_body = (
-        f"🔔 *طلب شراء جديد (اقلام محفورة بالاسم)* 🔔
-
-"
-        f"المنتج: {product_data['label']}
-"
-        f" الاسم المطلوب حفره: *{engraving_name}*
-" 
-        f"الكود: {product_data['callback']}
-
-"
-        f"اسم العميل: {user_info.first_name} {user_info.last_name if user_info.last_name else ''}
-"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}
-"
-        f"🔗 رابط صورة المنتج: {product_data['image']}
-"
+        f"🔔 *طلب شراء جديد (اقلام محفورة بالاسم)* 🔔\n\n"
+        f"المنتج: {product_data['label']}\n"
+        f" الاسم المطلوب حفره: *{engraving_name}*\n" 
+        f"الكود: {product_data['callback']}\n\n"
+        f"اسم العميل: {user_info.first_name} {user_info.last_name if user_info.last_name else ''}\n"
+        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
+        f"🔗 رابط صورة المنتج: {product_data['image']}\n"
         f"رابط التواصل عبر التليجرام: tg://user?id={user_info.id}"
     )
     
@@ -564,9 +543,7 @@ def receive_pen_name_and_prepare_whatsapp(update, context):
 
     context.bot.send_message(
         chat_id=update.message.chat_id, 
-        text=f"شكراً لك! سيتم حفر اسم **{engraving_name}** على **{product_data['label']}**.
-
-لإتمام الطلب، اضغط على الزر التالي:", 
+        text=f"شكراً لك! سيتم حفر اسم **{engraving_name}** على **{product_data['label']}**.\n\nلإتمام الطلب، اضغط على الزر التالي:", 
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
@@ -574,181 +551,6 @@ def receive_pen_name_and_prepare_whatsapp(update, context):
     context.user_data.clear()
     return ConversationHandler.END
 
-# ------------------------------------
-# دوال بوكس كتب الكتاب (الجديدة)
-# ------------------------------------
-
-def book_box_menu(update, context, edit_query=False):
-    # edit_query: إذا تم استدعاءها من callback_query فالنقطة مختلفة
-    if edit_query:
-        query = update
-        try:
-            query.message.delete()
-        except Exception:
-            pass
-        chat_id = query.message.chat.id
-    else:
-        chat_id = update.effective_chat.id
-
-    keyboard = [
-        [InlineKeyboardButton("بوكس فضي", callback_data="box_silver")],
-        [InlineKeyboardButton("بوكس ذهبي", callback_data="box_gold")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")]
-    ]
-
-    context.bot.send_message(
-        chat_id=chat_id,
-        text="✅ *بوكس كتب الكتاب*:
-
-من فضلك اختر الشكل المطلوب:",
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode="Markdown"
-    )
-
-
-def show_box_silver(update, context):
-    query = update.callback_query
-    query.answer()
-
-    # حفظ المنتج المختار
-    context.user_data['selected_book_box'] = {"label": "بوكس كتب الكتاب – فضي", "callback": "box_silver", "image": "https://via.placeholder.com/500x500?text=بوكس+فضي"}
-
-    photo = context.user_data['selected_book_box']['image']
-
-    caption = (
-        "📦 *بوكس كتب الكتاب – فضي*
-"
-        "• محتويات ممتازة
-"
-        "• مناسبة للهدايا
-"
-        "السعر: 250 جنيه
-"
-    )
-
-    keyboard = [
-        [InlineKeyboardButton("أدخل اسم العروسة والعريس", callback_data="box_enter_names")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data="back_to_book_box_menu")]
-    ]
-
-    try:
-        query.message.delete()
-    except Exception:
-        pass
-
-    context.bot.send_photo(
-        chat_id=update.effective_chat.id,
-        photo=photo,
-        caption=caption,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode="Markdown"
-    )
-
-
-def show_box_gold(update, context):
-    query = update.callback_query
-    query.answer()
-
-    context.user_data['selected_book_box'] = {"label": "بوكس كتب الكتاب – ذهبي", "callback": "box_gold", "image": "https://via.placeholder.com/500x500?text=بوكس+ذهبي"}
-
-    photo = context.user_data['selected_book_box']['image']
-
-    caption = (
-        "📦 *بوكس كتب الكتاب – ذهبي*
-"
-        "• شكل فاخر
-"
-        "• خامات ممتازة
-"
-        "السعر: 300 جنيه
-"
-    )
-
-    keyboard = [
-        [InlineKeyboardButton("أدخل اسم العروسة والعريس", callback_data="box_enter_names")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data="back_to_book_box_menu")]
-    ]
-
-    try:
-        query.message.delete()
-    except Exception:
-        pass
-
-    context.bot.send_photo(
-        chat_id=update.effective_chat.id,
-        photo=photo,
-        caption=caption,
-        reply_markup=InlineKeyboardMarkup(keyboard),
-        parse_mode="Markdown"
-    )
-
-
-def enter_book_box_names_screen(update, context):
-    query = update.callback_query
-    query.answer()
-
-    # رسالة تطلب اسم العروسة والعريس وزر رجوع
-    keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_book_box_menu")]]
-    try:
-        query.message.delete()
-    except Exception:
-        pass
-
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=("يرجى إدخال اسم العروسة والعريس في رسالة واحدة (سطر واحد):
-
-مثال: أحمد و سلمى"),
-        reply_markup=InlineKeyboardMarkup(keyboard)
-    )
-
-    context.user_data['state'] = GET_BOX_NAMES
-    return GET_BOX_NAMES
-
-
-def receive_book_box_names_and_prepare_whatsapp(update, context):
-    names = update.message.text.strip()
-    product = context.user_data.get('selected_book_box')
-
-    if not product:
-        update.message.reply_text("عفواً، لم يتم تحديد شكل البوكس. الرجاء البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        context.user_data.clear()
-        return ConversationHandler.END
-
-    user_info = update.message.from_user
-
-    message_body = (
-        f"🔔 *طلب شراء جديد (بوكس كتب الكتاب)* 🔔
-
-"
-        f"المنتج: {product['label']}
-"
-        f"العروسة والعريس: {names}
-
-"
-        f"اسم العميل: {user_info.first_name} {user_info.last_name if user_info.last_name else ''}
-"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}
-"
-        f"🔗 رابط صورة المنتج: {product['image']}
-"
-        f"رابط التواصل عبر التليجرام: tg://user?id={user_info.id}"
-    )
-
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-
-    keyboard = [[InlineKeyboardButton("✅ إرسال الطلب على واتساب", url=wa_link)], [InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]
-
-    update.message.reply_text(
-        text=f"تم استلام الأسماء: {names}
-
-اضغط لإرسال الطلب:",
-        reply_markup=InlineKeyboardMarkup(keyboard)
-    )
-
-    context.user_data.clear()
-    return ConversationHandler.END
 
 # ------------------------------------
 # الدالة الرئيسية لمعالجة ضغطات الأزرار
@@ -771,7 +573,7 @@ def button(update, context):
     if data == "aqlam":
         show_submenu(update, context, aqlam_submenu, "اقلام محفورة بالاسم", back_callback="main_menu")
         return 
-
+        
     # 4. معالجة اختيار المنتج (سواء محفظة أو قلم)
     if data in [item["callback"] for item in engraved_wallet_submenu]:
         return prompt_for_name(update, context) 
@@ -780,46 +582,15 @@ def button(update, context):
     if data in [item["callback"] for item in aqlam_submenu]:
         return prompt_for_pen_name(update, context) # ⬅️ توجيه مباشر لبدء المحادثة وطلب الاسم
 
-    # ----- بوكس كتب الكتاب -----
-    if data == "sawany":
-        title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
-        clean_title = title.split()[-1]
-        show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu") 
-        return
-
-    if data == "wedding_tissues":
-        # عند ضغط مناديل كتب الكتاب نريد أن يظهر زر البوكس اسفله
-        # سنعرض القائمة العادية ثم الزر الخاص بالبوكس
-        show_submenu(update, context, wedding_tissues_submenu, "مناديل كتب الكتاب", back_callback="main_menu")
-        return
-
-    # زر الدخول لقسم بوكس كتب الكتاب
-    if data == "book_box":
-        book_box_menu(update, context, edit_query=True)
-        return
-
-    # بوكس: عرض الأشكال
-    if data == "box_silver":
-        return show_box_silver(update, context)
-
-    if data == "box_gold":
-        return show_box_gold(update, context)
-
-    if data == "box_enter_names":
-        return enter_book_box_names_screen(update, context)
-
-    if data == "back_to_book_box_menu":
-        return book_box_menu(update, context, edit_query=True)
-
-    # 5. معالجة القوائم الفرعية المتداخلة (Sawany, Taarat, Haram, Doro3, Mugat)
+    # 5. معالجة فتح القوائم الفرعية المتداخلة (Sawany, Taarat, Haram, Doro3, Mugat)
     if data in ["sawany", "taarat", "haram", "doro3", "mugat"]:
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         clean_title = title.split()[-1]
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu") 
         return
         
-    # 6. معالجة القوائم الفرعية التي تعرض المنتجات مباشرة (Bsamat, Wedding_Tissues, Abajorat)
-    if data in ["bsamat", "wedding_tissues", "abajorat"]:
+    # 6. معالجة القوائم الفرعية التي تعرض المنتجات مباشرة (Bsamat, Wedding_Tissues, Abajorat, Box_Kitab_Alkitab)
+    if data in ["bsamat", "wedding_tissues", "abajorat", "box_kitab_alkitab"]:
         product_list = all_submenus[data]
         show_product_page(update, data, product_list, is_direct_list=True)
         return
@@ -883,18 +654,12 @@ def button(update, context):
         
         # تكوين نص الرسالة الذي سيُفتح في واتساب
         message_body = (
-            f"🔔 *طلب شراء جديد من بوت تليجرام* 🔔
-"
-            f"المنتج: {product_data['label']}
-"
-            f"الكود: {product_key}
-"
-            f"العميل: {user_info.first_name}
-"
-            f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}
-"
-            f"🔗 رابط صورة المنتج: {product_data['image']}
-" 
+            f"🔔 *طلب شراء جديد من بوت تليجرام* 🔔\n"
+            f"المنتج: {product_data['label']}\n"
+            f"الكود: {product_key}\n"
+            f"العميل: {user_info.first_name}\n"
+            f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
+            f"🔗 رابط صورة المنتج: {product_data['image']}\n" 
             f"رابط التواصل عبر تليجرام: tg://user?id={user_info.id}"
         )
         
@@ -924,6 +689,7 @@ def button(update, context):
 # 4. إعداد البوت 
 # --------------------
 def main():
+    # 💡 استبدل بتوكن البوت الخاص بك
     TOKEN = os.getenv("TOKEN") 
     
     if not TOKEN:
@@ -936,7 +702,7 @@ def main():
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     
-    # تعريف مُعالج المحادثة لـ "محافظ محفورة بالاسم"
+    # 1. مُعالج المحادثة لـ "محافظ محفورة بالاسم"
     engraved_wallet_handler = ConversationHandler(
         entry_points=[
             CallbackQueryHandler(
@@ -956,7 +722,7 @@ def main():
         ]
     )
 
-    # مُعالج المحادثة لـ "اقلام"
+    # 2. مُعالج المحادثة لـ "اقلام"
     engraved_pen_handler = ConversationHandler(
         entry_points=[
             CallbackQueryHandler(
@@ -976,29 +742,9 @@ def main():
         ]
     )
 
-    # مُعالج المحادثة لبوكس كتب الكتاب
-    book_box_handler = ConversationHandler(
-        entry_points=[
-            CallbackQueryHandler(
-                enter_book_box_names_screen,
-                pattern='^box_enter_names$'
-            ),
-        ],
-        states={
-            GET_BOX_NAMES: [
-                MessageHandler(Filters.text & ~Filters.command, receive_book_box_names_and_prepare_whatsapp),
-            ],
-        },
-        fallbacks=[
-            CommandHandler('start', start),
-            CallbackQueryHandler(button)
-        ]
-    )
-
     # إضافة مُعالجات المحادثة
     dp.add_handler(engraved_wallet_handler)
-    dp.add_handler(engraved_pen_handler)
-    dp.add_handler(book_box_handler)
+    dp.add_handler(engraved_pen_handler) 
     
     # إضافة معالجات الأوامر والأزرار الأخرى
     dp.add_handler(CommandHandler("start", start))
@@ -1009,6 +755,5 @@ def main():
     updater.idle()
 
 if __name__ == '__main__':
-    # 💡 تأكد من تعيين التوكن كمتغير بيئة قبل التشغيل
-    # os.environ["TOKEN"] = "YOUR_BOT_TOKEN_HERE" 
+    #os.environ["TOKEN"] = "YOUR_BOT_TOKEN_HERE" 
     main()
