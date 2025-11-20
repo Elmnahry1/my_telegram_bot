@@ -1,8 +1,7 @@
 ﻿import os
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
-from urllib.parse import quote_plus
+from telegram.ext import Updater, CallbackQueryHandler, CommandHandler
 
 # إعدادات الواتساب
 WHATSAPP_NUMBER = "201288846355"
@@ -15,185 +14,116 @@ GET_BOX_NAMES = 4
 GET_TRAY_NAMES = 5
 GET_TRAY_DATE = 6
 
-# البيانات والقوائم
-# (نفس البيانات والقوائم التي أرسلتها، أدرجها هنا كما هي)
+# البيانات والقوائم (أولاً، أدرج البيانات التي أرسلتها مسبقًا هنا)
 
-# ... (نفس البيانات والقوائم التي أرسلتها مسبقًا)
+# مثال على البيانات
+# جميع القوائم والبيانات التي أرسلتها يجب أن تكون هنا
 
-# خريطة المنتجات
-product_to_submenu_map = {}
-for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box"]:
-        for product in submenu_list:
-            product_to_submenu_map[product["callback"]] = menu_key
-    else:
-        for item in submenu_list:
-            product_to_submenu_map[item["callback"]] = menu_key
-            if 'items' in item:
-                for sub_item in item['items']:
-                    product_to_submenu_map[sub_item["callback"]] = item["callback"]
+# لنفترض أن لديك جميع البيانات مثل:
+# all_submenus, sawany_submenu, taarat_submenu، وغيرها
 
-# قائمة أكواد المنتجات التي تحتاج محادثة
-TRAY_PRODUCT_KEYS = (
-    [item["callback"] for item in sawany_submenu[0]['items']] +
-    [item["callback"] for item in sawany_submenu[1]['items']] +
-    [item["callback"] for item in taarat_submenu[0]['items']] +
-    [item["callback"] for item in taarat_submenu[1]['items']]
-)
+# مثال بسيط لتوضيح
+all_submenus = {
+    "bsamat": [
+        {"label": "بسمات", "callback": "bsamat", "image": "https://example.com/image.jpg"},
+    ],
+    "wedding_tissues": [
+        {"label": "مجات الزفاف", "callback": "wedding_tissues", "image": "https://example.com/image2.jpg"},
+    ],
+    # أضف باقي القوائم هنا
+}
 
-# -----------------------------------
+sawany_submenu = [
+    {
+        "items": [
+            {"label": "صواني أكرليك م1", "callback": "sawany_akerik_m1", "image": "https://example.com/sawany_akerik_m1.jpg"},
+            {"label": "صواني خشب م2", "callback": "sawany_khashab_m2", "image": "https://example.com/sawany_khashab_m2.jpg"},
+        ]
+    }
+]
+
+taarat_submenu = [
+    {
+        "items": [
+            {"label": "طارات أكرليك م1", "callback": "taarat_akerik_m1", "image": "https://example.com/taarat_akerik_m1.jpg"},
+            {"label": "طارات خشب م2", "callback": "taarat_khashab_m2", "image": "https://example.com/taarat_khashab_m2.jpg"},
+        ]
+    }
+]
+
 # دوال البداية والمساعدة
-# -----------------------------------
-
 def start(update, context):
-    # الكود كما هو
-    # ...
+    # هنا تضع الكود الخاص بالبدء
     pass
 
 def show_submenu(update, context, submenu_list, title, back_callback="main_menu"):
-    # الكود كما هو
-    # ...
+    # هنا تضع الكود الخاص بعرض القوائم
     pass
 
-def show_product_page(update, product_callback_data, product_data, is_direct_list=False):
-    # الكود كما هو
-    # ...
+def show_product_page(update, product_callback_data, product_list, is_direct_list=False):
+    # هنا تضع الكود الخاص بعرض صفحة المنتج
     pass
 
-# -----------------------------------
-# الدوال الخاصة بالمحفظة والأقلام
-# -----------------------------------
-# (نفس الدوال كما هو، بدون تغيير)
-
-# -----------------------------------
-# دوال بوكس كتب الكتاب
-# -----------------------------------
-# (نفس الدوال كما هو، بدون تغيير)
-
-# -----------------------------------
-# دوال الصواني والطارات (أكليريك وخشب)
-# -----------------------------------
-
-def start_tray_purchase(update, context):
-    query = update.callback_query
-    query.answer()
-    data = query.data
-    product_callback = data.replace("buy_", "")
-
-    # تحديد المنتج بناءً على الكود
-    if "akerik_m" in product_callback:
-        items_list = taarat_submenu[0]['items'] if "taarat" in product_callback else sawany_submenu[0]['items']
-        back_cb = "taarat_akerik" if "taarat" in product_callback else "sawany_akerik"
-    elif "khashab_m" in product_callback:
-        items_list = taarat_submenu[1]['items'] if "taarat" in product_callback else sawany_submenu[1]['items']
-        back_cb = "taarat_khashab" if "taarat" in product_callback else "sawany_khashab"
-    else:
-        # خطأ
-        query.answer("خطأ في تحديد المنتج", show_alert=True)
-        return
-
-    selected_tray = next((item for item in items_list if item["callback"] == product_callback), None)
-    if not selected_tray:
-        query.answer("بيانات المنتج غير موجودة", show_alert=True)
-        return
-
-    # حفظ البيانات
-    context.user_data['tray_product'] = selected_tray
-    context.user_data['tray_back_callback'] = back_cb
-    context.user_data['state'] = GET_TRAY_NAMES
-
-    # عرض الصورة وخطوة الإدخال
-    try:
-        query.message.delete()
-    except:
-        pass
-
-    context.bot.send_photo(
-        chat_id=update.effective_chat.id,
-        photo=selected_tray['image'],
-        caption=f"✅ **{selected_tray['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:",
-        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 رجوع", callback_data=back_cb)]]),
-        parse_mode="Markdown"
-    )
-    return GET_TRAY_NAMES
-
-# ... (وظائف الرجوع وتسجيل الأسماء والتاريخ كما هي)
-
-# -----------------------------------
-# معالجة زر الشراء الخاص بالمنتجات (مهم جدًا)
-# -----------------------------------
-
+# دالة المعالجة للأزرار
 def button(update, context):
     query = update.callback_query
     data = query.data
 
-    # العودة للقائمة الرئيسية
+    # معالجة زر العودة
     if data == "main_menu":
         start(update, context)
         return
 
-    # المحافظ والأقلام
-    if data == "engraved_wallet":
-        show_submenu(update, context, engraved_wallet_submenu, "محافظ محفورة بالاسم", back_callback="main_menu")
-        return
-    if data == "aqlam":
-        show_submenu(update, context, aqlam_submenu, "اقلام محفورة بالاسم", back_callback="main_menu")
-        return
-
-    # القوائم المتداخلة
-    if data in ["sawany", "taarat", "haram", "doro3", "mugat"]:
-        # عرض القائمة
-        title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
-        show_submenu(update, context, all_submenus[data], title, back_callback="main_menu")
+    # معالجة صفحات القوائم
+    if data in all_submenus:
+        show_submenu(update, context, all_submenus[data], data)
         return
 
     # صفحات المنتجات المباشرة
     if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
-        show_product_page(update, data, all_submenus[data], is_direct_list=True)
+        show_product_page(update, data, all_submenus[data], True)
         return
 
-    # صفحات المنتجات المتداخلة (الصواني والطارات)
-    if data == "sawany_akerik":
-        show_product_page(update, "sawany_akerik", sawany_submenu[0]['items'], is_direct_list=True)
-        return
-    if data == "sawany_khashab":
-        show_product_page(update, "sawany_khashab", sawany_submenu[1]['items'], is_direct_list=True)
-        return
-    if data == "taarat_akerik":
-        show_product_page(update, "taarat_akerik", taarat_submenu[0]['items'], is_direct_list=True)
-        return
-    if data == "taarat_khashab":
-        show_product_page(update, "taarat_khashab", taarat_submenu[1]['items'], is_direct_list=True)
+    # صفحات منتجات الصواني والطارات
+    if data == "sawany_akerik" or data == "sawany_khashab" or data == "taarat_akerik" or data == "taarat_khashab":
+        if data == "sawany_akerik":
+            show_product_page(update, data, sawany_submenu[0]['items'], True)
+        elif data == "sawany_khashab":
+            show_product_page(update, data, sawany_submenu[1]['items'], True)
+        elif data == "taarat_akerik":
+            show_product_page(update, data, taarat_submenu[0]['items'], True)
+        elif data == "taarat_khashab":
+            show_product_page(update, data, taarat_submenu[1]['items'], True)
         return
 
-    # زر الشراء لمنتجات عادية
+    # معالجة زر الشراء للمنتجات
     if data.startswith("buy_"):
-        # هنا نضيف معالجة خاصة لمنتجات الصواني والطارات
+        # هنا نحدد نوع المنتج بناءً على الكود
         if data.startswith("buy_sawany_") or data.startswith("buy_taarat_"):
-            # عرض المنتجات
+            # عرض المنتج من جديد بناءً على النمط
             if data.startswith("buy_sawany_"):
                 if "akerik" in data:
-                    show_product_page(update, data, sawany_submenu[0]['items'], is_direct_list=True)
+                    show_product_page(update, data, sawany_submenu[0]['items'], True)
                 elif "khashab" in data:
-                    show_product_page(update, data, sawany_submenu[1]['items'], is_direct_list=True)
+                    show_product_page(update, data, sawany_submenu[1]['items'], True)
             elif data.startswith("buy_taarat_"):
                 if "akerik" in data:
-                    show_product_page(update, data, taarat_submenu[0]['items'], is_direct_list=True)
+                    show_product_page(update, data, taarat_submenu[0]['items'], True)
                 elif "khashab" in data:
-                    show_product_page(update, data, taarat_submenu[1]['items'], is_direct_list=True)
+                    show_product_page(update, data, taarat_submenu[1]['items'], True)
             return
 
-        # باقي المنتجات
+        # معالجة المنتجات العادية
         product_key = data.replace("buy_", "")
-        # استخرج بيانات المنتج
+        # ابحث عن المنتج في جميع القوائم
         product_data = None
         for submenu in all_submenus.values():
             for item in submenu:
-                if item.get("callback") == product_key and 'items' not in item:
+                if item.get("callback") == product_key:
                     product_data = item
                     break
-                if 'items' in item:
-                    for sub_item in item['items']:
+                if "items" in item:
+                    for sub_item in item["items"]:
                         if sub_item.get("callback") == product_key:
                             product_data = sub_item
                             break
@@ -203,16 +133,17 @@ def button(update, context):
                 break
 
         if not product_data:
-            query.answer("لم يتم العثور على المنتج.", show_alert=True)
+            query.answer("لم يتم العثور على المنتج", show_alert=True)
             return
 
-        # الآن أرسل الطلب عبر واتساب
+        # الآن نرسل الطلب عبر واتساب
         user_info = query.from_user
-        message_body = (f"🔔 *طلب شراء جديد*\nالمنتج: {product_data['label']}\nالكود: {product_data['callback']}\nالعميل: {user_info.first_name}\n🔗 صورة: {product_data['image']}")
+        message_body = f"🔔 *طلب شراء*\nالمنتج: {product_data['label']}\nالكود: {product_data['callback']}\nالعميل: {user_info.first_name}\n🔗 صورة: {product_data['image']}"
+        from urllib.parse import quote_plus
         encoded_text = quote_plus(message_body)
         wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
 
-        # إرسال الرابط
+        # نرسل الرابط
         query.answer("سيتم فتح واتساب...", show_alert=False)
         keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -220,56 +151,45 @@ def button(update, context):
             query.message.delete()
         except:
             pass
-        context.bot.send_message(chat_id=query.message.chat_id, text=f"شكراً لطلبك! اضغط أدناه للإرسال:", reply_markup=reply_markup)
+        context.bot.send_message(chat_id=query.message.chat_id, text="شكراً لطلبك! اضغط أدناه لإرسال الطلب:", reply_markup=reply_markup)
         return
 
-    # زر الشراء الخاص بمنتجات الصواني والطارات
+    # زر الشراء لمنتجات الصواني والطارات
     if data.startswith("buy_sawany_") or data.startswith("buy_taarat_"):
-        # عرض المنتجات من جديد
+        # عرض المنتجات من جديد بناءً على النمط
         if data.startswith("buy_sawany_"):
             if "akerik" in data:
-                show_product_page(update, data, sawany_submenu[0]['items'], is_direct_list=True)
+                show_product_page(update, data, sawany_submenu[0]['items'], True)
             elif "khashab" in data:
-                show_product_page(update, data, sawany_submenu[1]['items'], is_direct_list=True)
+                show_product_page(update, data, sawany_submenu[1]['items'], True)
         elif data.startswith("buy_taarat_"):
             if "akerik" in data:
-                show_product_page(update, data, taarat_submenu[0]['items'], is_direct_list=True)
+                show_product_page(update, data, taarat_submenu[0]['items'], True)
             elif "khashab" in data:
-                show_product_page(update, data, taarat_submenu[1]['items'], is_direct_list=True)
+                show_product_page(update, data, taarat_submenu[1]['items'], True)
         return
 
     # زر الرجوع
     if data == "back_to_tray_names":
-        back_to_tray_names(update, context)
-        return
+        # وظيفة للرجوع لصفحة إدخال الأسماء
+        pass
 
     # غير معروف
-    query.answer("زر غير معروف أو غير مخصص.", show_alert=True)
+    query.answer("زر غير معروف أو غير مخصص", show_alert=True)
 
-# -----------------------------------
-# النهاية، إعداد البوت
-# -----------------------------------
-
+# إعداد البوت
 def main():
     TOKEN = os.getenv("TOKEN")
-    if not TOKEN:
-        print("توكن غير موجود")
-        return
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
 
-    # المعالجات
-    # (نفس إعدادات المحادثات كما هي)
+    # أضف هنا كل المعالجات
     # ...
-    # أضف هنا المعالجات
-    # ...
-
-    # معالج زر الأزرار
-    dp.add_handler(CallbackQueryHandler(button))
     dp.add_handler(CommandHandler("start", start))
-    print("البوت يعمل")
+    dp.add_handler(CallbackQueryHandler(button))
+    # ابدأ تشغيل البوت
     updater.start_polling()
     updater.idle()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
