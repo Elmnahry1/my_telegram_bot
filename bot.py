@@ -1169,9 +1169,6 @@ def button(update, context):
         product_data = None
         for submenu_key, submenu_list in all_submenus.items():
             for item in submenu_list:
-                if data == item.get("callback") and 'items' in item:
-                    product_data = item
-                    break 
                 if data == item.get("callback") and 'items' not in item:
                     product_data = item
                     break
@@ -1274,9 +1271,9 @@ def main():
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(button)]
     )
 
-    # 4. صواني شبكة اكليريك
+    # 4. صواني شبكة اكليريك - 🟢 تم التعديل
     tray_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(start_tray_purchase, pattern='^buy_akerik_.*')],
+        entry_points=[CallbackQueryHandler(start_tray_purchase, pattern=r'^buy_akerik_m\d+$')],
         states={
             GET_TRAY_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_tray_names_ask_date),
@@ -1291,24 +1288,24 @@ def main():
         ]
     )
     
-    # 5. صواني شبكة خشب
+    # 5. صواني شبكة خشب - 🟢 تم التعديل
     khashab_tray_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(start_khashab_tray_purchase, pattern='^buy_khashab_.*')],
+        entry_points=[CallbackQueryHandler(start_khashab_tray_purchase, pattern=r'^buy_khashab_m\d+$')],
         states={
             GET_KHASHAB_TRAY_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_khashab_tray_names_ask_date),
-                CallbackQueryHandler(button, pattern='^sawany_khashab$') # للتعامل مع زر الرجوع في البداية
+                CallbackQueryHandler(button, pattern='^sawany_khashab$')
             ],
             GET_KHASHAB_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_tray_date_and_finish)]
         },
         fallbacks=[
             CommandHandler('start', start),
-            CallbackQueryHandler(back_to_khashab_tray_names, pattern='^back_to_khashab_tray_names$'), # رجوع من التاريخ للاسماء
+            CallbackQueryHandler(back_to_khashab_tray_names, pattern='^back_to_khashab_tray_names$'),
             CallbackQueryHandler(button)
         ]
     )
 
-    # 🆕 6. طارات اكليريك - 🔴 تم تعديل النمط هنا
+    # 6. طارات اكليريك - النمط كان صحيحاً بالفعل
     akerik_taarat_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_akerik_taarat_purchase, pattern=r'^buy_taarat_akerik_m\d+$')],
         states={
@@ -1325,7 +1322,7 @@ def main():
         ]
     )
     
-    # 🆕 7. طارات خشب - 🔴 تم تعديل النمط هنا
+    # 7. طارات خشب - النمط كان صحيحاً بالفعل
     khashab_taarat_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_khashab_taarat_purchase, pattern=r'^buy_taarat_khashab_m\d+$')],
         states={
@@ -1347,8 +1344,8 @@ def main():
     dp.add_handler(box_handler)
     dp.add_handler(tray_handler)
     dp.add_handler(khashab_tray_handler)
-    dp.add_handler(akerik_taarat_handler) # 🆕 تسجيل هاندلر طارات اكليريك
-    dp.add_handler(khashab_taarat_handler) # 🆕 تسجيل هاندلر طارات خشب
+    dp.add_handler(akerik_taarat_handler) 
+    dp.add_handler(khashab_taarat_handler) 
     
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CallbackQueryHandler(button))
