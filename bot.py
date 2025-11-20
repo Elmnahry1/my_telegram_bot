@@ -17,8 +17,14 @@ GET_BOX_COLOR = 3   # حالة اختيار لون البوكس
 GET_BOX_NAMES = 4   # حالة كتابة أسماء العرسان للبوكس
 GET_TRAY_NAMES = 5  # حالة كتابة الأسماء للصينية الاكليريك
 GET_TRAY_DATE = 6   # حالة كتابة التاريخ للصينية الاكليريك
-GET_KHASHAB_TRAY_NAMES = 7 # 🆕 حالة كتابة الأسماء لصينية الخشب
-GET_KHASHAB_TRAY_DATE = 8  # 🆕 حالة كتابة التاريخ لصينية الخشب
+GET_KHASHAB_TRAY_NAMES = 7 # حالة كتابة الأسماء لصينية الخشب
+GET_KHASHAB_TRAY_DATE = 8  # حالة كتابة التاريخ لصينية الخشب
+# 🆕 حالات الطارات
+GET_AKRILIK_TAARAT_NAMES = 9 # حالة أسماء طارات اكليريك
+GET_AKRILIK_TAARAT_DATE = 10 # حالة تاريخ طارات اكليريك
+GET_KHASHAB_TAARAT_NAMES = 11 # حالة أسماء طارات خشب
+GET_KHASHAB_TAARAT_DATE = 12 # حالة تاريخ طارات خشب
+
 
 # --------------------
 # 2. بيانات القوائم والمنتجات
@@ -65,14 +71,14 @@ aqlam_submenu = [
 sawany_submenu = [
     {
         "label": "صواني شبكة اكليريك", "callback": "sawany_akerik", 
-        "items": [ # akerik_m1 و akerik_m2 هي التي سنستهدفها
+        "items": [ 
             {"label": "صينية اكليريك موديل 1", "callback": "akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية اكليريك: وصف المنتج الأول."},
             {"label": "صينية اكليريك موديل 2", "callback": "akerik_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية اكليريك: وصف المنتج الثاني."}
         ]
     },
     {
         "label": "صواني شبكة خشب", "callback": "sawany_khashab", 
-        "items": [ # khashab_m1 و khashab_m2 هي التي سنستهدفها الآن
+        "items": [ 
             {"label": "صينية خشب موديل 1", "callback": "khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية خشب: وصف المنتج الأول."},
             {"label": "صينية خشب موديل 2", "callback": "khashab_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية خشب: وصف المنتج الثاني."}
         ]
@@ -308,9 +314,13 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
     if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
-    # 🆕 إضافة sawany_akerik و sawany_khashab هنا لتعود للقائمة الرئيسية مباشرةً
+    # قائمة "صواني شبكة"
     elif product_callback_data in ["sawany_akerik", "sawany_khashab"]:
         back_callback = "sawany" # العودة لقائمة "صواني شبكة"
+        back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
+    # 🆕 قائمة "طارات"
+    elif product_callback_data in ["taarat_akerik", "taarat_khashab"]: 
+        back_callback = "taarat" # العودة لقائمة "طارات خطوبة وكتب الكتاب"
         back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
     else:
         back_callback = product_to_submenu_map.get(product_callback_data, "main_menu")
@@ -672,7 +682,7 @@ def receive_tray_date_and_finish(update, context):
 
 
 # ------------------------------------
-# 🆕 دوال صواني شبكة خشب (Khashab Trays Handlers)
+# دوال صواني شبكة خشب (Khashab Trays Handlers)
 # ------------------------------------
 
 def start_khashab_tray_purchase(update, context):
@@ -820,6 +830,275 @@ def receive_khashab_tray_date_and_finish(update, context):
 
 
 # ------------------------------------
+# 🆕 دوال طارات اكليريك (Acrylic Hoops Handlers)
+# ------------------------------------
+
+def get_akerik_taarat_items():
+    # taarat_submenu[0] is 'طارات اكليريك'
+    return taarat_submenu[0]['items']
+
+def start_akerik_taarat_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data  # buy_taarat_akerik_m1
+    product_callback = data.replace("buy_", "")
+    
+    items_list = get_akerik_taarat_items()
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+
+    context.user_data['taarat_akerik_product'] = selected_product
+    context.user_data['state'] = GET_AKRILIK_TAARAT_NAMES
+
+    # زر رجوع يعيدنا لصفحة عرض منتجات طارات اكليريك
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="taarat_akerik")]] 
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        print(f"Error sending photo in start_akerik_taarat_purchase: {e}")
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    return GET_AKRILIK_TAARAT_NAMES
+
+def back_to_akerik_taarat_names(update, context):
+    query = update.callback_query
+    query.answer()
+    
+    selected_product = context.user_data.get('taarat_akerik_product')
+    if not selected_product:
+        start(update, context)
+        return ConversationHandler.END
+
+    # زر رجوع يعيدنا لصفحة المنتجات
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="taarat_akerik")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+
+    try:
+        query.message.delete()
+    except:
+        pass
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"من فضلك أعد كتابة **اسم العريس والعروسة**:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_AKRILIK_TAARAT_NAMES
+
+
+def save_akerik_taarat_names_ask_date(update, context):
+    names = update.message.text
+    context.user_data['taarat_akerik_names'] = names
+
+    # زر رجوع يعيدنا لخطوة الأسماء
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_akerik_taarat_names")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"تم حفظ الأسماء: **{names}**\n\nمن فضلك الآن **اكتب التاريخ** (مثال: 2024/1/1):",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_AKRILIK_TAARAT_DATE
+
+def receive_akerik_taarat_date_and_finish(update, context):
+    date_text = update.message.text
+    product_data = context.user_data.get('taarat_akerik_product')
+    names_text = context.user_data.get('taarat_akerik_names')
+
+    if not product_data or not names_text:
+        update.effective_chat.send_message("حدث خطأ، يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
+        return ConversationHandler.END
+        
+    user_info = update.message.from_user
+
+    message_body = (
+        f"🔔 *طلب شراء جديد (طارة اكليريك)* 🔔\n\n"
+        f"المنتج: {product_data['label']}\n"
+        f"الأسماء: *{names_text}*\n"
+        f"التاريخ: *{date_text}*\n"
+        f"الكود: {product_data['callback']}\n\n"
+        f"اسم العميل: {user_info.first_name}\n"
+        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
+        f"🔗 رابط صورة المنتج: {product_data['image']}"
+    )
+
+    encoded_text = quote_plus(message_body)
+    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
+
+    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
+    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text=f"شكراً لك! تفاصيل الطلب:\n\n💍 المنتج: {product_data['label']}\n✍️ الأسماء: {names_text}\n📅 التاريخ: {date_text}\n\nلإتمام الطلب، اضغط على الزر التالي:",
+        reply_markup=reply_markup
+    )
+
+    context.user_data.clear()
+    return ConversationHandler.END
+
+# ------------------------------------
+# 🆕 دوال طارات خشب (Wood Hoops Handlers)
+# ------------------------------------
+
+def get_khashab_taarat_items():
+    # taarat_submenu[1] is 'طارات خشب'
+    return taarat_submenu[1]['items']
+
+def start_khashab_taarat_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data  # buy_taarat_khashab_m1
+    product_callback = data.replace("buy_", "")
+
+    items_list = get_khashab_taarat_items()
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+
+    context.user_data['taarat_khashab_product'] = selected_product
+    context.user_data['state'] = GET_KHASHAB_TAARAT_NAMES
+
+    # زر رجوع يعيدنا لصفحة عرض منتجات طارات خشب
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="taarat_khashab")]] 
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        print(f"Error sending photo in start_khashab_taarat_purchase: {e}")
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    return GET_KHASHAB_TAARAT_NAMES
+
+def back_to_khashab_taarat_names(update, context):
+    query = update.callback_query
+    query.answer()
+    
+    selected_product = context.user_data.get('taarat_khashab_product')
+    if not selected_product:
+        start(update, context)
+        return ConversationHandler.END
+
+    # زر رجوع يعيدنا لصفحة المنتجات
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="taarat_khashab")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+
+    try:
+        query.message.delete()
+    except:
+        pass
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"من فضلك أعد كتابة **اسم العريس والعروسة**:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_KHASHAB_TAARAT_NAMES
+
+
+def save_khashab_taarat_names_ask_date(update, context):
+    names = update.message.text
+    context.user_data['taarat_khashab_names'] = names
+
+    # زر رجوع يعيدنا لخطوة الأسماء
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_khashab_taarat_names")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"تم حفظ الأسماء: **{names}**\n\nمن فضلك الآن **اكتب التاريخ** (مثال: 2024/1/1):",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_KHASHAB_TAARAT_DATE
+
+def receive_khashab_taarat_date_and_finish(update, context):
+    date_text = update.message.text
+    product_data = context.user_data.get('taarat_khashab_product')
+    names_text = context.user_data.get('taarat_khashab_names')
+
+    if not product_data or not names_text:
+        update.effective_chat.send_message("حدث خطأ، يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
+        return ConversationHandler.END
+        
+    user_info = update.message.from_user
+
+    message_body = (
+        f"🔔 *طلب شراء جديد (طارة خشب)* 🔔\n\n"
+        f"المنتج: {product_data['label']}\n"
+        f"الأسماء: *{names_text}*\n"
+        f"التاريخ: *{date_text}*\n"
+        f"الكود: {product_data['callback']}\n\n"
+        f"اسم العميل: {user_info.first_name}\n"
+        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
+        f"🔗 رابط صورة المنتج: {product_data['image']}"
+    )
+
+    encoded_text = quote_plus(message_body)
+    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
+
+    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
+    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text=f"شكراً لك! تفاصيل الطلب:\n\n💍 المنتج: {product_data['label']}\n✍️ الأسماء: {names_text}\n📅 التاريخ: {date_text}\n\nلإتمام الطلب، اضغط على الزر التالي:",
+        reply_markup=reply_markup
+    )
+
+    context.user_data.clear()
+    return ConversationHandler.END
+
+
+# ------------------------------------
 # الدالة الرئيسية لمعالجة ضغطات الأزرار
 # ------------------------------------
 def button(update, context):
@@ -863,18 +1142,26 @@ def button(update, context):
     
     # 🛑 6-B: معالجة خاصة لزر "صواني شبكة اكليريك" لعرض منتجاتها مباشرة
     if data == "sawany_akerik":
-        # استخراج قائمة المنتجات من داخل sawany_submenu
-        # العنصر الأول في sawany_submenu هو الاكليريك
         products = sawany_submenu[0]['items']
         show_product_page(update, "sawany_akerik", products, is_direct_list=True)
         return
     
-    # 🛑 6-C: 🆕 معالجة خاصة لزر "صواني شبكة خشب" لعرض منتجاتها مباشرة
+    # 🛑 6-C: معالجة خاصة لزر "صواني شبكة خشب" لعرض منتجاتها مباشرة
     if data == "sawany_khashab":
-        # استخراج قائمة المنتجات من داخل sawany_submenu
-        # العنصر الثاني في sawany_submenu هو الخشب
         products = sawany_submenu[1]['items']
         show_product_page(update, "sawany_khashab", products, is_direct_list=True)
+        return
+    
+    # 🛑 6-D: 🆕 معالجة خاصة لزر "طارات اكليريك" لعرض منتجاتها مباشرة
+    if data == "taarat_akerik":
+        products = taarat_submenu[0]['items']
+        show_product_page(update, "taarat_akerik", products, is_direct_list=True)
+        return
+    
+    # 🛑 6-E: 🆕 معالجة خاصة لزر "طارات خشب" لعرض منتجاتها مباشرة
+    if data == "taarat_khashab":
+        products = taarat_submenu[1]['items']
+        show_product_page(update, "taarat_khashab", products, is_direct_list=True)
         return
 
     # 7. معالجة ضغط زر المنتج للذهاب لصفحة الشراء 
@@ -904,14 +1191,11 @@ def button(update, context):
             return
 
     # 8. حالة زر الشراء (المنتجات العادية)
-    # ⚠️ هام: نستثني هنا البوكسات وصواني الاكليريك وصواني الخشب لأن لهم ConversationHandler خاص
+    # ⚠️ هام: نستثني هنا البوكسات والصواني والطارات لأن لهم ConversationHandler خاص
     if data.startswith("buy_"):
-        # فحص إذا كان المنتج من صواني الاكليريك (akerik_m1, akerik_m2) أو الخشب (khashab_m1, khashab_m2) لا نفعل شيئاً هنا
-        if "akerik_m" in data or "khashab_m" in data: 
-             # 💡 هذا هو السبب المحتمل لظهور الزر معلقاً. يتم الخروج من الدالة دون إعطاء رد إذا لم يتم التقاطه بواسطة ConversationHandler
-             # بما أن الـ ConversationHandler تم إضافته قبل هذا الـ CallbackQueryHandler، فمن المفترض أنه سيلتقطها.
-             # إذا لم يلتقطها الـ ConversationHandler (لأي سبب)، يجب أن يظل هنا و"يتجاهلها" ليتم تمريرها لـ ConversationHandler آخر
-             # ولتجنب ظهور الزر معلقاً، يتم عمل answer:
+        # فحص إذا كان المنتج من الصواني (akerik_m, khashab_m) أو الطارات (taarat_akerik_m, taarat_khashab_m)
+        if "akerik_m" in data or "khashab_m" in data or "taarat_akerik_m" in data or "taarat_khashab_m" in data: 
+             # يتم التقاطها بواسطة ConversationHandler
              query.answer()
              return
 
@@ -1007,7 +1291,7 @@ def main():
         ]
     )
     
-    # 🆕 5. صواني شبكة خشب
+    # 5. صواني شبكة خشب
     khashab_tray_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_khashab_tray_purchase, pattern='^buy_khashab_.*')],
         states={
@@ -1024,11 +1308,47 @@ def main():
         ]
     )
 
+    # 🆕 6. طارات اكليريك
+    akerik_taarat_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_akerik_taarat_purchase, pattern='^buy_taarat_akerik_.*')],
+        states={
+            GET_AKRILIK_TAARAT_NAMES: [
+                MessageHandler(Filters.text & ~Filters.command, save_akerik_taarat_names_ask_date),
+                CallbackQueryHandler(button, pattern='^taarat_akerik$')
+            ],
+            GET_AKRILIK_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_akerik_taarat_date_and_finish)]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_akerik_taarat_names, pattern='^back_to_akerik_taarat_names$'),
+            CallbackQueryHandler(button)
+        ]
+    )
+    
+    # 🆕 7. طارات خشب
+    khashab_taarat_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_khashab_taarat_purchase, pattern='^buy_taarat_khashab_.*')],
+        states={
+            GET_KHASHAB_TAARAT_NAMES: [
+                MessageHandler(Filters.text & ~Filters.command, save_khashab_taarat_names_ask_date),
+                CallbackQueryHandler(button, pattern='^taarat_khashab$')
+            ],
+            GET_KHASHAB_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_taarat_date_and_finish)]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_khashab_taarat_names, pattern='^back_to_khashab_taarat_names$'),
+            CallbackQueryHandler(button)
+        ]
+    )
+
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler)
     dp.add_handler(box_handler)
     dp.add_handler(tray_handler)
-    dp.add_handler(khashab_tray_handler) # 🆕 تسجيل هاندلر صواني الخشب
+    dp.add_handler(khashab_tray_handler)
+    dp.add_handler(akerik_taarat_handler) # 🆕 تسجيل هاندلر طارات اكليريك
+    dp.add_handler(khashab_taarat_handler) # 🆕 تسجيل هاندلر طارات خشب
     
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CallbackQueryHandler(button))
