@@ -297,43 +297,41 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
             query.message.delete()
         except Exception:
             pass
-    
+
+    chat_id = update.effective_chat.id
+    bot = update.effective_bot
+
     for item in products_to_show:
         item_keyboard = [[InlineKeyboardButton("🛒 شراء", callback_data=f"buy_{item['callback']}")]]
         item_reply_markup = InlineKeyboardMarkup(item_keyboard)
-        
-        update.effective_message.bot.send_photo(
-            chat_id=update.effective_chat.id,
+
+        bot.send_photo(
+            chat_id=chat_id,
             photo=item['image'],
             caption=f"**{item['label']}**\n\n{item['description']}",
             reply_markup=item_reply_markup,
             parse_mode="Markdown"
         )
-    
-    # تحديد زر الرجوع
+
+    # زر الرجوع
     if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "box_kitab_alkitab"]:
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     else:
         back_callback = product_to_submenu_map.get(product_callback_data, "main_menu")
-        
         if back_callback in ["sawany", "taarat", "haram", "doro3", "mugat"]:
-             back_callback = back_callback
-             back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
+            back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
         elif back_callback in ["engraved_wallet", "aqlam"]:
-             back_callback = back_callback
-             back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
+            back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
         else:
-             back_callback = back_callback
-             back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
-
+            back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
 
     back_keyboard = [[InlineKeyboardButton(back_text, callback_data=back_callback)]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
-        
-    update.effective_message.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text="---", 
+
+    bot.send_message(
+        chat_id=chat_id,
+        text="---",
         reply_markup=back_reply_markup
     )
 
