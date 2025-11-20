@@ -801,21 +801,22 @@ def button(update, context):
 
 
 # --------------------
-# 4. إعداد البوت 
+# 4. إعداد البوت والتشغيل (تم تحديث هذا الجزء)
 # --------------------
 def main():
-    # ⚠️ استبدل هذا بسطر قراءة التوكن الفعلي في بيئتك
-    TOKEN = os.getenv("TOKEN", "YOUR_TELEGRAM_BOT_TOKEN") 
+    # 🛑 انتباه: يجب استبدال التوكن التالي بالرمز الفعلي لبوتك
+    # ----------------------------------------------------
+    TOKEN = "YOUR_TELEGRAM_BOT_TOKEN" 
+    # ----------------------------------------------------
     
     if TOKEN == "YOUR_TELEGRAM_BOT_TOKEN":
-         print("❌ يرجى تعيين توكن البوت في متغير البيئة TOKEN أو استبدال القيمة الافتراضية.")
+         print("❌ فشل التشغيل: يرجى تعيين توكن البوت في المتغير TOKEN.")
          return
 
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     
     # 1. محافظ (ConversationHandler)
-    # لا تحتاج buy_، يتم التقاطها مباشرة من زر المنتج في دالة button
     engraved_wallet_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^(' + '|'.join([item['callback'] for item in engraved_wallet_submenu]) + ')$')],
         states={GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp)]},
@@ -873,11 +874,10 @@ def main():
     dp.add_handler(CallbackQueryHandler(button))
 
     print("🤖 البوت يعمل الآن...")
-    # يرجى تشغيل البوت باستخدام أمر python /path/to/your/file.py
-    # updater.start_polling()
-    # updater.idle()
+    
+    # هذا الجزء هو المسؤول عن تشغيل البوت
+    updater.start_polling()
+    updater.idle()
 
 if __name__ == '__main__':
-    # main() # يرجى تشغيل دالة main يدوياً في بيئة التشغيل الخاصة بك
-    # لتجنب خطأ التشغيل هنا، سأقوم فقط بعرض الكود
-    pass
+    main()
