@@ -27,6 +27,13 @@ wedding_tissues_submenu = [
     {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 1."},
     {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 2."}
 ]
+
+# 🆕 القائمة الجديدة: بوكس كتب الكتاب
+katb_kitab_box_submenu = [
+    {"label": "بوكس كتب كتاب موديل 1", "callback": "box_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 1، يحتوي على تصميم مميز."},
+    {"label": "بوكس كتب كتاب موديل 2", "callback": "box_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 2، خامة عالية الجودة."}
+]
+
 abajorat_submenu = [
     {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 1."},
     {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2."}
@@ -42,13 +49,13 @@ aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", 
         "callback": "aqlam_metal", 
-        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/475773348_986832329974720_6197915277469223378_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=107&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=KrebndL4u2oQ7kNvwH3smA2&_nc_oc=AdkT6T_o5SpJKdr9FQ5OhX2vuI5Cp3WjQl0pV9vRotIn9csOIX1DX-I9dC3FpvlBLJM&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=JFYgN-MxG5oy8y3q9Os6Ew&oh=00_AfhJxajOEm9owiAqd00_zEZ4Hy4qzX7DYATV6p4tWdRxeA&oe=6923BE1B", # ضع رابط الصورة الفعلية للقلم
+        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/475773348_986832329974720_6197915277469223378_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=107&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=KrebndL4u2oQ7kNvwH3smA2&_nc_oc=AdkT6T_o5SpJKdr9FQ5OhX2vuI5Cp3WjQl0pV9vRotIn9csOIX1DX-I9dC3FpvlBLJM&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=JFYgN-MxG5oy8y3q9Os6Ew&oh=00_AfhJxajOEm9owiAqd00_zEZ4Hy4qzX7DYATV6p4tWdRxeA&oe=6923BE1B", 
         "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر."
     },
     {
         "label": "قلم تاتش مضئ", 
         "callback": "aqlam_luminous", 
-        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/489809156_1164483322357054_6286791651911010777_n.jpg?stp=dst-jpg_s590x590_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ELb9pciSoD0Q7kNvwG_rdLE&_nc_oc=AdkDWLOZBcjZp9AbNO2Fs-zK-suPtGc1D-KC3JP7NlzhwgJB3WZeGQQfCQIsfxZgvrg&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=U5_JMOw_cSsgrQQLv77j7g&oh=00_Afg-wJrTmoGZo5m1kVVh2IU0227UQ7pUtKSjRx_YEFoGWg&oe=6923B3BA", # ضع رابط الصورة الفعلية للقلم
+        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/489809156_1164483322357054_6286791651911010777_n.jpg?stp=dst-jpg_s590x590_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ELb9pciSoD0Q7kNvwG_rdLE&_nc_oc=AdkDWLOZBcjZp9AbNO2Fs-zK-suPtGc1D-KC3JP7NlzhwgJB3WZeGQQfCQIsfxZgvrg&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=U5_JMOw_cSsgrQQLv77j7g&oh=00_Afg-wJrTmoGZo5m1kVVh2IU0227UQ7pUtKSjRx_YEFoGWg&oe=6923B3BA", 
         "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر."
     }
 ]
@@ -151,29 +158,14 @@ mugat_submenu = [
     }
 ]
 
-# ======= إضافة بوكس كتب الكتاب =======
-box_kitab_alkitab_submenu = [
-    {
-        "label": "بوكس كتب الكتاب موديل 1",
-        "callback": "box_kitab_alkitab_m1",
-        "image": "https://via.placeholder.com/300.png?text=Box+Model+1",
-        "description": "وصف بوكس كتب الكتاب موديل 1."
-    },
-    {
-        "label": "بوكس كتب الكتاب موديل 2",
-        "callback": "box_kitab_alkitab_m2",
-        "image": "https://via.placeholder.com/300.png?text=Box+Model+2",
-        "description": "وصف بوكس كتب الكتاب موديل 2."
-    }
-]
 
 # --- القائمة الرئيسية ---
 main_menu = [
     {"label": "💍💍 صواني شبكة", "callback": "sawany"},
     {"label": "💍 طارات خطوبة وكتب الكتاب", "callback": "taarat"},
     {"label": "✋ بصامات", "callback": "bsamat"}, 
-    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"}, 
-    {"label": "📦 بوكس كتب الكتاب", "callback": "box_kitab_alkitab"},   # إضافي هنا
+    {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"},
+    {"label": "🎁 بوكس كتب الكتاب", "callback": "katb_kitab_box"}, # 🆕 تمت الاضافة هنا
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
@@ -183,6 +175,7 @@ main_menu = [
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
 ]
 
+
 all_submenus = {
     "sawany": sawany_submenu,
     "taarat": taarat_submenu,
@@ -191,16 +184,17 @@ all_submenus = {
     "aqlam": aqlam_submenu,
     "mugat": mugat_submenu,
     "bsamat": bsamat_submenu, 
-    "wedding_tissues": wedding_tissues_submenu, 
+    "wedding_tissues": wedding_tissues_submenu,
+    "katb_kitab_box": katb_kitab_box_submenu, # 🆕 تمت اضافة القائمة هنا
     "abajorat": abajorat_submenu,
-    "engraved_wallet": engraved_wallet_submenu,
-    "box_kitab_alkitab": box_kitab_alkitab_submenu  # إضافة القائمة الجديدة
+    "engraved_wallet": engraved_wallet_submenu
 }
 
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "box_kitab_alkitab"]: 
+    # 🆕 تمت اضافة katb_kitab_box للقائمة هنا
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box"]: 
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             product_to_submenu_map[product["callback"]] = menu_key
@@ -297,41 +291,44 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
             query.message.delete()
         except Exception:
             pass
-
-    chat_id = update.effective_chat.id
-    bot = update.effective_bot
-
+    
     for item in products_to_show:
         item_keyboard = [[InlineKeyboardButton("🛒 شراء", callback_data=f"buy_{item['callback']}")]]
         item_reply_markup = InlineKeyboardMarkup(item_keyboard)
-
-        bot.send_photo(
-            chat_id=chat_id,
+        
+        update.effective_message.bot.send_photo(
+            chat_id=update.effective_chat.id,
             photo=item['image'],
             caption=f"**{item['label']}**\n\n{item['description']}",
             reply_markup=item_reply_markup,
             parse_mode="Markdown"
         )
-
-    # زر الرجوع
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "box_kitab_alkitab"]:
+    
+    # تحديد زر الرجوع
+    # 🆕 تمت اضافة katb_kitab_box هنا للتأكد من أن زر الرجوع يذهب للقائمة الرئيسية
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     else:
         back_callback = product_to_submenu_map.get(product_callback_data, "main_menu")
+        
         if back_callback in ["sawany", "taarat", "haram", "doro3", "mugat"]:
-            back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
+             back_callback = back_callback
+             back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
         elif back_callback in ["engraved_wallet", "aqlam"]:
-            back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
+             back_callback = back_callback
+             back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
         else:
-            back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
+             back_callback = back_callback
+             back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
+
 
     back_keyboard = [[InlineKeyboardButton(back_text, callback_data=back_callback)]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
-
-    bot.send_message(
-        chat_id=chat_id,
-        text="---",
+        
+    update.effective_message.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="---", 
         reply_markup=back_reply_markup
     )
 
@@ -587,8 +584,9 @@ def button(update, context):
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu") 
         return
         
-    # 6. معالجة القوائم الفرعية التي تعرض المنتجات مباشرة (Bsamat, Wedding_Tissues, Abajorat, Box_Kitab_Alkitab)
-    if data in ["bsamat", "wedding_tissues", "abajorat", "box_kitab_alkitab"]:
+    # 6. معالجة القوائم الفرعية التي تعرض المنتجات مباشرة (Bsamat, Wedding_Tissues, Abajorat)
+    # 🆕 تمت اضافة katb_kitab_box هنا
+    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
         product_list = all_submenus[data]
         show_product_page(update, data, product_list, is_direct_list=True)
         return
