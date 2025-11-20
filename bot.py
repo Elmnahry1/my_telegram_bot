@@ -15,8 +15,8 @@ GET_WALLET_NAME = 1 # حالة المحافظ
 GET_PEN_NAME = 2    # حالة الأقلام 
 GET_BOX_COLOR = 3   # حالة اختيار لون البوكس
 GET_BOX_NAMES = 4   # حالة كتابة أسماء العرسان للبوكس
-GET_TRAY_NAMES = 5  # حالة كتابة الأسماء للصينية (خشب أو اكليريك)
-GET_TRAY_DATE = 6   # حالة كتابة التاريخ للصينية (خشب أو اكليريك)
+GET_TRAY_NAMES = 5  # حالة كتابة الأسماء (للصواني والطارات)
+GET_TRAY_DATE = 6   # حالة كتابة التاريخ (للصواني والطارات)
 
 # --------------------
 # 2. بيانات القوائم والمنتجات
@@ -70,7 +70,7 @@ sawany_submenu = [
     },
     {
         "label": "صواني شبكة خشب", "callback": "sawany_khashab", 
-        "items": [ # 🆕 منتجات الخشب هنا
+        "items": [ 
             {"label": "صينية خشب موديل 1", "callback": "khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية خشب: وصف المنتج الأول."},
             {"label": "صينية خشب موديل 2", "callback": "khashab_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية خشب: وصف المنتج الثاني."}
         ]
@@ -484,31 +484,40 @@ def receive_box_names_and_finish(update, context):
 
 
 # ------------------------------------
-# 🆕 دوال صواني شبكة (اكليريك وخشب)
+# 🆕 دوال الصواني والطارات (اكليريك وخشب)
 # ------------------------------------
 
 def start_tray_purchase(update, context):
     """
-    الخطوة 1: التقاط زر شراء للصينية (اكليريك أو خشب) وطلب الأسماء
+    الخطوة 1: التقاط زر شراء للصينية أو الطارة (اكليريك أو خشب) وطلب الأسماء
     """
     query = update.callback_query
     query.answer()
     data = query.data
     product_callback = data.replace("buy_", "")
 
-    # تحديد هل هو خشب أم اكليريك لجلب البيانات الصحيحة
-    selected_tray = None
-    
-    # البحث في قائمة الاكليريك (index 0)
-    if "akerik" in product_callback:
+    items_list = None
+    back_cb = "main_menu"
+
+    # 1. فحص الطارات (Taarat)
+    if "taarat" in product_callback:
+        if "akerik" in product_callback:
+            items_list = taarat_submenu[0]['items']
+            back_cb = "taarat_akerik"
+        elif "khashab" in product_callback:
+            items_list = taarat_submenu[1]['items']
+            back_cb = "taarat_khashab"
+            
+    # 2. فحص الصواني (Sawany)
+    elif "akerik" in product_callback:
         items_list = sawany_submenu[0]['items'] 
         back_cb = "sawany_akerik"
-    # البحث في قائمة الخشب (index 1)
     elif "khashab" in product_callback:
         items_list = sawany_submenu[1]['items']
         back_cb = "sawany_khashab"
-    else:
-        query.answer("حدث خطأ غير متوقع", show_alert=True)
+    
+    if not items_list:
+        query.answer("حدث خطأ في تحديد القائمة", show_alert=True)
         return ConversationHandler.END
 
     # البحث عن المنتج
@@ -604,9 +613,12 @@ def receive_tray_date_and_finish(update, context):
         return ConversationHandler.END
         
     user_info = update.message.from_user
+    
+    # تحديد نوع المنتج للعرض في الرسالة
+    product_type = "طارة" if "taarat" in product_data['callback'] else "صينية"
 
     message_body = (
-        f"🔔 *طلب شراء جديد (صينية شبكة)* 🔔\n\n"
+        f"🔔 *طلب شراء جديد ({product_type})* 🔔\n\n"
         f"المنتج: {product_data['label']}\n"
         f"الأسماء: *{names_text}*\n"
         f"التاريخ: *{date_text}*\n"
@@ -687,6 +699,18 @@ def button(update, context):
         show_product_page(update, "sawany_khashab", products, is_direct_list=True)
         return
 
+    # 🆕 6-D: معالجة خاصة لزر "طارات اكليريك" لعرض منتجاتها مباشرة
+    if data == "taarat_akerik":
+        products = taarat_submenu[0]['items']
+        show_product_page(update, "taarat_akerik", products, is_direct_list=True)
+        return
+
+    # 🆕 6-E: معالجة خاصة لزر "طارات خشب" لعرض منتجاتها مباشرة
+    if data == "taarat_khashab":
+        products = taarat_submenu[1]['items']
+        show_product_page(update, "taarat_khashab", products, is_direct_list=True)
+        return
+
     # 7. معالجة ضغط زر المنتج للذهاب لصفحة الشراء 
     if data in product_to_submenu_map:
         product_data = None
@@ -714,13 +738,10 @@ def button(update, context):
             return
 
     # 8. حالة زر الشراء (المنتجات العادية)
-    # ⚠️ هام: نستثني هنا البوكسات وصواني الاكليريك والخشب لأن لهم ConversationHandler خاص
+    # ⚠️ هام: نستثني هنا البوكسات وصواني الاكليريك والخشب والطارات لأن لهم ConversationHandler خاص
     if data.startswith("buy_"):
-        # نتجاهل اكليريك
-        if "akerik_m" in data: 
-             return
-        # نتجاهل خشب
-        if "khashab_m" in data:
+        # نتجاهل اكليريك وخشب (يغطي الصواني والطارات)
+        if "akerik" in data or "khashab" in data: 
              return
 
         product_key = data.replace("buy_", "")
@@ -798,14 +819,14 @@ def main():
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(button)]
     )
 
-    # 4. صواني شبكة (اكليريك وخشب)
-    # 🆕 تم تحديث الباترن ليشمل khashab
+    # 4. صواني وطارات (اكليريك وخشب)
+    # 🆕 تم تحديث الباترن ليشمل الصواني والطارات
     tray_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(start_tray_purchase, pattern='^buy_(akerik|khashab)_.*')],
+        entry_points=[CallbackQueryHandler(start_tray_purchase, pattern='^buy_(akerik|khashab|taarat_akerik|taarat_khashab)_.*')],
         states={
             GET_TRAY_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_tray_names_ask_date),
-                CallbackQueryHandler(button, pattern='^(sawany_akerik|sawany_khashab)$') # للتعامل مع زر الرجوع
+                CallbackQueryHandler(button, pattern='^(sawany_akerik|sawany_khashab|taarat_akerik|taarat_khashab)$')
             ],
             GET_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tray_date_and_finish)]
         },
