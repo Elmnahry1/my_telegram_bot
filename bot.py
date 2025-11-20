@@ -3,7 +3,7 @@ import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
 from urllib.parse import quote_plus 
-import re # تم إضافة استيراد مكتبة re
+import re 
 
 # ⚠️ إعدادات الواتساب: استبدل بالرقم الخاص بك
 WHATSAPP_NUMBER = "201288846355" 
@@ -742,7 +742,7 @@ def button(update, context):
         if data.startswith("buy_box_"): 
             return # بوكس كتب الكتاب لديه مُعالج منفصل ولكن يبدأ بنفس البداية، يُعالج بواسطة box_handler
 
-        # ⚠️ التعديل هنا: استثناء صواني/طارات اكليريك وخشب باستخدام القائمة المحددة
+        # ⚠️ استثناء صواني/طارات اكليريك وخشب باستخدام القائمة المحددة
         if product_key in TRAY_PRODUCT_KEYS:
             # إذا كان الزر من ضمن المنتجات المخصصة، نتجاهله هنا للسماح لـ tray_handler بمعالجته
             return
@@ -822,11 +822,20 @@ def main():
         },
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(button)]
     )
-
-    # 4. صواني وطارات (اكليريك وخشب) - تم الإبقاء على الـ Regex الصحيح
+    
+    # 4. صواني وطارات (اكليريك وخشب) - تحديث النمط لضمان التقاط جميع أزرار الشراء 
+    
+    # حساب النمط الصريح لأكواد أزرار الشراء الخاصة بالصواني والطارات
+    # (مثال: buy_akerik_m1, buy_khashab_m2, buy_taarat_akerik_m1...)
+    tray_buy_callbacks = [f"buy_{key}" for key in TRAY_PRODUCT_KEYS]
+    # يضمن هذا النمط الدقيق (باستخدام ^ و $) مطابقة الزر المطلوب فقط
+    tray_entry_pattern = '^(' + '|'.join(re.escape(cb) for cb in tray_buy_callbacks) + ')$'
+    
     tray_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(start_tray_purchase, 
-            pattern=r'^(buy_akerik_m|buy_khashab_m|buy_taarat_akerik_m|buy_taarat_khashab_m).*$')],
+        entry_points=[
+            # 💡 تم استبدال النمط السابق بالنمط الدقيق tray_entry_pattern
+            CallbackQueryHandler(start_tray_purchase, pattern=tray_entry_pattern)
+        ],
         states={
             GET_TRAY_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_tray_names_ask_date),
