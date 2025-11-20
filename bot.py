@@ -517,18 +517,13 @@ def start_tray_purchase(update, context):
         back_cb = "sawany_khashab"
     
     if not items_list:
-        # محاولة أخيرة للبحث في القوائم المعروفة
-        # قد يكون الاسم لا يحتوي على akerik/khashab بشكل صريح ولكن نعرفه
-        pass 
+        # إذا لم يتم تحديد القائمة لأي سبب، ننهي المحادثة
+        query.answer("خطأ في تحديد نوع المنتج. يرجى المحاولة مرة أخرى.", show_alert=True)
+        return ConversationHandler.END
 
     # البحث عن المنتج في القائمة المحددة
-    if items_list:
-        selected_tray = next((item for item in items_list if item["callback"] == product_callback), None)
-    else:
-        # بحث شامل إذا لم نحدد القائمة
-        selected_tray = None
-        # يمكن إضافة منطق بحث هنا إذا لزم الأمر
-
+    selected_tray = next((item for item in items_list if item["callback"] == product_callback), None)
+    
     if not selected_tray:
         query.answer("خطأ في العثور على بيانات المنتج. حاول مرة أخرى.", show_alert=True)
         return ConversationHandler.END
@@ -711,9 +706,6 @@ def button(update, context):
         product_data = None
         for submenu_key, submenu_list in all_submenus.items():
             for item in submenu_list:
-                if data == item.get("callback") and 'items' in item:
-                    product_data = item
-                    break 
                 if data == item.get("callback") and 'items' not in item:
                     product_data = item
                     break
@@ -734,22 +726,9 @@ def button(update, context):
 
     # 8. حالة زر الشراء (المنتجات العادية)
     if data.startswith("buy_"):
-        # استثناء المنتجات التي لها محادثة خاصة
+        # استثناء المنتجات التي لها محادثة خاصة (الصواني، الطارات، بوكس كتب الكتاب)
         if data.startswith("buy_box_"): return
-        
-        # 🛑 هنا كان الخطأ: التعبير النمطي الجديد في الهاندلر (buy_(akerik|khashab|taarat))
-        # يلتقط أي شيء يبدأ بهذه الكلمات. يجب أن نمنع دالة button من معالجتها.
-        
-        # 1. استثناء الطارات (Taarat)
         if "taarat" in data: return 
-
-        # 2. استثناء الصواني (Akerik & Khashab) 
-        # ملاحظة: يجب التأكد أننا لا نستثني منتجات أخرى بالخطأ مثل الهرم والدروع
-        # منتجات الهرم والدروع تحتوي على akerik/khashab أيضاً!
-        # الحل: الصواني فقط تبدأ بـ buy_akerik_m أو buy_khashab_m (متبوعة بموديل)
-        # بينما الهرم والدروع تبدأ بـ buy_haram_... أو buy_doro3_...
-        
-        # لذلك، إذا كان الزر يبدأ بـ buy_akerik أو buy_khashab مباشرة، فهو صواني (حسب تسمياتك الحالية)
         if data.startswith("buy_akerik_"): return
         if data.startswith("buy_khashab_"): return
 
@@ -828,10 +807,10 @@ def main():
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(button)]
     )
 
-    # 4. صواني وطارات (اكليريك وخشب)
-    # ✅ تم تبسيط الـ Regex لضمان التقاط أي زر يبدأ بـ buy_ ثم akerik أو khashab أو taarat
+    # 4. صواني وطارات (اكليريك وخشب) - تم تغيير الـ Regex لضمان التقاط الأزرار بشكل سليم
     tray_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(start_tray_purchase, pattern=r'^buy_(akerik|khashab|taarat).*')],
+        entry_points=[CallbackQueryHandler(start_tray_purchase, 
+            pattern=r'^(buy_akerik_m|buy_khashab_m|buy_taarat_akerik_m|buy_taarat_khashab_m).*$')],
         states={
             GET_TRAY_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_tray_names_ask_date),
