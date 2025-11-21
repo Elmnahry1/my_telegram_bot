@@ -214,6 +214,21 @@ for submenu in [sawany_submenu, taarat_submenu]:
             for sub_item in item['items']:
                 NAMES_DATE_PRODUCT_KEYS.append(sub_item['callback'])
 
+# 🆕 استخراج جميع مفاتيح "الرجوع" الممكنة التي يجب أن تنهي محادثة الأسماء والتاريخ
+parent_callbacks_for_names_date = set()
+for product_key in NAMES_DATE_PRODUCT_KEYS:
+    # الحصول على مفتاح القائمة الأب المباشر للمنتج (مثل sawany_akerik أو bsamat)
+    parent_key = product_to_submenu_map.get(product_key) 
+    if parent_key:
+        parent_callbacks_for_names_date.add(parent_key)
+
+# إضافة القوائم الرئيسية المباشرة التي قد تكون هي الأب المباشر للمنتج (مثل bsamat, wedding_tissues)
+parent_callbacks_for_names_date.add("bsamat")
+parent_callbacks_for_names_date.add("wedding_tissues")
+parent_callbacks_for_names_date.add("main_menu") 
+
+PARENT_CALLBACKS_PATTERN = '^(' + '|'.join(parent_callbacks_for_names_date) + ')$'
+
 
 # --------------------
 # 3. الدوال الرئيسية والمساعدة
@@ -314,7 +329,7 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
         )
     
     # تحديد زر الرجوع:
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "aqlam", "engraved_wallet"]:
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "aqlam", "engraved_wallet", "haram", "doro3", "mugat"]:
         # قوائم مباشرة تعود للقائمة الرئيسية
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
@@ -426,8 +441,11 @@ def back_to_pen_types(update, context):
     except Exception:
         pass
     
-    show_product_page(update, "aqlam", aqlam_submenu, is_direct_list=True)
-    return ConversationHandler.END 
+    # يجب أن نستخدم دالة button لتوجيه المستخدم إلى قائمة الأقلام
+    # show_product_page(update, "aqlam", aqlam_submenu, is_direct_list=True)
+    # لكن بما أننا خارج المحادثة، يجب أن يكون هناك معالج زر عام. الأسهل هو محاكاة ضغطة زر 'aqlam'
+    update.callback_query.data = 'aqlam'
+    return button(update, context) # الآن button ستظهر قائمة الأقلام
 
 def prompt_for_pen_name(update, context):
     query = update.callback_query
@@ -493,7 +511,7 @@ def start_box_purchase(update, context):
          return ConversationHandler.END
     context.user_data['box_product'] = selected_box
     context.user_data['state'] = GET_BOX_COLOR
-    keyboard = [[InlineKeyboardButton("اسود في دهبي", callback_data="color_black_gold")], [InlineKeyboardButton("ابيض في دهبي", callback_data="color_white_gold")], [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")]]
+    keyboard = [[InlineKeyboardButton("اسود في دهبي", callback_data="color_black_gold")], [InlineKeyboardButton("ابيض في دهبي", callback_data="color_white_gold")], [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box_back")]] # 🆕 تغيير callback_data
     reply_markup = InlineKeyboardMarkup(keyboard)
     try:
         query.message.delete()
@@ -506,7 +524,7 @@ def save_box_color_ask_names(update, context):
     query = update.callback_query
     query.answer()
     data = query.data 
-    if data == "katb_kitab_box":
+    if data == "katb_kitab_box_back": # 🆕 معالجة زر الرجوع الجديد
         show_product_page(update, "katb_kitab_box", katb_kitab_box_submenu, is_direct_list=True)
         context.user_data.clear()
         return ConversationHandler.END
@@ -528,7 +546,7 @@ def back_to_box_color(update, context):
     if not selected_box:
         start(update, context)
         return ConversationHandler.END
-    keyboard = [[InlineKeyboardButton("اسود في دهبي", callback_data="color_black_gold")], [InlineKeyboardButton("ابيض في دهبي", callback_data="color_white_gold")], [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")]]
+    keyboard = [[InlineKeyboardButton("اسود في دهبي", callback_data="color_black_gold")], [InlineKeyboardButton("ابيض في دهبي", callback_data="color_white_gold")], [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box_back")]] # 🆕 تغيير callback_data
     reply_markup = InlineKeyboardMarkup(keyboard)
     try:
         query.message.delete()
@@ -573,11 +591,13 @@ def start_names_date_purchase(update, context):
     context.user_data['names_date_product'] = selected_product
     context.user_data['state'] = GET_NAMES 
 
-    # لتحديد زر الرجوع في المحادثة
+    # لتحديد زر الرجوع: هو مفتاح القائمة الأب
     final_back_key = product_to_submenu_map.get(product_callback, "main_menu")
     
+    # حفظ مفتاح الرجوع في بيانات المستخدم
     context.user_data['names_date_back_callback'] = final_back_key
 
+    # زر الرجوع يستخدم مفتاح القائمة الأب
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data=final_back_key)]] 
     reply_markup = InlineKeyboardMarkup(back_keyboard)
 
@@ -678,6 +698,53 @@ def receive_date_and_finish_whatsapp(update, context):
 
 
 # ------------------------------------
+# 🆕 دالة لإنهاء أي محادثة والعودة للقائمة (لحل مشكلة زر الرجوع)
+# ------------------------------------
+def go_to_parent_menu_and_end(update, context):
+    query = update.callback_query
+    data = query.data 
+    query.answer()
+    
+    # إنهاء بيانات المحادثة الحالية أولاً
+    context.user_data.clear() 
+    
+    if data == "main_menu":
+        start(update, context)
+        return ConversationHandler.END
+
+    # حذف الرسالة القديمة (رسالة طلب الاسم/التاريخ)
+    try:
+        query.message.delete()
+    except Exception:
+        pass
+        
+    # إعادة توجيه للزر المناسب (منطق مشابه لدالة button ولكن هنا يتم ضمان إنهاء المحادثة)
+    if data in all_submenus:
+        # إذا كان الزر هو قائمة رئيسية (مثل bsamat, sawany, taarat)
+        product_list = all_submenus[data]
+        show_product_page(update, data, product_list, is_direct_list=True) 
+        return ConversationHandler.END
+
+    # إذا كان الزر هو قائمة فرعية متداخلة (مثل sawany_akerik)
+    # نستخدم نفس منطق button لـ "معالجة ضغط زر المنتج للذهاب لصفحة الشراء" 
+    if data in product_to_submenu_map:
+        product_data = None
+        for submenu_key, submenu_list in all_submenus.items():
+            item = next((i for i in submenu_list if i.get("callback") == data), None)
+            if item:
+                 product_data = item
+                 break
+        
+        if product_data:
+            show_product_page(update, data, product_data)
+            return ConversationHandler.END
+
+    # في حالة فشل التوجيه أو كانت البيانات غير متوقعة، العودة للرئيسية كحل أخير
+    start(update, context)
+    return ConversationHandler.END
+
+
+# ------------------------------------
 # الدالة الرئيسية لمعالجة ضغطات الأزرار
 # ------------------------------------
 def button(update, context):
@@ -700,20 +767,14 @@ def button(update, context):
         show_product_page(update, data, product_list, is_direct_list=True)
         return 
         
-    # 4. معالجة اختيار المنتج (محفظة) - الدخول في حالة المحادثة
-    # *** تم حذف هذا البلوك: يتم التعامل معه كنقطة دخول (entry_point) في engraved_wallet_handler، وهو مضاف قبل button في الموزع (Dispatcher).
-    # if data in [item["callback"] for item in engraved_wallet_submenu]:
-    #     # نستخدم دالة بدء المحادثة مباشرةً
-    #     return prompt_for_name(update, context) 
-    
-    # 5. معالجة فتح القوائم الفرعية المتداخلة (Sawany, Taarat, Haram, Doro3, Mugat)
+    # 4. معالجة فتح القوائم الفرعية المتداخلة (Sawany, Taarat, Haram, Doro3, Mugat)
     if data in ["sawany", "taarat", "haram", "doro3", "mugat"]:
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         clean_title = title.split()[-1]
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu") 
         return
         
-    # 6. معالجة ضغط زر المنتج للذهاب لصفحة الشراء (القوائم المتداخلة: صواني اكليريك/خشب، طارات اكليريك/خشب، أهرامات، دروع، مجات)
+    # 5. معالجة ضغط زر المنتج للذهاب لصفحة الشراء (القوائم المتداخلة: صواني اكليريك/خشب، طارات اكليريك/خشب، أهرامات، دروع، مجات)
     if data in product_to_submenu_map:
         product_data = None
         # نبحث عن بيانات القائمة (المستوى الأول من القائمة المتداخلة)
@@ -730,14 +791,12 @@ def button(update, context):
             query.answer(text="عذراً، لم يتم العثور على بيانات المنتج.", show_alert=True)
             return
 
-    # 7. حالة زر الشراء (المنتجات التي تحتاج محادثة والمنتجات التي لا تحتاج)
+    # 6. حالة زر الشراء (المنتجات التي لا تحتاج إلى محادثة مثل دروع، مجات، أهرام، أو مستلزمات سبلميشن)
     if data.startswith("buy_"):
         product_key = data.replace("buy_", "")
         
-        # *** تم حذف منطق توجيه المحادثات يدوياً (الأسماء/التاريخ، البوكس، الأقلام). 
-        # هذه الآن نقاط دخول (entry points) يتم التعامل معها بواسطة الـ ConversationHandlers المضافة أولاً.
-        
-        # 8. إذا لم يكن منتجاً يحتاج إلى محادثة (مثل دروع، مجات، أهرام، أو مستلزمات سبلميشن)
+        # إذا كان المنتج يحتاج محادثة (محافظ، اقلام، بوكس، أسماء/تاريخ) فسيتم التقاطه من ConversationHandler أولاً.
+        # هنا سنعالج فقط المنتجات التي لم يتم التقاطها (أي التي تتطلب زر شراء واتساب مباشر)
         
         product_data = find_product_by_callback(product_key)
         
@@ -745,7 +804,7 @@ def button(update, context):
             query.answer(text="عذراً، لم يتم العثور على بيانات المنتج.", show_alert=True)
             return
             
-        # إرسال طلب واتساب مباشر (للدروع، المجات، الأهرام، والسبلميشن)
+        # إرسال طلب واتساب مباشر
         user_info = query.from_user
         message_body = (f"🔔 *طلب شراء جديد* 🔔\n\nالمنتج: {product_data['label']}\nالكود: {product_key}\n\nاسم العميل: {user_info.first_name}\nاليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n🔗 رابط صورة المنتج: {product_data.get('image', 'لا يوجد رابط صورة')}")
         encoded_text = quote_plus(message_body)
@@ -788,7 +847,6 @@ def main():
     # 1. محافظ (ConversationHandler)
     wallet_callbacks = [item['callback'] for item in engraved_wallet_submenu]
     engraved_wallet_handler = ConversationHandler(
-        # Entry point: الضغط على زر المحفظة (اللون)
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^(' + '|'.join(wallet_callbacks) + ')$')],
         states={GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp)]},
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'), CallbackQueryHandler(button)],
@@ -796,7 +854,6 @@ def main():
     )
 
     # 2. اقلام (ConversationHandler)
-    # تم تصحيح: يجب أن يكون زر الشراء هو نقطة الدخول للمحادثة، وإلا فإن الرسالة التالية (الاسم) لن يتم توجيهها بشكل صحيح.
     buy_pen_callbacks_pattern = '^buy_(' + '|'.join([item['callback'] for item in aqlam_submenu]) + ')$'
     
     engraved_pen_handler = ConversationHandler(
@@ -811,7 +868,10 @@ def main():
     box_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_box_purchase, pattern='^buy_box_.*')],
         states={
-            GET_BOX_COLOR: [CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*|katb_kitab_box$')],
+            GET_BOX_COLOR: [
+                CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*'), # اختيار اللون
+                CallbackQueryHandler(save_box_color_ask_names, pattern='^katb_kitab_box_back$') # 🆕 زر الرجوع من اختيار اللون
+            ], 
             GET_BOX_NAMES: [MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish)]
         },
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(button)],
@@ -826,8 +886,8 @@ def main():
         states={
             GET_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_names_ask_date),
-                # زر الرجوع للقائمة الأب
-                CallbackQueryHandler(button, pattern='^(' + '|'.join(product_to_submenu_map.values()) + ')$') 
+                # 🆕 FIX: استخدام الدالة المخصصة لإنهاء المحادثة عند ضغط زر الرجوع للقائمة الأب
+                CallbackQueryHandler(go_to_parent_menu_and_end, pattern=PARENT_CALLBACKS_PATTERN)
             ],
             GET_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_date_and_finish_whatsapp)]
         },
