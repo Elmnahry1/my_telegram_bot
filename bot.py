@@ -225,9 +225,8 @@ for product_key in NAMES_DATE_PRODUCT_KEYS:
 # إضافة القوائم الرئيسية المباشرة التي قد تكون هي الأب المباشر للمنتج (مثل bsamat, wedding_tissues)
 parent_callbacks_for_names_date.add("bsamat")
 parent_callbacks_for_names_date.add("wedding_tissues")
-parent_callbacks_for_names_date.add("main_menu") 
-parent_callbacks_for_names_date.add("sawany") # الآباء من المستوى الأعلى
-parent_callbacks_for_names_date.add("taarat") # الآباء من المستوى الأعلى
+parent_callbacks_for_names_date.add("sawany") 
+parent_callbacks_for_names_date.add("taarat") 
 
 PARENT_CALLBACKS_PATTERN = '^(' + '|'.join(parent_callbacks_for_names_date) + ')$'
 
@@ -661,6 +660,7 @@ def back_to_names_input(update, context):
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
+    # 💡 هام: العودة إلى حالة GET_NAMES دون إنهاء المحادثة
     return GET_NAMES
 
 
@@ -732,7 +732,6 @@ def go_to_parent_menu_and_end(update, context):
         return ConversationHandler.END
 
     # إذا كان الزر هو قائمة فرعية متداخلة (مثل sawany_akerik)
-    # نستخدم نفس منطق button لـ "معالجة ضغط زر المنتج للذهاب لصفحة الشراء" 
     if data in product_to_submenu_map:
         product_data = None
         for submenu_key, submenu_list in all_submenus.items():
@@ -751,11 +750,12 @@ def go_to_parent_menu_and_end(update, context):
 
 
 # ------------------------------------
-# الدالة الرئيسية لمعالجة ضغطات الأزرار
+# الدالة الرئيسية لمعالجة ضغطات الأزرار (تستخدم فقط للأزرار خارج المحادثات)
 # ------------------------------------
 def button(update, context):
     query = update.callback_query
     data = query.data
+    query.answer() # يجب الإجابة على الكويري دائماً
 
     # 1. حالة العودة للقائمة الرئيسية
     if data == "main_menu":
@@ -825,6 +825,8 @@ def button(update, context):
             pass
         context.bot.send_message(chat_id=query.message.chat_id, text=f"شكراً لطلبك! اضغط أدناه للإرسال:", reply_markup=reply_markup)
         return
+        
+    # إذا لم يتم معالجة الزر، لا تفعل شيئاً (يجب أن يتم معالجته بواسطة ConversationHandler Fallbacks إذا كان البوت في محادثة)
 
 
 # --------------------
@@ -855,8 +857,12 @@ def main():
     engraved_wallet_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^(' + '|'.join(wallet_callbacks) + ')$')],
         states={GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp)]},
-        # 🆕 تم التأكد من أن back_to_wallets_color تنهي المحادثة
-        fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'), CallbackQueryHandler(button)],
+        # 💥 FIX: استبدال CallbackQueryHandler(button) بـ go_to_parent_menu_and_end
+        fallbacks=[
+            CommandHandler('start', start), 
+            CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'),
+            CallbackQueryHandler(go_to_parent_menu_and_end) 
+        ],
         per_message=True
     )
 
@@ -866,8 +872,12 @@ def main():
     engraved_pen_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern=buy_pen_callbacks_pattern)], 
         states={GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)]},
-        # 🆕 تم التأكد من أن back_to_pen_types تستخدم go_to_parent_menu_and_end لتضمن إنهاء المحادثة
-        fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$'), CallbackQueryHandler(button)],
+        # 💥 FIX: استبدال CallbackQueryHandler(button) بـ go_to_parent_menu_and_end
+        fallbacks=[
+            CommandHandler('start', start), 
+            CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$'),
+            CallbackQueryHandler(go_to_parent_menu_and_end)
+        ],
         per_message=True,
         allow_reentry=True 
     )
@@ -877,13 +887,18 @@ def main():
         entry_points=[CallbackQueryHandler(start_box_purchase, pattern='^buy_box_.*')],
         states={
             GET_BOX_COLOR: [
-                CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*'), # اختيار اللون
-                # 🆕 FIX: استخدام دالة إنهاء المحادثة للرجوع إلى قائمة البوكسات
+                CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*'), 
+                # هذا الزر يعود لقائمة البوكسات وينتهي عبر save_box_color_ask_names
                 CallbackQueryHandler(save_box_color_ask_names, pattern='^katb_kitab_box_back$') 
             ], 
             GET_BOX_NAMES: [MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish)]
         },
-        fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'), CallbackQueryHandler(button)],
+        # 💥 FIX: استبدال CallbackQueryHandler(button) بـ go_to_parent_menu_and_end
+        fallbacks=[
+            CommandHandler('start', start), 
+            CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'),
+            CallbackQueryHandler(go_to_parent_menu_and_end)
+        ],
         per_message=True
     )
 
@@ -895,17 +910,16 @@ def main():
         states={
             GET_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_names_ask_date),
-                # 💥 FIX الجذري: استخدام الدالة المخصصة لإنهاء المحادثة والعودة للقائمة الأب
+                # زر الرجوع للقائمة الأب
                 CallbackQueryHandler(go_to_parent_menu_and_end, pattern=PARENT_CALLBACKS_PATTERN)
             ],
             GET_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_date_and_finish_whatsapp)]
         },
+        # 💥 FIX: استبدال كل Callbacks التي لا تنهي المحادثة بـ go_to_parent_menu_and_end
         fallbacks=[
             CommandHandler('start', start),
             CallbackQueryHandler(back_to_names_input, pattern='^back_to_names_input$'), 
-            # 🆕 إضافة الرجوع للرئيسية كـ fallback باستخدام دالة إنهاء المحادثة
-            CallbackQueryHandler(go_to_parent_menu_and_end, pattern='^main_menu$'),
-            CallbackQueryHandler(button)
+            CallbackQueryHandler(go_to_parent_menu_and_end) # 💡 يلتقط أي زر غير محدد ويُنهي المحادثة
         ],
         per_message=True
     )
@@ -918,7 +932,7 @@ def main():
     
     # إضافة الأوامر العامة ومعالج الأزرار كمعالج عام في النهاية
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CallbackQueryHandler(button))
+    dp.add_handler(CallbackQueryHandler(button)) # هذا الزر يلتقط فقط الأزرار التي لا يتم التقاطها بواسطة أي ConversationHandler
 
     print("🤖 البوت يعمل الآن...")
     
