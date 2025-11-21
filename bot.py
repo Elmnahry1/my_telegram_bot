@@ -226,6 +226,8 @@ for product_key in NAMES_DATE_PRODUCT_KEYS:
 parent_callbacks_for_names_date.add("bsamat")
 parent_callbacks_for_names_date.add("wedding_tissues")
 parent_callbacks_for_names_date.add("main_menu") 
+parent_callbacks_for_names_date.add("sawany") # الآباء من المستوى الأعلى
+parent_callbacks_for_names_date.add("taarat") # الآباء من المستوى الأعلى
 
 PARENT_CALLBACKS_PATTERN = '^(' + '|'.join(parent_callbacks_for_names_date) + ')$'
 
@@ -329,13 +331,13 @@ def show_product_page(update, product_callback_data, product_data, is_direct_lis
         )
     
     # تحديد زر الرجوع:
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "aqlam", "engraved_wallet", "haram", "doro3", "mugat"]:
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "aqlam", "engraved_wallet"]:
         # قوائم مباشرة تعود للقائمة الرئيسية
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     elif product_callback_data in all_submenus:
-        # قوائم فرعية (مثل sawany_akerik) تعود للقائمة الرئيسية (الأب sawany)
-        back_callback = product_callback_data
+        # قوائم فرعية (مثل sawany) تعود للقائمة الرئيسية
+        back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     else:
         # قوائم متداخلة المستوى الثالث (مثل akerik_m1) تعود للقائمة الفرعية (مثل sawany_akerik)
@@ -387,6 +389,7 @@ def prompt_for_name(update, context):
     except Exception:
         pass
         
+    # هنا يجب أن نستخدم زر رجوع يؤدي لإنهاء المحادثة
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_wallets_color")]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
     
@@ -441,11 +444,9 @@ def back_to_pen_types(update, context):
     except Exception:
         pass
     
-    # يجب أن نستخدم دالة button لتوجيه المستخدم إلى قائمة الأقلام
-    # show_product_page(update, "aqlam", aqlam_submenu, is_direct_list=True)
-    # لكن بما أننا خارج المحادثة، يجب أن يكون هناك معالج زر عام. الأسهل هو محاكاة ضغطة زر 'aqlam'
+    # محاكاة ضغطة زر 'aqlam' ثم إنهاء المحادثة
     update.callback_query.data = 'aqlam'
-    return button(update, context) # الآن button ستظهر قائمة الأقلام
+    return go_to_parent_menu_and_end(update, context) 
 
 def prompt_for_pen_name(update, context):
     query = update.callback_query
@@ -511,7 +512,9 @@ def start_box_purchase(update, context):
          return ConversationHandler.END
     context.user_data['box_product'] = selected_box
     context.user_data['state'] = GET_BOX_COLOR
-    keyboard = [[InlineKeyboardButton("اسود في دهبي", callback_data="color_black_gold")], [InlineKeyboardButton("ابيض في دهبي", callback_data="color_white_gold")], [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box_back")]] # 🆕 تغيير callback_data
+    
+    # 🆕 زر الرجوع هنا يجب أن يعود إلى قائمة البوكسات وينتهي
+    keyboard = [[InlineKeyboardButton("اسود في دهبي", callback_data="color_black_gold")], [InlineKeyboardButton("ابيض في دهبي", callback_data="color_white_gold")], [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box_back")]] 
     reply_markup = InlineKeyboardMarkup(keyboard)
     try:
         query.message.delete()
@@ -524,10 +527,13 @@ def save_box_color_ask_names(update, context):
     query = update.callback_query
     query.answer()
     data = query.data 
-    if data == "katb_kitab_box_back": # 🆕 معالجة زر الرجوع الجديد
-        show_product_page(update, "katb_kitab_box", katb_kitab_box_submenu, is_direct_list=True)
-        context.user_data.clear()
-        return ConversationHandler.END
+    
+    # 🆕 معالجة زر الرجوع الذي يجب أن ينهي المحادثة
+    if data == "katb_kitab_box_back": 
+        # نستخدم الدالة العامة للإنهاء والعودة 
+        update.callback_query.data = 'katb_kitab_box' 
+        return go_to_parent_menu_and_end(update, context)
+
     color_name = "أسود في ذهبي" if data == "color_black_gold" else "أبيض في ذهبي"
     context.user_data['box_color'] = color_name
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_box_color")]]
@@ -546,7 +552,7 @@ def back_to_box_color(update, context):
     if not selected_box:
         start(update, context)
         return ConversationHandler.END
-    keyboard = [[InlineKeyboardButton("اسود في دهبي", callback_data="color_black_gold")], [InlineKeyboardButton("ابيض في دهبي", callback_data="color_white_gold")], [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box_back")]] # 🆕 تغيير callback_data
+    keyboard = [[InlineKeyboardButton("اسود في دهبي", callback_data="color_black_gold")], [InlineKeyboardButton("ابيض في دهبي", callback_data="color_white_gold")], [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box_back")]] 
     reply_markup = InlineKeyboardMarkup(keyboard)
     try:
         query.message.delete()
@@ -849,6 +855,7 @@ def main():
     engraved_wallet_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^(' + '|'.join(wallet_callbacks) + ')$')],
         states={GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_name_and_prepare_whatsapp)]},
+        # 🆕 تم التأكد من أن back_to_wallets_color تنهي المحادثة
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'), CallbackQueryHandler(button)],
         per_message=True
     )
@@ -859,6 +866,7 @@ def main():
     engraved_pen_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern=buy_pen_callbacks_pattern)], 
         states={GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)]},
+        # 🆕 تم التأكد من أن back_to_pen_types تستخدم go_to_parent_menu_and_end لتضمن إنهاء المحادثة
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$'), CallbackQueryHandler(button)],
         per_message=True,
         allow_reentry=True 
@@ -870,7 +878,8 @@ def main():
         states={
             GET_BOX_COLOR: [
                 CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*'), # اختيار اللون
-                CallbackQueryHandler(save_box_color_ask_names, pattern='^katb_kitab_box_back$') # 🆕 زر الرجوع من اختيار اللون
+                # 🆕 FIX: استخدام دالة إنهاء المحادثة للرجوع إلى قائمة البوكسات
+                CallbackQueryHandler(save_box_color_ask_names, pattern='^katb_kitab_box_back$') 
             ], 
             GET_BOX_NAMES: [MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish)]
         },
@@ -886,7 +895,7 @@ def main():
         states={
             GET_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, save_names_ask_date),
-                # 🆕 FIX: استخدام الدالة المخصصة لإنهاء المحادثة عند ضغط زر الرجوع للقائمة الأب
+                # 💥 FIX الجذري: استخدام الدالة المخصصة لإنهاء المحادثة والعودة للقائمة الأب
                 CallbackQueryHandler(go_to_parent_menu_and_end, pattern=PARENT_CALLBACKS_PATTERN)
             ],
             GET_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_date_and_finish_whatsapp)]
@@ -894,6 +903,8 @@ def main():
         fallbacks=[
             CommandHandler('start', start),
             CallbackQueryHandler(back_to_names_input, pattern='^back_to_names_input$'), 
+            # 🆕 إضافة الرجوع للرئيسية كـ fallback باستخدام دالة إنهاء المحادثة
+            CallbackQueryHandler(go_to_parent_menu_and_end, pattern='^main_menu$'),
             CallbackQueryHandler(button)
         ],
         per_message=True
