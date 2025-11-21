@@ -1,7 +1,6 @@
 ﻿import os
 import telegram 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-# تم استيراد Updater بدلاً من Application
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
 from urllib.parse import quote_plus 
 
@@ -38,42 +37,54 @@ SELECT_PEN_TYPE = 17
 
 
 # --------------------
-# 2. بيانات القوائم والمنتجات (تم استخدام صور وهمية/بسيطة)
+# 2. بيانات القوائم والمنتجات (تم استرجاع القوائم الأصلية)
 # --------------------
 
-def get_placeholder_image():
-    # صورة وهمية للمنتجات التي لا تظهر صورها في القوائم الفرعية
-    return "https://via.placeholder.com/300x200?text=Product+Image"
-
-
-# القوائم الفرعية
-bsamat_submenu = [{"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": get_placeholder_image(), "description": "وصف البصامة موديل 1."}]
-wedding_tissues_submenu = [{"label": "منديل موديل 1", "callback": "tissue_m1", "image": get_placeholder_image(), "description": "وصف منديل كتب الكتاب موديل 1."}]
-katb_kitab_box_submenu = [{"label": "بوكس كتب كتاب موديل 1", "callback": "box_m1", "image": get_placeholder_image(), "description": "وصف بوكس كتب الكتاب موديل 1."}]
-abajorat_submenu = [{"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": get_placeholder_image(), "description": "وصف الأباجورة موديل 1."}]
-engraved_wallet_submenu = [
-    {"label": "محفظة بيج", "callback": "wallet_bege", "image": get_placeholder_image(), "description": "محفظة بيج."},
-    {"label": "محفظة بني", "callback": "wallet_brown", "image": get_placeholder_image(), "description": "محفظة بني."},
+# --- قوائم فرعية مباشرة ---
+bsamat_submenu = [
+    {"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 1."},
+    {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 2."}
 ]
+wedding_tissues_submenu = [
+    {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 1."},
+    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 2."}
+]
+katb_kitab_box_submenu = [
+    {"label": "بوكس كتب كتاب موديل 1", "callback": "box_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 1، يحتوي على تصميم مميز."},
+    {"label": "بوكس كتب كتاب موديل 2", "callback": "box_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 2، خامة عالية الجودة."}
+]
+abajorat_submenu = [
+    {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 1."},
+    {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2."}
+]
+engraved_wallet_submenu = [
+    {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان)."},
+    {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني."},
+    {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود."}
+]
+# 🎯 قائمة الأقلام المعدلة
 aqlam_submenu = [
-    {
-        "label": "قلم تاتش معدن", 
-        "callback": "aqlam_metal", 
-        "image": "https://i.imgur.com/Kz9Gf4M.png", # Placeholder image
-        "description": "قلم تاتش معدن عالي الجودة."
-    },
     {
         "label": "قلم تاتش مضئ", 
         "callback": "aqlam_luminous", 
-        "image": "https://i.imgur.com/H1JbQ2t.png", # Placeholder image
-        "description": "قلم تاتش مضئ بتقنية متطورة."
+        "image": "https://i.imgur.com/H1JbQ2t.png", 
+        "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر."
+    },
+    {
+        "label": "قلم تاتش معدن", 
+        "callback": "aqlam_metal", 
+        "image": "https://i.imgur.com/Kz9Gf4M.png", 
+        "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر."
     }
 ]
+
+# --- القوائم المتداخلة (مبسطة) ---
 sawany_submenu = [{"label": "صواني اكليريك", "callback": "sawany_akerik"}, {"label": "صواني خشب", "callback": "sawany_khashab"}] 
 taarat_submenu = [{"label": "طارات اكليريك", "callback": "taarat_akerik"}, {"label": "طارات خشب", "callback": "taarat_khashab"}]
-haram_submenu = [] 
-doro3_submenu = [] 
-mugat_submenu = [] 
+haram_submenu = [] # تم افتراض أنها كانت فارغة أو تحتوي على بيانات وهمية
+doro3_submenu = [] # تم افتراض أنها كانت فارغة أو تحتوي على بيانات وهمية
+mugat_submenu = [] # تم افتراض أنها كانت فارغة أو تحتوي على بيانات وهمية
+
 
 # --- القائمة الرئيسية ---
 main_menu = [
@@ -85,7 +96,7 @@ main_menu = [
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
-    {"label": "✏️ اقلام", "callback": "aqlam"}, # 🎯 نقطة دخول المحادثة
+    {"label": "✏️ اقلام", "callback": "aqlam"}, # نقطة دخول المحادثة
     {"label": "☕ مجات", "callback": "mugat"},
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
@@ -108,7 +119,7 @@ all_submenus = {
 
 
 # --------------------
-# 3. الدوال الرئيسية والمساعدة
+# 3. الدوال الرئيسية والمساعدة (مع الدوال الوهمية)
 # --------------------
 
 def create_whatsapp_link(message, phone_number=WHATSAPP_NUMBER):
@@ -132,7 +143,6 @@ def cancel_and_end(update, context):
 
 def start(update, context):
     query = update.callback_query
-    # Clearing user_data when starting/restarting
     context.user_data.clear()
         
     if query:
@@ -154,7 +164,6 @@ def start(update, context):
     return ConversationHandler.END
 
 
-# دالة وهمية لعرض القوائم الفرعية
 def show_submenu(update, context, submenu_list, title, back_callback="main_menu"):
     query = update.callback_query
     query.answer()
@@ -171,7 +180,6 @@ def show_submenu(update, context, submenu_list, title, back_callback="main_menu"
         update.effective_chat.send_message(message_text, reply_markup=reply_markup, parse_mode="Markdown")
 
 
-# دالة وهمية لعرض صفحات المنتجات المباشرة
 def show_product_page(update, product_callback_data, product_list, is_direct_list=False):
     query = update.callback_query
     query.answer()
@@ -237,7 +245,6 @@ def button(update, context):
 
 
 def handle_messages(update, context):
-    # وظيفة لمعالجة الرسائل النصية التي لا تبدأ بأمر /
     if context.user_data.get('state') is None:
         update.effective_message.reply_text("من فضلك اختر طلبك من القائمة الرئيسية أولاً.", 
                                             reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="back_to_main_menu")]]))
@@ -248,20 +255,16 @@ def handle_messages(update, context):
 # --------------------
 
 def select_pen_type_menu(update, context):
-    """
-    (الدالة الجديدة) تعرض قائمة بأنواع الأقلام (مضئ ومعدن) وزر رجوع.
-    """
     query = update.callback_query
     query.answer()
     
-    # مسح البيانات المخزنة من محادثة سابقة عند الرجوع
     context.user_data.pop('pen_data', None)
             
     # الأزرار المطلوبة: قلم مضئ، قلم معدن، رجوع
     keyboard = [
         [InlineKeyboardButton("قلم تاتش مضئ", callback_data='aqlam_luminous')], 
         [InlineKeyboardButton("قلم تاتش معدن", callback_data='aqlam_metal')],   
-        [InlineKeyboardButton("رجوع", callback_data='back_to_main_menu')] # زر الرجوع للقائمة الرئيسية
+        [InlineKeyboardButton("رجوع", callback_data='back_to_main_menu')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
@@ -287,11 +290,8 @@ def select_pen_type_menu(update, context):
 
 
 def prompt_for_pen_name(update, context):
-    """
-    (الدالة الجديدة) تخزن نوع القلم وتطلب من العميل إدخال الاسم.
-    """
     query = update.callback_query
-    data = query.data # aqlam_luminous or aqlam_metal
+    data = query.data 
     query.answer()
     
     selected_pen_data = next((item for item in aqlam_submenu if item["callback"] == data), None)
@@ -301,22 +301,17 @@ def prompt_for_pen_name(update, context):
 
     context.user_data['pen_data'] = selected_pen_data
     
-    # رسالة طلب الإسم وزر الرجوع المطلوبين
     message_text = f"**اختيارك: {selected_pen_data['label']}**\n\nاكتب الاسم المطلوب حفره علي القلم او اضغط الرجوع للعودة الي القائمة السابقة"
-    # زر الرجوع يعود لقائمة اختيار أنواع القلم (callback 'aqlam')
     back_keyboard = [[InlineKeyboardButton("رجوع", callback_data='aqlam')]] 
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
     
-    # محاولة تعديل الرسالة
     try:
-        # محاولة تعديل الرسالة النصية
         query.edit_message_text(
             text=message_text,
             reply_markup=back_reply_markup,
             parse_mode="Markdown"
         )
     except telegram.error.BadRequest:
-        # إذا فشل التعديل، نرسل رسالة جديدة
         update.effective_chat.send_message(
             text=message_text,
             reply_markup=back_reply_markup,
@@ -327,11 +322,8 @@ def prompt_for_pen_name(update, context):
 
 
 def receive_pen_name_and_prepare_whatsapp(update, context):
-    """
-    (الدالة المعدلة) تستقبل الاسم وتعد رسالة الواتساب وزر الإرسال.
-    """
     engraving_name = update.message.text
-    product_data = context.user_data.pop('pen_data', None) # استرجاع وحذف البيانات
+    product_data = context.user_data.pop('pen_data', None) 
     
     if not product_data:
         update.effective_chat.send_message("عفواً، حدث خطأ. يرجى البدء من القائمة الرئيسية.", 
@@ -348,13 +340,11 @@ def receive_pen_name_and_prepare_whatsapp(update, context):
         f"اسم العميل: {user_info.first_name}\n"
         f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}"
     )
-    # إنشاء رابط الواتساب
     wa_link = create_whatsapp_link(message_body)
     
-    # ⚠️ الأزرار المطلوبة: "ارسال الطلب الي الواتساب" و "زر رجوع"
     keyboard = [
         [InlineKeyboardButton("ارسال الطلب الي الواتساب", url=wa_link)],
-        [InlineKeyboardButton("رجوع", callback_data="back_to_main_menu")] # العودة للقائمة الرئيسية
+        [InlineKeyboardButton("رجوع", callback_data="back_to_main_menu")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
@@ -391,7 +381,7 @@ def receive_wallet_name_and_prepare_whatsapp(update, context):
     return ConversationHandler.END
 
 def back_to_wallets_color(update, context):
-    return start(update, context) # Simplification: back to main menu
+    return start(update, context) 
 
 # دالة وهمية للخطوات التالية في المحادثات الأخرى
 def handle_next_step(update, context):
@@ -404,20 +394,17 @@ def handle_next_step(update, context):
 # 6. تعريف معالجات المحادثة (Conversation Handlers)
 # --------------------
 
-# 1. معالج الأقلام (المعدل)
+# 1. معالج الأقلام
 engraved_pen_handler = ConversationHandler(
     entry_points=[CallbackQueryHandler(select_pen_type_menu, pattern='^aqlam$')],
-    
     states={
         SELECT_PEN_TYPE: [
             CallbackQueryHandler(prompt_for_pen_name, pattern='^(aqlam_luminous|aqlam_metal)$')
         ],
-        
         GET_PEN_NAME: [
             MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)
         ]
     },
-    
     fallbacks=[
         CallbackQueryHandler(select_pen_type_menu, pattern='^aqlam$'),
         CommandHandler('start', start),
@@ -438,63 +425,12 @@ engraved_wallet_handler = ConversationHandler(
     ]
 )
 
-# 3. معالج بوكس كتب الكتاب (Placeholder)
-box_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(handle_next_step, pattern='^(box_m1|box_m2)$')],
-    states={
-        GET_BOX_COLOR: [CallbackQueryHandler(handle_next_step, pattern='^color_')],
-    },
-    fallbacks=[
-        CommandHandler('start', start),
-        CallbackQueryHandler(cancel_and_end)
-    ]
-)
-# 4. معالج صواني اكليريك (Placeholder)
-tray_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(handle_next_step, pattern='^sawany_akerik_')],
-    states={
-        GET_TRAY_NAMES: [MessageHandler(Filters.text & ~Filters.command, handle_next_step)],
-    },
-    fallbacks=[
-        CommandHandler('start', start),
-        CallbackQueryHandler(cancel_and_end)
-    ]
-)
-# 5. معالج طارات اكليريك (Placeholder)
-akerik_taarat_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(handle_next_step, pattern='^taarat_akerik_')],
-    states={
-        GET_AKRILIK_TAARAT_NAMES: [MessageHandler(Filters.text & ~Filters.command, handle_next_step)],
-    },
-    fallbacks=[
-        CommandHandler('start', start),
-        CallbackQueryHandler(cancel_and_end)
-    ]
-)
-# 6. معالج بصامات (Placeholder)
-bsamat_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(handle_next_step, pattern='^bsamat_m')],
-    states={
-        GET_BSAMAT_NAMES: [MessageHandler(Filters.text & ~Filters.command, handle_next_step)],
-    },
-    fallbacks=[
-        CommandHandler('start', start),
-        CallbackQueryHandler(cancel_and_end)
-    ]
-)
-# 7. معالج مناديل كتب الكتاب (Placeholder)
-tissue_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(handle_next_step, pattern='^tissue_m')],
-    states={
-        GET_TISSUE_NAMES: [MessageHandler(Filters.text & ~Filters.command, handle_next_step)],
-    },
-    fallbacks=[
-        CommandHandler('start', start),
-        CallbackQueryHandler(cancel_and_end)
-    ]
-)
-
-# Placeholder for Khashab Tray, Khashab Taarat
+# 3. معالجات المنتجات الأخرى (Placeholder للحفاظ على الهيكل)
+box_handler = ConversationHandler(entry_points=[CallbackQueryHandler(handle_next_step, pattern='^(box_m1|box_m2)$')], states={GET_BOX_COLOR: [CallbackQueryHandler(handle_next_step, pattern='^color_')],}, fallbacks=[CommandHandler('start', start), CallbackQueryHandler(cancel_and_end)])
+tray_handler = ConversationHandler(entry_points=[CallbackQueryHandler(handle_next_step, pattern='^sawany_akerik_')], states={GET_TRAY_NAMES: [MessageHandler(Filters.text & ~Filters.command, handle_next_step)],}, fallbacks=[CommandHandler('start', start), CallbackQueryHandler(cancel_and_end)])
+akerik_taarat_handler = ConversationHandler(entry_points=[CallbackQueryHandler(handle_next_step, pattern='^taarat_akerik_')], states={GET_AKRILIK_TAARAT_NAMES: [MessageHandler(Filters.text & ~Filters.command, handle_next_step)],}, fallbacks=[CommandHandler('start', start), CallbackQueryHandler(cancel_and_end)])
+bsamat_handler = ConversationHandler(entry_points=[CallbackQueryHandler(handle_next_step, pattern='^bsamat_m')], states={GET_BSAMAT_NAMES: [MessageHandler(Filters.text & ~Filters.command, handle_next_step)],}, fallbacks=[CommandHandler('start', start), CallbackQueryHandler(cancel_and_end)])
+tissue_handler = ConversationHandler(entry_points=[CallbackQueryHandler(handle_next_step, pattern='^tissue_m')], states={GET_TISSUE_NAMES: [MessageHandler(Filters.text & ~Filters.command, handle_next_step)],}, fallbacks=[CommandHandler('start', start), CallbackQueryHandler(cancel_and_end)])
 khashab_tray_handler = ConversationHandler(entry_points=[CallbackQueryHandler(handle_next_step, pattern='^sawany_khashab_')], states={1: [MessageHandler(Filters.text, handle_next_step)]}, fallbacks=[CommandHandler('start', start)])
 khashab_taarat_handler = ConversationHandler(entry_points=[CallbackQueryHandler(handle_next_step, pattern='^taarat_khashab_')], states={1: [MessageHandler(Filters.text, handle_next_step)]}, fallbacks=[CommandHandler('start', start)])
 
@@ -504,11 +440,13 @@ khashab_taarat_handler = ConversationHandler(entry_points=[CallbackQueryHandler(
 # --------------------
 
 def main():
-    # ⚠️ استدعاء التوكن من متغير البيئة 'Token'
-    token = os.environ.get('TOKEN') 
-    
+    # استدعاء التوكن من متغير البيئة 'Token' أو 'TOKEN'
+    token = os.environ.get('Token') 
     if not token:
-        print("خطأ: لم يتم العثور على متغير البيئة 'Token'. يرجى التأكد من إضافته بشكل صحيح.")
+        token = os.environ.get('TOKEN') 
+
+    if not token:
+        print("خطأ: لم يتم العثور على متغير البيئة للتوكن (Token أو TOKEN). يرجى التأكد من إضافته بشكل صحيح.")
         return
 
     updater = Updater(token, use_context=True) 
@@ -516,7 +454,7 @@ def main():
     dp = updater.dispatcher
 
     # 4. إضافة جميع ConversationHandler أولاً لضمان الأولوية
-    dp.add_handler(engraved_pen_handler)
+    dp.add_handler(engraved_pen_handler) # معالج الأقلام أولاً
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(box_handler)
     dp.add_handler(tray_handler)
