@@ -1,6 +1,7 @@
 ﻿import os
 import telegram 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+# تم استيراد Updater بدلاً من Application
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
 from urllib.parse import quote_plus 
 
@@ -487,7 +488,7 @@ def receive_bsamat_date_and_finish(update, context):
     return ConversationHandler.END
 
 
-# --- [دوال المحادثات الخاصة بمناديل كتب الكتاب] --- (تمت الإضافة)
+# --- [دوال المحادثات الخاصة بمناديل كتب الكتاب] --- (تم تعديلها وتأكيدها)
 
 def get_wedding_tissues_items():
     return wedding_tissues_submenu
@@ -1491,8 +1492,14 @@ def prepare_whatsapp_link_for_direct_buy(update, context):
 def button(update, context):
     query = update.callback_query
     data = query.data
-    query.answer()
     
+    # ⚠️ تجنب إجابة استدعاءات الأزرار التي يتم التقاطها بواسطة ConversationHandler
+    # إذا كان الزر يلتقط محادثة (buy_tissue_m1, buy_bsamat_m1, buy_akerik_m1...) فلن يصل إلى هنا أصلاً
+    # إذا وصل إلى هنا، فهو زر تنقل عادي
+    
+    if not data.startswith("buy_"):
+        query.answer()
+
     # 1. حالة العودة للقائمة الرئيسية
     if data == "main_menu":
         start(update, context)
@@ -1509,16 +1516,11 @@ def button(update, context):
     if data in ["engraved_wallet", "aqlam", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
-        title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         
         # إذا كانت "بصمات" أو أي قائمة أخرى تحتاج عرض المنتجات أولاً
         if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "engraved_wallet", "aqlam"]:
             show_product_page(update, data, submenu_list, is_direct_list=True)
             return
-            
-        # عرض القائمة الفرعية (لن يتم الوصول إلى هنا في هذا الكود المعدل لكن للاحتياط)
-        show_submenu(update, context, submenu_list, title.split()[-1], back_callback="main_menu")
-        return
 
     # 4. معالجة عرض صفحات المنتجات مباشرة (قوائم المستوى الثاني)
     product_list_keys = [
@@ -1529,8 +1531,6 @@ def button(update, context):
         "mugat_white", "mugat_magic", "mugat_digital"
     ]
     if data in product_list_keys:
-        # تحديد القائمة الأم
-        parent_callback = product_to_submenu_map.get(data)
         # البحث عن القائمة الفرعية المناسبة في all_submenus
         submenu_list = next((item['items'] for menu_list in all_submenus.values() for item in menu_list if item['callback'] == data), None)
         
@@ -1539,10 +1539,9 @@ def button(update, context):
             return
     
     # 5. معالجة أزرار الشراء الفردية (للمنتجات التي لا تحتاج محادثة)
-    # يجب أن يصل إلى هنا فقط الأباجورات والهرامات والدروع والمجات 
     if data.startswith("buy_"):
-        # *يتم التقاط منتجات المحادثات (مناديل، صواني، بصمات، إلخ) بواسطة ConversationHandler قبل الوصول إلى هنا.*
-        # إذا لم يلتقطها ConversationHandler، نعالجها كشراء مباشر (للمنتجات المتبقية).
+        # يجب أن يصل إلى هنا فقط الأباجورات والهرامات والدروع والمجات 
+        # (حيث لم يتم إضافة ConversationHandler لها)
         prepare_whatsapp_link_for_direct_buy(update, context)
         return
     
@@ -1557,27 +1556,28 @@ def handle_messages(update, context):
         start(update, context)
 
 # ------------------------------------
-# 4. دالة main لتشغيل البوت
+# 4. دالة main لتشغيل البوت (تم تعديلها لاستخدام Updater)
 # ------------------------------------
 
 def main():
     """Start the bot."""
-    # ⚠️ ملاحظة: يجب توفير التوكن الفعلي في بيئة التشغيل
-    from telegram.ext import Application 
     
-    try:
-        token = os.environ.get("TELEGRAM_BOT_TOKEN")
-        if not token:
-            # افتراض توكن وهمي مؤقت لغرض بناء الكود إذا لم يكن موجوداً
-            token = "YOUR_BOT_TOKEN_HERE" 
+    # 1. إعداد التوكن
+    token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    if not token:
+        token = "YOUR_BOT_TOKEN_HERE" 
         
-        application = Application.builder().token(token).build()
-        dp = application
+    # 2. التهيئة باستخدام Updater (متوافق مع الإصدارات الأقدم)
+    try:
+        updater = Updater(token, use_context=True)
+        dp = updater.dispatcher
     except Exception as e:
-        print(f"Error initializing Application: {e}")
+        print(f"Error initializing Updater: {e}")
         return # إيقاف إذا لم يتمكن من التهيئة
         
-    # 1. محفظة (ConversationHandler)
+    # 3. معالجات ConversationHandler (أولوية عالية)
+    
+    # محفظة
     engraved_wallet_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^buy_wallet_.*')],
         states={
@@ -1590,11 +1590,7 @@ def main():
         ]
     )
     
-    # لضمان التقاط زر الشراء الخاص بالمحفظة
-    for item in engraved_wallet_submenu:
-        dp.add_handler(CallbackQueryHandler(prompt_for_name, pattern=f'^buy_{item["callback"]}$'))
-
-    # 2. اقلام (ConversationHandler)
+    # اقلام
     engraved_pen_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^buy_aqlam_.*')],
         states={
@@ -1606,12 +1602,8 @@ def main():
             CallbackQueryHandler(cancel_and_end)
         ]
     )
-    # لضمان التقاط زر الشراء الخاص بالقلم
-    for item in aqlam_submenu:
-        dp.add_handler(CallbackQueryHandler(prompt_for_pen_name, pattern=f'^buy_{item["callback"]}$'))
-
-
-    # 3. بوكس كتب الكتاب (ConversationHandler)
+    
+    # بوكس كتب الكتاب
     box_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_box_purchase, pattern='^buy_box_.*')],
         states={
@@ -1621,12 +1613,12 @@ def main():
         fallbacks=[
             CommandHandler('start', start),
             CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$'),
-            CallbackQueryHandler(back_to_box_menu, pattern='^back_to_box_menu$'), # في حال أردنا الرجوع من صفحة الاسم للون
+            CallbackQueryHandler(back_to_box_menu, pattern='^back_to_box_menu$'),
             CallbackQueryHandler(cancel_and_end)
         ]
     )
     
-    # 4. صواني شبكة اكليريك (ConversationHandler)
+    # صواني شبكة اكليريك
     tray_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_tray_purchase, pattern='^buy_akerik_.*')],
         states={
@@ -1643,7 +1635,7 @@ def main():
         ]
     )
 
-    # 5. صواني شبكة خشب (ConversationHandler)
+    # صواني شبكة خشب
     khashab_tray_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_khashab_tray_purchase, pattern='^buy_khashab_.*')],
         states={
@@ -1660,7 +1652,7 @@ def main():
         ]
     )
     
-    # 6. طارات اكليريك (ConversationHandler)
+    # طارات اكليريك
     akerik_taarat_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_akerik_taarat_purchase, pattern='^buy_taarat_akerik_.*')],
         states={
@@ -1677,7 +1669,7 @@ def main():
         ]
     )
     
-    # 7. طارات خشب (ConversationHandler)
+    # طارات خشب
     khashab_taarat_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_khashab_taarat_purchase, pattern='^buy_taarat_khashab_.*')],
         states={
@@ -1694,7 +1686,7 @@ def main():
         ]
     )
     
-    # 8. بصامات (ConversationHandler)
+    # بصامات
     bsamat_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_bsamat_purchase, pattern='^buy_bsamat_.*')],
         states={
@@ -1711,7 +1703,7 @@ def main():
         ]
     )
     
-    # 9. مناديل كتب الكتاب (ConversationHandler) - تم إضافتها
+    # مناديل كتب الكتاب (الحل المطلوب)
     tissue_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_tissue_purchase, pattern='^buy_tissue_.*')],
         states={
@@ -1728,32 +1720,33 @@ def main():
         ]
     )
 
-    # 🛑 إضافة جميع ConversationHandler أولاً لضمان الأولوية
-    # ملاحظة: تم إضافة معالجات المحفظة والقلم (entry_points) بشكل منفصل فوق لضمان التقاط الأزرار الفردية.
+    # 4. إضافة جميع ConversationHandler أولاً لضمان الأولوية
     dp.add_handler(box_handler)
     dp.add_handler(tray_handler)
     dp.add_handler(khashab_tray_handler)
     dp.add_handler(akerik_taarat_handler) 
     dp.add_handler(khashab_taarat_handler) 
     dp.add_handler(bsamat_handler) 
-    dp.add_handler(tissue_handler) # ⬅️ معالج المناديل
+    dp.add_handler(tissue_handler) 
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler)
     
     
-    # 10. أوامر /start
+    # 5. أوامر /start
     dp.add_handler(CommandHandler("start", start))
     
-    # 11. معالج أزرار القائمة والتنقل (يجب أن يأتي بعد معالجات المحادثة)
+    # 6. معالج أزرار القائمة والتنقل (يجب أن يأتي بعد معالجات المحادثة)
     dp.add_handler(CallbackQueryHandler(button)) 
 
-    # 12. معالج للرسائل النصية التي لا تلتقطها أي محادثة
+    # 7. معالج للرسائل النصية التي لا تلتقطها أي محادثة
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_messages))
 
     # Start the Bot
     print("Bot is starting polling...")
     try:
-        application.run_polling(poll_interval=1.0)
+        # تشغيل البوت باستخدام Updater
+        updater.start_polling()
+        updater.idle()
     except Exception as e:
         print(f"Error during bot polling: {e}")
 
