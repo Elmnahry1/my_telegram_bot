@@ -600,6 +600,7 @@ def start_names_date_purchase(update, context):
 
 def save_names_ask_date(update, context):
     # 💥💥💥 تم إصلاح هذا الجزء 💥💥💥
+    # تم إزالة parse_mode="Markdown" من الرسالة لضمان عدم فشل إرسالها بسبب إدخال المستخدم الذي قد يحتوي رموز Markdown
     names = update.message.text
     context.user_data['names'] = names
 
@@ -608,10 +609,9 @@ def save_names_ask_date(update, context):
 
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        # تم إزالة تنسيق ** حول {names} لتجنب أخطاء البارسنغ الناتجة عن مدخلات المستخدم
-        text=f"تم حفظ الأسماء: {names}\n\nمن فضلك الآن **اكتب التاريخ** (مثال: 2024/1/1):", 
-        reply_markup=reply_markup,
-        parse_mode="Markdown"
+        text=f"تم حفظ الأسماء: {names}\n\nمن فضلك الآن اكتب التاريخ (مثال: 2024/1/1):", 
+        reply_markup=reply_markup
+        # تمت إزالة parse_mode="Markdown"
     )
     return GET_DATE # 👈 هذا هو مفتاح الانتقال لطلب التاريخ
 
@@ -636,9 +636,9 @@ def back_to_names_input(update, context):
 
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=f"من فضلك أعد كتابة **اسم العريس والعروسة**:",
+        text=f"من فضلك أعد كتابة اسم العريس والعروسة:",
         reply_markup=reply_markup,
-        parse_mode="Markdown"
+        # تمت إزالة parse_mode="Markdown"
     )
     return GET_NAMES
 
