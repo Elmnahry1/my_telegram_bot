@@ -505,7 +505,7 @@ khashab_taarat_handler = ConversationHandler(entry_points=[CallbackQueryHandler(
 
 def main():
     # ⚠️ استدعاء التوكن من متغير البيئة 'Token'
-    token = os.environ.get('Token') 
+    token = os.environ.get('TOKEN') 
     
     if not token:
         print("خطأ: لم يتم العثور على متغير البيئة 'Token'. يرجى التأكد من إضافته بشكل صحيح.")
