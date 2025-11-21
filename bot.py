@@ -400,7 +400,7 @@ def receive_name_and_prepare_whatsapp(update, context):
     product_label = product_data['label']
     try:
         color = product_label.split('محفظة ', 1)[1].strip() 
-        wallet_type = "محفظة سافوكس الاصلية التقيلة" 
+        wallet_type = "محفظة سافوكس الاصلية تقيلة" 
     except IndexError:
         color = product_label
         wallet_type = product_label
@@ -850,7 +850,8 @@ def main():
         entry_points=[CallbackQueryHandler(start_names_date_purchase, pattern=buy_names_date_pattern)],
         states={
             GET_NAMES: [
-                MessageHandler(Filters.text & ~Filters.command, save_names_ask_date),
+                # 💥💥💥 التعديل الجديد هنا 💥💥💥
+                MessageHandler(Filters.regex(r'^\w+.*') & ~Filters.command, save_names_ask_date),
                 # زر الرجوع للقائمة الأب
                 CallbackQueryHandler(button, pattern='^(' + '|'.join(product_to_submenu_map.values()) + ')$') 
             ],
