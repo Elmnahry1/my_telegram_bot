@@ -1563,7 +1563,7 @@ def main():
     """Start the bot."""
     
     # 1. إعداد التوكن
-    token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    token = os.environ.get("TOKEN")
     if not token:
         token = "YOUR_BOT_TOKEN_HERE" 
         
