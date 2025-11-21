@@ -25,7 +25,8 @@ GET_DATE = 6        # حالة كتابة التاريخ (عامة للصوان�
 # --- قوائم فرعية مباشرة ---
 bsamat_submenu = [
     {"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 1."},
-    {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 2."}
+    {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 2."},
+    {"label": "بصامة موديل 3", "callback": "bsamat_m3", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 3."}
 ]
 wedding_tissues_submenu = [
     {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 1."},
@@ -433,7 +434,8 @@ def prompt_for_pen_name(update, context):
     data = query.data
     query.answer()
     
-    product_callback = data.replace("buy_", "") if data.startswith("buy_") else data # يجب أن يكون buy_aqlam_*
+    # التعامل مع buy_
+    product_callback = data.replace("buy_", "") if data.startswith("buy_") else data 
     
     selected_pen_data = next((item for item in aqlam_submenu if item["callback"] == product_callback), None)
     
@@ -593,7 +595,6 @@ def start_names_date_purchase(update, context):
     )
     return GET_NAMES
 
-# 🟢 الدالة التي تقوم بالانتقال من الأسماء إلى التاريخ
 def save_names_ask_date(update, context):
     names = update.message.text
     context.user_data['names'] = names
@@ -700,9 +701,10 @@ def button(update, context):
         return 
         
     # 4. معالجة اختيار المنتج (محفظة) - الدخول في حالة المحادثة
-    if data in [item["callback"] for item in engraved_wallet_submenu]:
-        # نستخدم دالة بدء المحادثة مباشرةً
-        return prompt_for_name(update, context) 
+    # *** تم حذف هذا البلوك: يتم التعامل معه كنقطة دخول (entry_point) في engraved_wallet_handler، وهو مضاف قبل button في الموزع (Dispatcher).
+    # if data in [item["callback"] for item in engraved_wallet_submenu]:
+    #     # نستخدم دالة بدء المحادثة مباشرةً
+    #     return prompt_for_name(update, context) 
     
     # 5. معالجة فتح القوائم الفرعية المتداخلة (Sawany, Taarat, Haram, Doro3, Mugat)
     if data in ["sawany", "taarat", "haram", "doro3", "mugat"]:
@@ -732,23 +734,9 @@ def button(update, context):
     if data.startswith("buy_"):
         product_key = data.replace("buy_", "")
         
-        # 🟢 التحقق من المنتجات التي تتطلب محادثة (أسماء وتاريخ)
-        if product_key in NAMES_DATE_PRODUCT_KEYS:
-            query.answer() 
-            return start_names_date_purchase(update, context)
-            
-        # 🟢 التحقق من بوكس كتب الكتاب (له محادثة خاصة)
-        elif product_key.startswith('box_m'):
-            query.answer()
-            return start_box_purchase(update, context)
+        # *** تم حذف منطق توجيه المحادثات يدوياً (الأسماء/التاريخ، البوكس، الأقلام). 
+        # هذه الآن نقاط دخول (entry points) يتم التعامل معها بواسطة الـ ConversationHandlers المضافة أولاً.
         
-        # 🟢 التحقق من الأقلام (لها محادثة خاصة)
-        pen_callbacks = [item['callback'] for item in aqlam_submenu]
-        if product_key in pen_callbacks:
-             query.answer()
-             # يجب أن يتم استدعاء دالة بدء المحادثة هنا للدخول في حالة ConversationHandler
-             return prompt_for_pen_name(update, context)
-
         # 8. إذا لم يكن منتجاً يحتاج إلى محادثة (مثل دروع، مجات، أهرام، أو مستلزمات سبلميشن)
         
         product_data = find_product_by_callback(product_key)
@@ -808,12 +796,11 @@ def main():
     )
 
     # 2. اقلام (ConversationHandler)
-    # تم حل المشكلة ببدء المحادثة من دالة button() مباشرة 
+    # تم تصحيح: يجب أن يكون زر الشراء هو نقطة الدخول للمحادثة، وإلا فإن الرسالة التالية (الاسم) لن يتم توجيهها بشكل صحيح.
     buy_pen_callbacks_pattern = '^buy_(' + '|'.join([item['callback'] for item in aqlam_submenu]) + ')$'
     
     engraved_pen_handler = ConversationHandler(
-        # يتم ترك entry_points فارغة لأن المحادثة تبدأ من دالة button()
-        entry_points=[CallbackQueryHandler(lambda update, context: ConversationHandler.WAITING, pattern='^aqlam_never_match_entry$')],
+        entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern=buy_pen_callbacks_pattern)], 
         states={GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)]},
         fallbacks=[CommandHandler('start', start), CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$'), CallbackQueryHandler(button)],
         per_message=True,
@@ -852,11 +839,10 @@ def main():
         per_message=True
     )
 
-    # إضافة كل محادثات الشراء أولاً
+    # إضافة كل محادثات الشراء أولاً لضمان الأولوية
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler)
     dp.add_handler(box_handler)
-    # 💡 تأكد من إضافة هذا المعالج لكي يعمل
     dp.add_handler(names_date_handler)
     
     # إضافة الأوامر العامة ومعالج الأزرار كمعالج عام في النهاية
