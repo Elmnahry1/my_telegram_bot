@@ -76,7 +76,6 @@ aqlam_submenu = [
 ]
 
 # --- القوائم المتداخلة (Placeholder) ---
-# يجب تعريف هذه القوائم الفرعية إذا كانت مستخدمة في زر 'القائمة الرئيسية'
 sawany_submenu = [
     {"label": "صينية اكليريك", "callback": "sawany_acrylic"},
     {"label": "صينية خشب", "callback": "sawany_khashab"},
@@ -113,7 +112,6 @@ all_submenus = {
 
 # --------------------
 # 3. الدوال الأساسية (start, cancel_and_end, show_submenu, show_product_page)
-# *يجب تعريفها قبل أي معالج يستخدمها*
 # --------------------
 
 def cancel_and_end(update, context):
@@ -145,7 +143,7 @@ def start(update, context):
     # تعريف لوحة المفاتيح الرئيسية
     keyboard = [
         [InlineKeyboardButton("محافظ جلد محفورة بالاسم", callback_data="engraved_wallet")],
-        [InlineKeyboardButton("اقلام محفورة بالاسم", callback_data="aqlam")], # 🛑 تم إضافة زر الأقلام
+        [InlineKeyboardButton("اقلام محفورة بالاسم", callback_data="aqlam")], 
         [InlineKeyboardButton("بصمات كتب كتاب", callback_data="bsamat")],
         [InlineKeyboardButton("مناديل كتب كتاب", callback_data="wedding_tissues")],
         [InlineKeyboardButton("بوكس كتب كتاب", callback_data="katb_kitab_box")],
@@ -193,27 +191,32 @@ def show_submenu(update, context, submenu_list, title, back_callback):
             parse_mode="Markdown"
         )
 
-def show_product_page(update, data, submenu_list, is_direct_list=False):
+def show_product_page(update, context, data, submenu_list, is_direct_list=False):
     """دالة مساعدة لعرض صفحة المنتج (صورة، وصف، زر شراء)."""
-    # ... (Logic remains the same, placeholder for brevity) ...
-    # يتم استدعاء هذه الدالة لمنتجات أخرى مثل المحافظ والأباجورات، وليست للأقلام حالياً.
-    # إذا كانت القائمة مباشرة، نفترض أن الـ data هو اسم القائمة الرئيسية (مثل 'engraved_wallet') 
-    # وإلا فإن الـ data هو الـ callback للـ item.
     
     query = update.callback_query
     query.answer()
     
-    # في حالة القوائم المباشرة، نختار أول منتج لغرض العرض كإجراء احتياطي
-    # (يفضل أن يتم تعديل هذه الدالة لتظهر خيارات المنتجات وليس المنتج الأول مباشرة)
     if is_direct_list and submenu_list:
         selected_item_data = submenu_list[0]
         back_callback = "main_menu"
     else:
         # هذا الجزء مخصص لاختيار منتج محدد من قائمة فرعية
         selected_item_data = next((item for item in submenu_list if item["callback"] == data), None)
-        # يجب تحديد زر الرجوع بناءً على السياق (قائمة الصواني، الطارات، إلخ)
-        # (يجب تعديل هذه اللوجيك في التطبيق الفعلي لتحديد الـ back_callback المناسب)
-        back_callback = "main_menu" # Placeholder 
+        # Placeholder for back_callback, should be dynamically determined based on the product type
+        if data.startswith("wallet_"):
+            back_callback = "engraved_wallet" 
+        elif data.startswith("bsamat_"):
+            back_callback = "bsamat"
+        elif data.startswith("tissue_"):
+            back_callback = "wedding_tissues"
+        elif data.startswith("box_"):
+            back_callback = "katb_kitab_box"
+        elif data.startswith("abajora_"):
+            back_callback = "abajorat"
+        # يمكن إضافة باقي حالات الرجوع هنا
+        else:
+             back_callback = "main_menu" # Fallback 
 
     if not selected_item_data:
         query.answer("خطأ في العثور على المنتج", show_alert=True)
@@ -251,10 +254,10 @@ def show_product_page(update, data, submenu_list, is_direct_list=False):
 
 
 # --------------------
-# 4. دوال المحادثات الخاصة بالأقلام (تم تعديلها حسب الطلب)
+# 4. دوال المحادثات الخاصة بالأقلام (تم تطبيق المطلوب هنا)
 # --------------------
 
-# 💡 دالة جديدة: لعرض صفحة منتج القلم المفرد (الخطوة 2 في طلبك)
+# دالة لعرض صفحة منتج القلم المفرد (الخطوة 2)
 def display_single_pen_product(update, context, product_callback):
     query = update.callback_query
     query.answer()
@@ -299,10 +302,10 @@ def display_single_pen_product(update, context, product_callback):
         )
         
 
-# 🛑 تم تعديل هذه الدالة لتبدأ المحادثة بعد الضغط على زر الشراء (الخطوة 3 في طلبك)
+# دالة لبدء محادثة الشراء (الخطوة 3)
 def start_pen_purchase_conversation(update, context):
     query = update.callback_query
-    data = query.data  # buy_aqlam_metal
+    data = query.data 
     query.answer()
     
     # استخراج المفتاح الأصلي للمنتج
@@ -346,7 +349,7 @@ def start_pen_purchase_conversation(update, context):
     return GET_PEN_NAME
 
 
-# 🛑 تم تعديل هذه الدالة لإنشاء زر إرسال الطلب على الواتساب (الخطوة 4 في طلبك)
+# دالة لاستلام الاسم وإعداد رابط الواتساب (الخطوة 4)
 def receive_pen_name_and_prepare_whatsapp(update, context):
     engraving_name = update.message.text
     product_data = context.user_data.get('pen_data')
@@ -384,7 +387,7 @@ def receive_pen_name_and_prepare_whatsapp(update, context):
     context.user_data.clear()
     return ConversationHandler.END
 
-# 🛑 تم تعديل هذه الدالة لإظهار القائمة الفرعية للأقلام عند الرجوع من المحادثة
+# دالة الرجوع من المحادثة إلى قائمة الأقلام
 def back_to_pen_types(update, context):
     query = update.callback_query
     query.answer()
@@ -397,61 +400,77 @@ def back_to_pen_types(update, context):
     # نستخدم show_submenu لعرض قائمة الأقلام (الخطوة 1)
     submenu_list = aqlam_submenu
     show_submenu(update, context, submenu_list, "اقلام محفورة بالاسم", back_callback="main_menu")
-    return ConversationHandler.END # ننهي المحادثة ونعود إلى معالج الأزرار العام
+    return ConversationHandler.END
 
 
 # --- [دوال المحادثات الأخرى] --- (Placeholder)
-# ... (يجب أن تكون جميع دوال المحادثات الأخرى هنا) ...
+# يجب تعريف باقي دوال المحادثات هنا مثل (get_wedding_tissues_items, start_tissue_purchase, etc.)
+
 
 # --------------------
 # 5. معالج الأزرار العام (button)
-# *يجب أن يكون هنا*
 # --------------------
 
 def button(update, context):
     query = update.callback_query
     data = query.data
     
-    # 1. معالجة زر الرجوع للقائمة الرئيسية
     if data == "main_menu":
         start(update, context)
         return
 
-    # 2. معالجة فتح القوائم المتداخلة
+    # معالجة فتح القوائم المتداخلة (المستوى الأول)
     if data in ["sawany", "taarat", "haram", "doro3", "mugat"]:
         submenu_list = all_submenus.get(data)
-        show_submenu(update, context, submenu_list, update.callback_query.message.reply_markup.inline_keyboard[0][0].text, back_callback="main_menu") # افتراضياً نستخدم اسم الزر المبدئي كعنوان
+        # يمكن تحسين الحصول على اسم القائمة إذا لم يكن موجوداً في الرسالة الأصلية
+        title = next((item for sublist in [engraved_wallet_submenu, aqlam_submenu, bsamat_submenu, wedding_tissues_submenu, katb_kitab_box_submenu, abajorat_submenu] for item in sublist if item.get("callback") == data), {}).get("label", "قائمة فرعية")
+        show_submenu(update, context, submenu_list, title, back_callback="main_menu")
         return
     
-    # 🛑 التعامل الخاص مع قائمة الأقلام (الخطوة 1: عرض قائمة الأنواع)
+    # التعامل الخاص مع قائمة الأقلام (الخطوة 1)
     if data == "aqlam":
         submenu_list = all_submenus.get(data)
         show_submenu(update, context, submenu_list, "اقلام محفورة بالاسم", back_callback="main_menu")
         return
         
-    # 🛑 التعامل الخاص مع اختيار نوع القلم (الخطوة 2: عرض تفاصيل القلم وزر الشراء)
+    # التعامل الخاص مع اختيار نوع القلم (الخطوة 2)
     if data in ["aqlam_metal", "aqlam_luminous"]:
         display_single_pen_product(update, context, data)
         return
 
-    # 4. معالجة قوائم المستوى الأول المباشرة الأخرى (التي تعرض المنتجات مباشرة)
+    # معالجة قوائم المستوى الأول المباشرة الأخرى (التي تعرض المنتجات مباشرة أو خيارات المنتجات)
     if data in ["engraved_wallet", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
         submenu_list = all_submenus.get(data)
-        show_product_page(update, context, data, submenu_list, is_direct_list=True)
+        # هنا قد تحتاج لـ show_submenu إذا كانت تعرض أكثر من خيار، أو show_product_page إذا كانت تعرض المنتج مباشرة
+        # بناءً على تعريف القوائم أعلاه (مثل المحافظ والبصمات)، نستخدم show_submenu ثم يتم استخدام show_product_page لاحقاً
+        title_map = {"engraved_wallet": "محافظ جلد محفورة بالاسم", "bsamat": "بصمات كتب كتاب", "wedding_tissues": "مناديل كتب كتاب", "abajorat": "أباجورات", "katb_kitab_box": "بوكس كتب كتاب"}
+        show_submenu(update, context, submenu_list, title_map.get(data, "قائمة"), back_callback="main_menu")
         return
 
-    # 5. معالجة عرض صفحات المنتجات مباشرة (قوائم المستوى الثاني)
-    if data in ["wallet_bege", "wallet_brown", "wallet_black", "bsamat_m1", "bsamat_m2", "tissue_m1", "tissue_m2", "box_m1", "box_m2", "abajora_m1", "abajora_m2", "haram_m1", "doro3_m1", "mugat_m1"]:
-        # يجب تحديد القائمة الفرعية المناسبة لكل مجموعة منتجات
-        # يتم تمرير قائمة الأقلام هنا لغرض المثال فقط، يجب تعديلها حسب المنتج الفعلي
+    # معالجة عرض صفحات المنتجات مباشرة (قوائم المستوى الثاني مثل wallet_bege, bsamat_m1)
+    if data in [item["callback"] for sublist in all_submenus.values() for item in sublist if item["callback"] not in ["sawany_acrylic", "sawany_khashab", "taarat_acrylic", "taarat_khashab"]]:
+        
+        # تحديد القائمة الفرعية المناسبة للرجوع
         if data.startswith("wallet_"):
             submenu = engraved_wallet_submenu
         elif data.startswith("bsamat_"):
             submenu = bsamat_submenu
-        # ... تكملة باقي القوائم ...
+        elif data.startswith("tissue_"):
+            submenu = wedding_tissues_submenu
+        elif data.startswith("box_"):
+            submenu = katb_kitab_box_submenu
+        elif data.startswith("abajora_"):
+            submenu = abajorat_submenu
+        elif data.startswith("haram_"):
+            submenu = haram_submenu
+        elif data.startswith("doro3_"):
+            submenu = doro3_submenu
+        elif data.startswith("mugat_"):
+            submenu = mugat_submenu
         else:
-            submenu = [] # قائمة احتياطية
-            
+            query.answer("خطأ في تحديد المنتج.", show_alert=True)
+            return
+
         show_product_page(update, context, data, submenu)
         return
 
@@ -461,13 +480,9 @@ def button(update, context):
 
 # --------------------
 # 6. تعريف معالجات المحادثات (Conversation Handlers)
-# *يجب تعريفها هنا بعد الدوال التي تعتمد عليها*
 # --------------------
 
-# ... (box_handler, tray_handler, khashab_tray_handler, akerik_taarat_handler, khashab_taarat_handler, bsamat_handler, tissue_handler, engraved_wallet_handler - Placeholder) ...
-# يجب أن يكون تعريف جميع الـ ConversationHandler هنا
-
-# تعريف محادثة المحافظ (مثال)
+# مثال: تعريف محادثة المحافظ
 engraved_wallet_handler = ConversationHandler(
     entry_points=[CallbackQueryHandler(lambda u,c: c.bot.send_message(u.effective_chat.id, "ادخل الاسم المطلوب..."), pattern='^buy_wallet_.*')],
     states={
@@ -476,7 +491,7 @@ engraved_wallet_handler = ConversationHandler(
     fallbacks=[CommandHandler('start', start)]
 )
 
-# 🛑 تم تعديل engraved_pen_handler لتبدأ عند زر الشراء (buy_aqlam_*) وليس عند زر نوع القلم (aqlam_*)
+# معالج محادثة الأقلام (تم تطبيقه وفقاً للمتطلبات)
 engraved_pen_handler = ConversationHandler(
     entry_points=[CallbackQueryHandler(start_pen_purchase_conversation, pattern='^buy_aqlam_.*')],
     states={
@@ -490,21 +505,43 @@ engraved_pen_handler = ConversationHandler(
 )
 
 
+# --- [يجب إضافة باقي معالجات المحادثات هنا، مثل box_handler, tray_handler, إلخ] ---
+# placeholder definitions for missing handlers to prevent errors
+def dummy_handler(entry_pattern):
+    return ConversationHandler(
+        entry_points=[CallbackQueryHandler(lambda u, c: ConversationHandler.END, pattern=entry_pattern)],
+        states={},
+        fallbacks=[CommandHandler('start', start)]
+    )
+
+box_handler = dummy_handler('^buy_box_.*')
+tray_handler = dummy_handler('^buy_sawany_acrylic_.*')
+khashab_tray_handler = dummy_handler('^buy_sawany_khashab_.*')
+akerik_taarat_handler = dummy_handler('^buy_taarat_acrylic_.*')
+khashab_taarat_handler = dummy_handler('^buy_taarat_khashab_.*')
+bsamat_handler = dummy_handler('^buy_bsamat_.*')
+tissue_handler = dummy_handler('^buy_tissue_.*')
+
+
 # --------------------
 # 7. دالة main
 # --------------------
 
 def main():
     # 1. إعدادات التوكن
-    # ⚠️ استبدل 'YOUR_BOT_TOKEN' بالتوكن الفعلي الخاص بك
-    # TOKEN = os.environ.get("TOKEN", "YOUR_BOT_TOKEN") 
-    TOKEN = "YOUR_BOT_TOKEN" # استخدام متغير التوكن كما طلب العميل
+    # 🛑 ⚠️ هام: يجب استبدال "YOUR_BOT_TOKEN" بالتوكن الفعلي الخاص ببوت تليجرام
+    TOKEN = "YOUR_BOT_TOKEN" 
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     
     # 4. إضافة جميع ConversationHandler أولاً لضمان الأولوية
-    # dp.add_handler(box_handler) 
-    # ... (إضافة باقي الـ Handlers) ...
+    dp.add_handler(box_handler)
+    dp.add_handler(tray_handler)
+    dp.add_handler(khashab_tray_handler)
+    dp.add_handler(akerik_taarat_handler) 
+    dp.add_handler(khashab_taarat_handler) 
+    dp.add_handler(bsamat_handler) 
+    dp.add_handler(tissue_handler) 
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler)
     
@@ -515,7 +552,7 @@ def main():
     # 6. معالج أزرار القائمة والتنقل (يجب أن يأتي بعد معالجات المحادثة)
     dp.add_handler(CallbackQueryHandler(button)) 
 
-    # 7. معالج للرسائل النصية غير المعالجة (يمكن حذفه إذا كان يسبب مشاكل)
+    # 7. معالج للرسائل النصية غير المعالجة (يمكن إزالته إذا لم يكن ضرورياً)
     # dp.add_handler(MessageHandler(Filters.text & ~Filters.command, lambda update, context: update.message.reply_text("عفواً، لا أفهم هذا الأمر. يرجى استخدام الأزرار في القائمة.")))
 
     # 8. بدء البوت
