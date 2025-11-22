@@ -1,4 +1,4 @@
-﻿import os
+﻿import os # 🛑 تأكد من استيراد os
 import telegram 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
@@ -14,7 +14,10 @@ logger = logging.getLogger(__name__)
 # --------------------
 
 WHATSAPP_NUMBER = "201288846355" # مثال
-TOKEN = "YOUR_BOT_TOKEN_HERE" # 🛑 تم تغيير اسم المتغير إلى TOKEN
+
+# 🛑 تم التعديل لقراءة التوكن من متغير البيئة 'TOKEN' أولاً.
+# إذا فشلت القراءة (في بيئة التطوير)، سيستخدم القيمة الافتراضية (Placeholder).
+TOKEN = os.environ.get('TOKEN', "YOUR_BOT_TOKEN_HERE") 
 
 # --------------------
 # 1. تعريف حالات المحادثة
@@ -226,8 +229,6 @@ def show_pen_details_and_buy(update, context, pen_callback_data):
     
     return
 
-# ... (باقي دوال الرجوع والتنقل مثل back_to_wallets_color, cancel_and_end)
-
 
 # --------------------
 # 4. دوال معالجة المحادثات (Conversation Handlers)
@@ -377,7 +378,7 @@ def button(update, context):
 
 def main():
     """الدالة الرئيسية لتشغيل البوت."""
-    # 🛑 تم استخدام المتغير TOKEN بدلاً من BOT_TOKEN
+    # استخدام المتغير TOKEN
     updater = Updater(TOKEN, use_context=True) 
     dp = updater.dispatcher
 
