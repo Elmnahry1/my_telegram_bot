@@ -9,9 +9,12 @@ import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# ⚠️ إعدادات الواتساب: استبدل بالرقم الخاص بك
+# --------------------
+# ⚠️ إعدادات التوكن والواتساب
+# --------------------
+
 WHATSAPP_NUMBER = "201288846355" # مثال
-BOT_TOKEN = "YOUR_BOT_TOKEN_HERE" # استبدل برمز البوت الخاص بك
+TOKEN = "YOUR_BOT_TOKEN_HERE" # 🛑 تم تغيير اسم المتغير إلى TOKEN
 
 # --------------------
 # 1. تعريف حالات المحادثة
@@ -59,7 +62,7 @@ engraved_wallet_submenu = [
     {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود."}
 ]
 
-# 🛑 START OF NEW PEN LOGIC: قائمة الأقلام الجديدة
+# قائمة الأقلام
 aqlam_submenu = [
     {
         "label": "قلم تاتش مضئ", 
@@ -74,7 +77,6 @@ aqlam_submenu = [
         "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر. عند اختياره، يتم توجيهك لصفحة بها صورته ووصفه وزر شراء."
     }
 ]
-# END OF NEW PEN LOGIC
 
 # صواني
 sawany_submenu = [
@@ -87,14 +89,14 @@ taarat_submenu = [
     {"label": "طارة اكليريك", "callback": "akerik_taarat"},
     {"label": "طارة خشب", "callback": "khashab_taarat"}
 ]
-# ... (تعريف باقي القوائم مثل haram, doro3, mugat, bsamat, wedding_tissues, abajorat)
+# ... (باقي تعريفات القوائم الفرعية)
 
 # قائمة شاملة لجميع القوائم الفرعية
 all_submenus = {
     "sawany": sawany_submenu,
     "taarat": taarat_submenu,
     "engraved_wallet": engraved_wallet_submenu,
-    "aqlam": aqlam_submenu, # تم تضمينها هنا أيضاً لـ show_submenu
+    "aqlam": aqlam_submenu,
     # ... (باقي القوائم الفرعية)
 }
 
@@ -168,8 +170,6 @@ def show_product_page(update, product_key, product_list, is_direct_list=False):
     # ... (Logic for showing product list, not directly modified but kept for context)
     pass
     
-
-# 🛑 START OF NEW PEN DETAILS HANDLER (show_pen_details_and_buy)
 def show_pen_details_and_buy(update, context, pen_callback_data):
     """
     تعرض تفاصيل القلم المحدد (صورة، وصف) وزر الشراء وزر الرجوع إلى قائمة أنواع الأقلام.
@@ -226,8 +226,6 @@ def show_pen_details_and_buy(update, context, pen_callback_data):
     
     return
 
-# 🛑 END OF NEW PEN DETAILS HANDLER
-
 # ... (باقي دوال الرجوع والتنقل مثل back_to_wallets_color, cancel_and_end)
 
 
@@ -235,11 +233,10 @@ def show_pen_details_and_buy(update, context, pen_callback_data):
 # 4. دوال معالجة المحادثات (Conversation Handlers)
 # --------------------
 
-# دوال الأقلام (تم الحفاظ عليها)
+# دوال الأقلام 
 def prompt_for_pen_name(update, context):
     """
     تبدأ عملية طلب الحفر للقلم. 
-    هذه هي الدالة التي يتم استدعاؤها بعد الضغط على زر "شراء" (buy_aqlam_luminous أو buy_aqlam_metal).
     """
     query = update.callback_query
     
@@ -346,7 +343,7 @@ def button(update, context):
         show_submenu(update, context, all_submenus.get(data, []), clean_title, back_callback="main_menu")
         return
 
-    # 🛑 NEW: معالجة زر "اقلام" لعرض القائمة الفرعية (زرين فرعيين + رجوع)
+    # معالجة زر "اقلام" لعرض القائمة الفرعية (زرين فرعيين + رجوع)
     if data == "aqlam":
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         clean_title = title.split()[-1]
@@ -355,7 +352,7 @@ def button(update, context):
         return
 
 
-    # 3. معالجة فتح قوائم المستوى الأول المباشرة (التي تعرض تفاصيل المنتجات كلها مباشرة)
+    # 3. معالجة فتح قوائم المستوى الأول المباشرة 
     if data in ["engraved_wallet", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]: 
         submenu_list = all_submenus.get(data)
         if submenu_list:
@@ -365,7 +362,7 @@ def button(update, context):
         # ... (باقي المعالجة إذا لم يتم العثور على القائمة)
         return
 
-    # 🛑 NEW: معالجة اختيار نوع القلم (لعرض تفاصيل القلم وزر الشراء)
+    # معالجة اختيار نوع القلم (لعرض تفاصيل القلم وزر الشراء)
     if data in ["aqlam_luminous", "aqlam_metal"]:
         show_pen_details_and_buy(update, context, data)
         return
@@ -380,11 +377,11 @@ def button(update, context):
 
 def main():
     """الدالة الرئيسية لتشغيل البوت."""
-    updater = Updater(BOT_TOKEN, use_context=True)
+    # 🛑 تم استخدام المتغير TOKEN بدلاً من BOT_TOKEN
+    updater = Updater(TOKEN, use_context=True) 
     dp = updater.dispatcher
 
     # 1. تعريف ConversationHandler للأقلام
-    # يستخدم regex لمطابقة "buy_" يتبعها نوع القلم
     engraved_pen_handler = ConversationHandler(
         entry_points=[
             CallbackQueryHandler(prompt_for_pen_name, pattern='^buy_aqlam_') 
@@ -399,11 +396,7 @@ def main():
         ]
     )
 
-    # ... (باقي تعريفات ConversationHandler الأخرى مثل box_handler, wallet_handler, etc.)
-    # (افتراضاً أنها معرّفة هنا)
-
     # 2. تعريف بعض الـ Conversation Handlers الأساسية الأخرى
-    # (لأغراض العرض، سنضع مثال للمحفظة أيضاً)
     engraved_wallet_handler = ConversationHandler(
         entry_points=[
             CallbackQueryHandler(prompt_for_pen_name, pattern='^buy_wallet_') 
@@ -421,7 +414,6 @@ def main():
 
     # 3. إضافة جميع ConversationHandler أولاً لضمان الأولوية
     # dp.add_handler(box_handler)
-    # dp.add_handler(tray_handler)
     # ...
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler)
