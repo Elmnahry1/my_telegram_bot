@@ -1820,7 +1820,7 @@ tissue_handler = ConversationHandler(
 # --------------------
 def main():
     # ⚠️ لا تقم بتغيير التوكن أو طريقة قراءته
-    BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', 'YOUR_TOKEN_HERE') 
+    BOT_TOKEN = os.environ.get('TOKEN', 'YOUR_TOKEN_HERE') 
     
     if BOT_TOKEN == 'YOUR_TOKEN_HERE':
         print("🔴 خطأ: لم يتم تعيين توكن البوت في متغير البيئة TELEGRAM_BOT_TOKEN")
