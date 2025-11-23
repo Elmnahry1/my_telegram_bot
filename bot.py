@@ -29,7 +29,7 @@ GET_KHASHAB_TAARAT_DATE = 12 # حالة تاريخ طارات خشب
 GET_BSAMAT_NAMES = 13  # حالة كتابة أسماء العرسان للبصامات
 GET_BSAMAT_DATE = 14   # حالة كتابة التاريخ للبصامات
 
-# حالات مناديل كتب الكتاب (تم إضافتها هنا)
+# حالات مناديل كتب الكتاب
 GET_TISSUE_NAMES = 15  # حالة كتابة أسماء العرسان للمناديل
 GET_TISSUE_DATE = 16   # حالة كتابة التاريخ للمناديل
 
@@ -74,6 +74,12 @@ aqlam_submenu = [
         "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر."
     }
 ]
+# 🌟 القائمة المضافة: مستلزمات سبلميشن
+sublimation_submenu = [
+    {"label": "تيشيرت سبلميشن", "callback": "subli_tshirt", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "تيشيرت قطن بوليستر مجهز للطباعة الحرارية."},
+    {"label": "غطاء هاتف سبلميشن", "callback": "subli_phonecase", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "غطاء هاتف بلاستيك للطباعة الحرارية."}
+]
+
 
 # --- القوائم المتداخلة ---
 sawany_submenu = [
@@ -184,10 +190,10 @@ main_menu = [
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
-    {"label": "✏️ اقلام", "callback": "aqlam"}, # تم تغيير سلوكها
+    {"label": "✏️ اقلام", "callback": "aqlam"}, 
     {"label": "☕ مجات", "callback": "mugat"},
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
-    {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
+    {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"} # موجودة هنا
 ]
 
 
@@ -202,13 +208,14 @@ all_submenus = {
     "wedding_tissues": wedding_tissues_submenu,
     "katb_kitab_box": katb_kitab_box_submenu,
     "abajorat": abajorat_submenu,
-    "engraved_wallet": engraved_wallet_submenu
+    "engraved_wallet": engraved_wallet_submenu,
+    "sublimation": sublimation_submenu # 🌟 تمت إضافة قائمة السبلميشن هنا
 }
 
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box"]: 
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "sublimation"]: # 🌟 تمت إضافة sublimation هنا
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             product_to_submenu_map[product["callback"]] = menu_key
@@ -405,8 +412,8 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     
     # تحديد زر الرجوع
     
-    # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات)
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
+    # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات، سبلميشن)
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "sublimation"]: # 🌟 تمت إضافة sublimation هنا
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -430,8 +437,6 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
 
 
 # --- [دوال المحادثات الخاصة بالبصامات] ---
-# (لم تتغير)
-
 def get_bsamat_items():
     return bsamat_submenu
 
@@ -559,8 +564,6 @@ def receive_bsamat_date_and_finish(update, context):
 
 
 # --- [دوال المحادثات الخاصة بمناديل كتب الكتاب] ---
-# (لم تتغير)
-
 def get_wedding_tissues_items():
     return wedding_tissues_submenu
 
@@ -814,7 +817,7 @@ def receive_wallet_name_and_prepare_whatsapp(update, context):
     return ConversationHandler.END
 
 
-# --- [دوال المحادثات الخاصة بالأقلام] --- ⚠️ (تم تحديثها بالكامل)
+# --- [دوال المحادثات الخاصة بالأقلام] --- 
 
 # ⚠️ دالة الرجوع من إدخال اسم القلم لصفحة المنتج الواحد
 def back_to_single_pen_product_page(update, context):
@@ -928,7 +931,7 @@ def receive_pen_name_and_prepare_whatsapp(update, context):
     return ConversationHandler.END
 
 
-# دوال بوكسات كتب الكتاب (تم تصحيح دالة start_box_purchase)
+# دوال بوكسات كتب الكتاب
 
 def get_box_items():
     return katb_kitab_box_submenu
@@ -953,14 +956,13 @@ def start_box_purchase(update, context):
     except:
         pass
         
-    # 🌟🌟🌟🌟 هذا هو الجزء الذي تم تصحيحه لإعادة أزرار الألوان 🌟🌟🌟🌟
+    # خيارات الألوان (المصححة)
     keyboard = [
         [InlineKeyboardButton("أسود في ذهبي", callback_data="color_black_gold")],
         [InlineKeyboardButton("أبيض في ذهبي", callback_data="color_white_gold")],
         [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")] # يعود لقائمة موديلات البوكسات
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    # 🌟🌟🌟🌟 نهاية التصحيح 🌟🌟🌟🌟
 
     context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ **{selected_product['label']}**\n\nمن فضلك اختر **لون البوكس**:", reply_markup=reply_markup, parse_mode="Markdown")
     return GET_BOX_COLOR
@@ -1081,7 +1083,7 @@ def receive_box_names_and_finish(update, context):
     return ConversationHandler.END
 
 
-# دوال صواني شبكة اكليريك (لم تتغير)
+# دوال صواني شبكة اكليريك
 def get_akerik_tray_items():
     return sawany_submenu[0]['items']
 
@@ -1204,7 +1206,7 @@ def receive_tray_date_and_finish(update, context):
     return ConversationHandler.END
 
 
-# دوال صواني شبكة خشب (لم تتغير)
+# دوال صواني شبكة خشب
 def get_khashab_tray_items():
     return sawany_submenu[1]['items']
 
@@ -1327,7 +1329,7 @@ def receive_khashab_tray_date_and_finish(update, context):
     return ConversationHandler.END
 
 
-# دوال طارات اكليريك (لم تتغير)
+# دوال طارات اكليريك
 def get_akerik_taarat_items():
     return taarat_submenu[0]['items']
 
@@ -1450,7 +1452,7 @@ def receive_akerik_taarat_date_and_finish(update, context):
     return ConversationHandler.END
 
 
-# دوال طارات خشب (لم تتغير)
+# دوال طارات خشب
 def get_khashab_taarat_items():
     return taarat_submenu[1]['items']
 
@@ -1582,12 +1584,15 @@ def prepare_whatsapp_link_for_direct_buy(update, context):
     # 1. استخراج مفتاح المنتج
     product_callback = data.replace("buy_", "")
 
-    # 2. البحث عن بيانات المنتج (هذه الدالة تستخدم لـ: أباجورات، أهرامات، دروع، مجات)
+    # 2. البحث عن بيانات المنتج (هذه الدالة تستخدم لـ: أباجورات، أهرامات، دروع، مجات، سبلميشن)
     product_data = None
     
-    # قائمة الأباجورات (القائمة المباشرة)
-    items_list = abajorat_submenu
-    product_data = next((item for item in items_list if item["callback"] == product_callback), None)
+    # القوائم المباشرة (أباجورات، سبلميشن)
+    direct_lists = [abajorat_submenu, sublimation_submenu] # 🌟 إضافة sublimation_submenu
+    for items_list in direct_lists:
+        product_data = next((item for item in items_list if item["callback"] == product_callback), None)
+        if product_data:
+            break
 
     if not product_data:
         # البحث في القوائم المتداخلة (هرم مكتب، دروع، مجات)
@@ -1649,8 +1654,9 @@ def button(update, context):
         start(update, context)
         return
 
-    # 2. معالجة فتح قوائم المستوى الأول (مثل: sawany, taarat, haram, ...)
-    if data in ["sawany", "taarat", "haram", "doro3", "mugat", "sublimation"]:
+    # 2. معالجة فتح قوائم المستوى الأول (مثل: sawany, taarat, haram, ...) 
+    # 🌟 تم حذف "sublimation" من هذه القائمة ليعمل كمنتجات مباشرة
+    if data in ["sawany", "taarat", "haram", "doro3", "mugat"]:
         submenu_list = all_submenus.get(data)
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         clean_title = title.split()[-1]
@@ -1658,7 +1664,8 @@ def button(update, context):
         return
 
     # 3. معالجة فتح قوائم المستوى الأول المباشرة (engraved_wallet, aqlam, bsamat, etc.)
-    if data in ["engraved_wallet", "aqlam", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
+    # 🌟 تم إضافة "sublimation" هنا ليعمل كمنتجات مباشرة
+    if data in ["engraved_wallet", "aqlam", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "sublimation"]:
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
         
@@ -1667,13 +1674,13 @@ def button(update, context):
              show_submenu(update, context, submenu_list, "محافظ محفورة بالاسم", back_callback="main_menu")
              return
              
-        # ⚠️ الأقلام (aqlam) تفتح قائمة فرعية من الأزرار (التغيير المطلوب)
+        # ⚠️ الأقلام (aqlam) تفتح قائمة فرعية من الأزرار 
         if data == "aqlam":
             show_submenu(update, context, submenu_list, "اقلام محفورة بالاسم", back_callback="main_menu")
             return
              
-        # القوائم الأخرى التي تعرض المنتجات مباشرة (بصمات، أباجورات، بوكسات، مناديل)
-        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]: 
+        # القوائم الأخرى التي تعرض المنتجات مباشرة 
+        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "sublimation"]: # 🌟 sublimation يعرض المنتجات مباشرة
             show_product_page(update, data, submenu_list, is_direct_list=True)
             return
 
@@ -1683,7 +1690,7 @@ def button(update, context):
         show_single_wallet_product(update, context)
         return
 
-    # ⚠️ معالجة أزرار أنواع الأقلام الفردية لفتح صفحة المنتج (التغيير المطلوب)
+    # ⚠️ معالجة أزرار أنواع الأقلام الفردية لفتح صفحة المنتج 
     pen_product_keys = [item["callback"] for item in aqlam_submenu]
     if data in pen_product_keys:
         show_single_pen_product(update, context)
@@ -1707,7 +1714,7 @@ def button(update, context):
 
     # 5. معالجة أزرار الشراء الفردية (للمنتجات التي لا تحتاج محادثة)
     if data.startswith("buy_"):
-        # يجب أن يصل إلى هنا فقط الأباجورات والهرامات والدروع والمجات
+        # يجب أن يصل إلى هنا الأباجورات والهرامات والدروع والمجات والسبلميشن
         prepare_whatsapp_link_for_direct_buy(update, context)
         return
         
@@ -1752,7 +1759,7 @@ def main():
         ]
     )
 
-    # 2. تعريف ConversationHandler للأقلام ⚠️ (تم تحديثه)
+    # 2. تعريف ConversationHandler للأقلام 
     engraved_pen_handler = ConversationHandler(
         # تم تعديل نمط الدخول ليبدأ من زر الشراء
         entry_points=[CallbackQueryHandler(start_pen_purchase, pattern='^buy_aqlam_.*')],
@@ -1770,7 +1777,7 @@ def main():
     )
 
 
-    # 3. تعريف ConversationHandler لبوكسات كتب الكتاب ⚠️ (الخيار pattern='^katb_kitab_box$' هو زر الرجوع من قائمة الألوان)
+    # 3. تعريف ConversationHandler لبوكسات كتب الكتاب
     box_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_box_purchase, pattern='^buy_box_.*')],
         states={
