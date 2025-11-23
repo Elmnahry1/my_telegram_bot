@@ -1649,8 +1649,13 @@ def handle_messages(update, context):
 
 
 def main():
-    # ⚠️ استبدل 'TOKEN' بتوكن البوت الخاص بك
-    TOKEN = "YOUR_BOT_TOKEN"
+    # ⚠️ تم استعادة استخدام متغير البيئة BOT_TOKEN كما طلبت
+    TOKEN = os.environ.get('BOT_TOKEN') 
+    if not TOKEN:
+         # يفضل طباعة رسالة خطأ أو استخدام قيمة placeholder إذا لم يتم العثور على التوكن
+         print("Error: BOT_TOKEN environment variable is not set. Please set it or hardcode the token.")
+         return
+         
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
 
