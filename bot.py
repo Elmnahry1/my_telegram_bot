@@ -388,7 +388,7 @@ def start_bsamat_purchase(update, context):
     # 3. Send message
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
@@ -425,7 +425,7 @@ def back_to_bsamat_names(update, context):
     
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     context.bot.send_message(
@@ -516,7 +516,7 @@ def start_wedding_tissues_purchase(update, context):
     # 3. Send message
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
@@ -553,7 +553,7 @@ def back_to_tissue_names(update, context):
     
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     context.bot.send_message(
@@ -642,7 +642,11 @@ def start_box_purchase(update, context):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
-    try: query.message.delete() except: pass
+    # ⚠️ تم تصحيح خطأ بناء الجملة هنا (كان try: ... except: pass)
+    try: 
+        query.message.delete() 
+    except Exception: 
+        pass
     
     context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ **{selected_product['label']}**\n\nمن فضلك اختر **لون البوكس**:", reply_markup=reply_markup, parse_mode="Markdown")
     
@@ -684,9 +688,10 @@ def save_box_color_ask_names(update, context):
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_box_color")]]
     reply_markup = InlineKeyboardMarkup(back_keyboard)
     
+    # ⚠️ تم تصحيح خطأ بناء الجملة هنا (كان try: ... except: pass)
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     caption_text = f"✅ اختيارك: **{selected_box['label']}** باللون **{color_name}**\n\nمن فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
@@ -714,9 +719,10 @@ def back_to_box_color(update, context):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
+    # ⚠️ تم تصحيح خطأ بناء الجملة هنا (كان try: ... except: pass)
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     context.bot.send_message(
@@ -819,6 +825,7 @@ def back_to_wallets_color(update, context):
     query = update.callback_query
     query.answer()
     context.user_data.clear()
+    # ⚠️ تم تصحيح خطأ بناء الجملة هنا (كان try: ... except: pass)
     try:
         query.message.delete()
     except Exception:
@@ -904,6 +911,7 @@ def prompt_for_pen_name(update, context):
     context.user_data['pen_data'] = selected_pen_data
     context.user_data['state'] = GET_PEN_NAME
     
+    # ⚠️ تم تصحيح خطأ بناء الجملة هنا (كان try: ... except: pass)
     try:
         query.message.delete()
     except Exception:
@@ -916,7 +924,6 @@ def prompt_for_pen_name(update, context):
     # 3. إرسال الرسالة كما طلب المستخدم
     caption_text = (
         f"اكتب الاسم المطلوب حفره علي القلم او اضغط زر رجوع للعودة الي القائمة السابقة\n\n"
-        f"ثم بالاسفل زر رجوع"
     )
 
     update.effective_chat.bot.send_message(
@@ -1190,7 +1197,7 @@ def start_tray_purchase(update, context):
     
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
@@ -1226,7 +1233,7 @@ def back_to_tray_names(update, context):
     
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     context.bot.send_message(
@@ -1313,7 +1320,7 @@ def start_khashab_tray_purchase(update, context):
     
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
@@ -1349,7 +1356,7 @@ def back_to_khashab_tray_names(update, context):
     
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     context.bot.send_message(
@@ -1436,7 +1443,7 @@ def start_akerik_taarat_purchase(update, context):
     
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
@@ -1472,7 +1479,7 @@ def back_to_akerik_taarat_names(update, context):
     
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     context.bot.send_message(
@@ -1559,7 +1566,7 @@ def start_khashab_taarat_purchase(update, context):
     
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
@@ -1595,7 +1602,7 @@ def back_to_khashab_taarat_names(update, context):
     
     try:
         query.message.delete()
-    except:
+    except Exception:
         pass
         
     context.bot.send_message(
