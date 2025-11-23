@@ -37,7 +37,7 @@ engraved_wallet_submenu = [
     {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود."}
 ]
 
-# 🛑 قائمة الأقلام (المدخل الرئيسي للمحادثة)
+# 🛑 قائمة الأقلام (تم دمجها)
 aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", 
@@ -52,6 +52,7 @@ aqlam_submenu = [
         "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر."
     }
 ]
+
 
 # --- القوائم المتداخلة (sawany, taarat, haram, doro3, mugat) تبقى كما هي ---
 sawany_submenu = [
@@ -161,7 +162,7 @@ main_menu = [
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
-    {"label": "✏️ اقلام", "callback": "aqlam"}, 
+    {"label": "✏️ اقلام", "callback": "aqlam"}, # تم إبقاء زر الأقلام
     {"label": "☕ مجات", "callback": "mugat"},
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
@@ -173,7 +174,7 @@ all_submenus = {
     "taarat": taarat_submenu,
     "haram": haram_submenu,
     "doro3": doro3_submenu,
-    "aqlam": aqlam_submenu,
+    "aqlam": aqlam_submenu, # تم إضافة الأقلام
     "mugat": mugat_submenu,
     "bsamat": bsamat_submenu, 
     "wedding_tissues": wedding_tissues_submenu, 
@@ -184,7 +185,7 @@ all_submenus = {
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam"]: 
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam"]: # تم إضافة الأقلام هنا
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             product_to_submenu_map[product["callback"]] = menu_key
@@ -206,7 +207,7 @@ for menu_key, submenu_list in all_submenus.items():
 def start(update, context):
     query = update.callback_query
     # إنهاء أي محادثة جارية عند استخدام /start أو العودة للقائمة الرئيسية
-    if context.user_data.get('state') in [GET_WALLET_NAME, GET_PEN_NAME]:
+    if context.user_data.get('state') in [GET_WALLET_NAME, GET_PEN_NAME]: # تم إضافة حالة الأقلام
         context.user_data.clear()
         context.user_data['state'] = None
         
@@ -433,7 +434,7 @@ def receive_name_and_prepare_whatsapp(update, context):
     return ConversationHandler.END
 
 # ------------------------------------
-# دوال الأقلام (Pen Handlers)
+# دوال الأقلام (Pen Handlers) - تم دمجها
 # ------------------------------------
 
 def back_to_pen_types(update, context):
@@ -553,16 +554,16 @@ def button(update, context):
         show_submenu(update, context, engraved_wallet_submenu, "محافظ محفورة بالاسم", back_callback="main_menu")
         return 
         
-    # 3. معالجة فتح قائمة الأقلام (محادثة)
+    # 3. معالجة فتح قائمة الأقلام (محادثة) - تم تعديلها هنا
     if data == "aqlam":
         show_submenu(update, context, aqlam_submenu, "اقلام محفورة بالاسم", back_callback="main_menu")
         return 
         
-    # 4. معالجة اختيار المنتج (سواء محفظة أو قلم)
+    # 4. معالجة اختيار المنتج (سواء محفظة أو قلم) - تم تعديلها هنا
     if data in [item["callback"] for item in engraved_wallet_submenu]:
         return prompt_for_name(update, context) 
     
-    # 🛑 معالجة اختيار نوع القلم (معدن أو مضئ)
+    # 🛑 معالجة اختيار نوع القلم (معدن أو مضئ) - تم تعديلها هنا
     if data in [item["callback"] for item in aqlam_submenu]:
         return prompt_for_pen_name(update, context) # ⬅️ توجيه مباشر لبدء المحادثة وطلب الاسم
 
@@ -706,7 +707,7 @@ def main():
         ]
     )
 
-    # 2. مُعالج المحادثة لـ "اقلام"
+    # 2. مُعالج المحادثة لـ "اقلام" - تم إضافته
     engraved_pen_handler = ConversationHandler(
         entry_points=[
             CallbackQueryHandler(
@@ -728,7 +729,7 @@ def main():
 
     # إضافة مُعالجات المحادثة
     dp.add_handler(engraved_wallet_handler)
-    dp.add_handler(engraved_pen_handler) 
+    dp.add_handler(engraved_pen_handler) # تم إضافة مُعالج الأقلام
     
     # إضافة معالجات الأوامر والأزرار الأخرى
     dp.add_handler(CommandHandler("start", start))
