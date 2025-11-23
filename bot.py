@@ -1650,7 +1650,7 @@ def handle_messages(update, context):
 
 def main():
     # ⚠️ تم استعادة استخدام متغير البيئة BOT_TOKEN كما طلبت
-    TOKEN = os.environ.get('BOT_TOKEN') 
+    TOKEN = os.environ.get('TOKEN') 
     if not TOKEN:
          # يفضل طباعة رسالة خطأ أو استخدام قيمة placeholder إذا لم يتم العثور على التوكن
          print("Error: BOT_TOKEN environment variable is not set. Please set it or hardcode the token.")
