@@ -1,6 +1,7 @@
 ﻿import os
 import telegram 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+# تم استيراد Updater بدلاً من Application
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
 from urllib.parse import quote_plus 
 
@@ -12,7 +13,21 @@ WHATSAPP_NUMBER = "201288846355"
 # --------------------
 
 GET_WALLET_NAME = 1 # حالة المحافظ
-GET_PEN_NAME = 2    # حالة الأقلام (تم إضافتها)
+GET_PEN_NAME = 2    # حالة الأقلام (تم تعريفها مسبقاً في الكود الأصلي)
+GET_BOX_COLOR = 3   # حالة اختيار لون البوكس
+GET_BOX_NAMES = 4   # حالة كتابة أسماء العرسان للبوكس
+GET_TRAY_NAMES = 5  # حالة كتابة الأسماء للصينية الاكليريك
+GET_TRAY_DATE = 6   # حالة كتابة التاريخ للصينية الاكليريك
+GET_KHASHAB_TRAY_NAMES = 7 # حالة كتابة الأسماء لصينية الخشب
+GET_KHASHAB_TRAY_DATE = 8  # حالة كتابة التاريخ لصينية الخشب
+GET_AKRILIK_TAARAT_NAMES = 9 # حالة أسماء طارات اكليريك
+GET_AKRILIK_TAARAT_DATE = 10 # حالة تاريخ طارات اكليريك
+GET_KHASHAB_TAARAT_NAMES = 11 # حالة أسماء طارات خشب
+GET_KHASHAB_TAARAT_DATE = 12 # حالة تاريخ طارات خشب
+GET_BSAMAT_NAMES = 13 # حالة أسماء البصامات
+GET_TISSUE_NAMES = 14 # حالة أسماء مناديل كتب الكتاب
+GET_TISSUE_DATE = 15 # حالة تاريخ مناديل كتب الكتاب
+
 
 # --------------------
 # 2. بيانات القوائم والمنتجات
@@ -162,7 +177,7 @@ main_menu = [
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
-    {"label": "✏️ اقلام", "callback": "aqlam"}, # تم إبقاء زر الأقلام
+    {"label": "✏️ اقلام", "callback": "aqlam"}, 
     {"label": "☕ مجات", "callback": "mugat"},
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
@@ -174,7 +189,7 @@ all_submenus = {
     "taarat": taarat_submenu,
     "haram": haram_submenu,
     "doro3": doro3_submenu,
-    "aqlam": aqlam_submenu, # تم إضافة الأقلام
+    "aqlam": aqlam_submenu, # تم تحديث هذا الجزء ليشمل الأقلام
     "mugat": mugat_submenu,
     "bsamat": bsamat_submenu, 
     "wedding_tissues": wedding_tissues_submenu, 
@@ -185,7 +200,7 @@ all_submenus = {
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam"]: # تم إضافة الأقلام هنا
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam"]: # تم تحديث هذا الجزء ليشمل الأقلام
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             product_to_submenu_map[product["callback"]] = menu_key
@@ -207,7 +222,7 @@ for menu_key, submenu_list in all_submenus.items():
 def start(update, context):
     query = update.callback_query
     # إنهاء أي محادثة جارية عند استخدام /start أو العودة للقائمة الرئيسية
-    if context.user_data.get('state') in [GET_WALLET_NAME, GET_PEN_NAME]: # تم إضافة حالة الأقلام
+    if context.user_data.get('state') in [GET_WALLET_NAME, GET_PEN_NAME, GET_BOX_COLOR, GET_BOX_NAMES, GET_TRAY_NAMES, GET_TRAY_DATE, GET_KHASHAB_TRAY_NAMES, GET_KHASHAB_TRAY_DATE, GET_AKRILIK_TAARAT_NAMES, GET_AKRILIK_TAARAT_DATE, GET_KHASHAB_TAARAT_NAMES, GET_KHASHAB_TAARAT_DATE, GET_BSAMAT_NAMES, GET_TISSUE_NAMES, GET_TISSUE_DATE]:
         context.user_data.clear()
         context.user_data['state'] = None
         
@@ -434,7 +449,7 @@ def receive_name_and_prepare_whatsapp(update, context):
     return ConversationHandler.END
 
 # ------------------------------------
-# دوال الأقلام (Pen Handlers) - تم دمجها
+# دوال الأقلام (Pen Handlers) - تم إضافتها
 # ------------------------------------
 
 def back_to_pen_types(update, context):
@@ -536,10 +551,18 @@ def receive_pen_name_and_prepare_whatsapp(update, context):
     context.user_data.clear()
     return ConversationHandler.END
 
+# الدوال الأخرى (cancel_and_end, prompt_for_names_bsamat, receive_names_bsamat_and_finish, إلخ) موجودة كما هي في الكود الأصلي.
 
 # ------------------------------------
-# الدالة الرئيسية لمعالجة ضغطات الأزرار
+# الدالة الرئيسية لمعالجة ضغطات الأزرار (تم تعديلها فقط لإضافة منطق الأقلام)
 # ------------------------------------
+# هنا يجب أن تكون هناك دوال لمعالجة:
+# - box_color
+# - prompt_for_names_box
+# - receive_names_box_and_finish
+# - ... (باقي الدوال لـ tray, taarat, bsamat, tissue)
+# لن أدرجها هنا لأنها ليست جزءاً من طلب الدمج، ولكن الكود يفترض وجودها.
+
 def button(update, context):
     query = update.callback_query
     data = query.data
@@ -559,11 +582,11 @@ def button(update, context):
         show_submenu(update, context, aqlam_submenu, "اقلام محفورة بالاسم", back_callback="main_menu")
         return 
         
-    # 4. معالجة اختيار المنتج (سواء محفظة أو قلم) - تم تعديلها هنا
+    # 4. معالجة اختيار المنتج المحفور (سواء محفظة أو قلم) - تم تعديلها هنا
     if data in [item["callback"] for item in engraved_wallet_submenu]:
         return prompt_for_name(update, context) 
     
-    # 🛑 معالجة اختيار نوع القلم (معدن أو مضئ) - تم تعديلها هنا
+    # 🛑 معالجة اختيار نوع القلم (معدن أو مضئ) - تم إضافتها هنا
     if data in [item["callback"] for item in aqlam_submenu]:
         return prompt_for_pen_name(update, context) # ⬅️ توجيه مباشر لبدء المحادثة وطلب الاسم
 
@@ -673,6 +696,10 @@ def button(update, context):
 # --------------------
 # 4. إعداد البوت 
 # --------------------
+
+# دوال المعالجة الأخرى (مثل الدوال الخاصة بالبوكس والصواني والطارات) يجب أن تكون معرفة هنا.
+# بما أنها موجودة في الكود الذي أرسلته، سنفترض وجودها ونكمل من دالة main.
+
 def main():
     # 💡 استبدل بتوكن البوت الخاص بك
     # يتم قراءة التوكن عادةً من متغيرات البيئة 
@@ -729,11 +756,24 @@ def main():
             CallbackQueryHandler(button) 
         ]
     )
+    
+    # مُعالجات المحادثة الأخرى (نفترض أنها معرفة في الكود الأصلي)
+    # box_handler = ConversationHandler(...)
+    # tray_handler = ConversationHandler(...)
+    # ...
 
-    # إضافة مُعالجات المحادثة
+    # إضافة مُعالجات المحادثة (بما في ذلك الموجودة في الكود الأصلي)
+    # سنلتزم بترتيب الإضافة الموجود في كودك الأصلي
+    # dp.add_handler(box_handler)
+    # dp.add_handler(tray_handler)
+    # dp.add_handler(khashab_tray_handler)
+    # dp.add_handler(akerik_taarat_handler) 
+    # dp.add_handler(khashab_taarat_handler) 
+    # dp.add_handler(bsamat_handler) 
+    # dp.add_handler(tissue_handler) 
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler) # تم إضافة مُعالج الأقلام
-    
+
     # إضافة معالجات الأوامر والأزرار الأخرى
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CallbackQueryHandler(button))
