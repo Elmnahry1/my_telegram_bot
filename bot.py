@@ -703,54 +703,133 @@ def receive_name_and_prepare_whatsapp(update, context):
 
 
 # دوال الأقلام
-def back_to_pen_types(update, context):
+
+# ---------------- Pen (أقلام) - rebuilt logic (ONLY pen-related code modified) ----------------
+def show_pen_types(update, context):
+    \"\"\"عرض قائمة أنواع الأقلام (قلم تاتش معدن / قلم تاتش مضئ) مع زر رجوع.\"\"\"
     query = update.callback_query
-    query.answer()
-    
-    context.user_data.clear()
-    try:
-        query.message.delete()
-    except Exception:
-        pass
-    keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in aqlam_submenu]
+    if query:
+        query.answer()
+        try:
+            query.message.delete()
+        except Exception:
+            pass
+
+    keyboard = [
+        [InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in aqlam_submenu
+    ]
     keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
     reply_markup = InlineKeyboardMarkup(keyboard)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ *اقلام محفورة بالاسم*:\n\nمن فضلك اختر نوع القلم المطلوب:", reply_markup=reply_markup, parse_mode="Markdown")
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f\"✅ *اقلام محفورة بالاسم*:\n\nمن فضلك اختر نوع القلم المطلوب:\", reply_markup=reply_markup, parse_mode=\"Markdown\")
+    return ConversationHandler.END
+
+def show_pen_product_page(update, context, product_callback=None):
+    \"\"\"عرض صفحة منتج قلم مفردة: صورة، وصف، زر شراء، وزر رجوع إلى قائمة الأقلام.\"\"\"
+    query = update.callback_query
+    if query:
+        query.answer()
+
+    # حذف الرسالة السابقة إذا كانت موجودة
+    if query and getattr(query, 'message', None):
+        try:
+            query.message.delete()
+        except Exception:
+            pass
+
+    # العثور على بيانات المنتج داخل aqlam_submenu
+    prod_key = product_callback or (query.data if query else None)
+    selected = None
+    for item in aqlam_submenu:
+        if item["callback"] == prod_key:
+            selected = item
+            break
+    if not selected:
+        # لا يوجد، ارجع للقائمة الرئيسية كإجراء احتياطي
+        start(update, context)
+        return
+
+    # زر الشراء يرسل callback 'buy_<callback>' ليتم التقاطه بواسطة ConversationHandler الخاص بالأقلام
+    buy_cb = f\"buy_{selected['callback']}\"
+    keyboard = [
+        [InlineKeyboardButton(\"🛒 شراء\", callback_data=buy_cb)],
+        [InlineKeyboardButton(\"🔙 رجوع\", callback_data=\"aqlam\")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    # إرسال الصورة والوصف مع أزرار الشراء والرجوع
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected['image'],
+            caption=f\"**{selected['label']}**\\n\\n{selected['description']}\",
+            reply_markup=reply_markup,
+            parse_mode=\"Markdown\"
+        )
+    except telegram.error.BadRequest:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=f\"**{selected['label']}**\\n\\n{selected['description']}\",
+            reply_markup=reply_markup,
+            parse_mode=\"Markdown\"
+        )
+
+def back_to_pen_types(update, context):
+    \"\"\"إعادة عرض قائمة أنواع الأقلام\"\"\"
+    query = update.callback_query
+    if query:
+        query.answer()
+
+    context.user_data.clear()
+    try:
+        if query and query.message:
+            query.message.delete()
+    except Exception:
+        pass
+    keyboard = [[InlineKeyboardButton(item[\"label\"], callback_data=item[\"callback\"])] for item in aqlam_submenu]
+    keyboard.append([InlineKeyboardButton(\"🔙 رجوع\", callback_data=\"main_menu\")])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f\"✅ *اقلام محفورة بالاسم*:\n\nمن فضلك اختر نوع القلم المطلوب:\", reply_markup=reply_markup, parse_mode=\"Markdown\")
     return ConversationHandler.END
 
 def prompt_for_pen_name(update, context):
+    \"\"\"مُعالج بدء محادثة الأقلام: تتلقى callback مثل 'buy_aqlam_metal' - نستخلص المفتاح ثم نطلب الاسم.\"\"\"
     query = update.callback_query
-    data = query.data
     query.answer()
-    selected_pen_data = next((item for item in aqlam_submenu if item["callback"] == data), None)
+    data = query.data  # e.g. 'buy_aqlam_metal'
+    # نزيل بادئة 'buy_' إذا وُجدت
+    product_callback = data.replace('buy_', '')
+    selected_pen_data = next((item for item in aqlam_submenu if item[\"callback\"] == product_callback), None)
+    if not selected_pen_data:
+        query.answer(\"خطأ في العثور على المنتج\", show_alert=True)
+        start(update, context)
+        return ConversationHandler.END
+
     context.user_data['pen_data'] = selected_pen_data
     context.user_data['state'] = GET_PEN_NAME
     try:
         query.message.delete()
     except Exception:
         pass
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_pen_types")]]
+    back_keyboard = [[InlineKeyboardButton(\"🔙 رجوع\", callback_data=\"back_to_pen_types\")]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
-    caption_text = (f"**اختيارك: {selected_pen_data['label']}**\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير نوع القلم.")
-    
+    caption_text = (f\"**اختيارك: {selected_pen_data['label']}**\\n\\nمن فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل. او اضغط زر رجوع للعودة الي القائمة السابقة\\nأو اضغط زر الرجوع لتغيير نوع القلم.\")
     try:
         update.effective_chat.bot.send_photo(
             chat_id=update.effective_chat.id,
             photo=selected_pen_data['image'],
             caption=caption_text,
             reply_markup=back_reply_markup,
-            parse_mode="Markdown"
+            parse_mode=\"Markdown\"
         )
-    except telegram.error.BadRequest as e:
+    except telegram.error.BadRequest:
         update.effective_chat.bot.send_message(
             chat_id=update.effective_chat.id,
             text=caption_text,
             reply_markup=back_reply_markup,
-            parse_mode="Markdown"
+            parse_mode=\"Markdown\"
         )
-        
     return GET_PEN_NAME
-
+# ---------------- end pen logic ----------------
 def receive_pen_name_and_prepare_whatsapp(update, context):
     engraving_name = update.message.text
     product_data = context.user_data.get('pen_data')
@@ -1513,7 +1592,7 @@ def button(update, context):
         return
         
     # 3. معالجة فتح قوائم المستوى الأول المباشرة (engraved_wallet, aqlam, bsamat, etc.)
-    if data in ["engraved_wallet", "aqlam", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
+    if data in ["engraved_wallet", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
         
