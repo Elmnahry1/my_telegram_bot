@@ -1609,14 +1609,14 @@ def button(update, context):
 
 def main():
     # ⚠️ استبدل بالتوكن الخاص بك (يجب أن يكون موجوداً كمتغير بيئة)
-    BOT_TOKEN = os.environ.get('BOT_TOKEN') 
+    BOT_TOKEN = os.environ.get('TOKEN') 
 
     if not BOT_TOKEN:
         print("❌ لم يتم العثور على متغير البيئة 'BOT_TOKEN'. يرجى التأكد من إعداده.")
         return
 
     # استخدام Updater بدلاً من Application للتوافق مع الأكواد الموجودة
-    updater = Updater(BOT_TOKEN)
+    updater = Updater(TOKEN)
     dp = updater.dispatcher
 
     # 1. معالج محافظ محفورة
