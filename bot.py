@@ -928,7 +928,7 @@ def receive_pen_name_and_prepare_whatsapp(update, context):
     return ConversationHandler.END
 
 
-# دوال بوكسات كتب الكتاب (لم تتغير)
+# دوال بوكسات كتب الكتاب (تم تصحيح دالة start_box_purchase)
 
 def get_box_items():
     return katb_kitab_box_submenu
@@ -948,14 +948,20 @@ def start_box_purchase(update, context):
     context.user_data['box_product'] = selected_product
     context.user_data['state'] = GET_BOX_COLOR
     
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")]] 
-    reply_markup = InlineKeyboardMarkup(back_keyboard)
-    
     try:
         query.message.delete()
     except:
         pass
         
+    # 🌟🌟🌟🌟 هذا هو الجزء الذي تم تصحيحه لإعادة أزرار الألوان 🌟🌟🌟🌟
+    keyboard = [
+        [InlineKeyboardButton("أسود في ذهبي", callback_data="color_black_gold")],
+        [InlineKeyboardButton("أبيض في ذهبي", callback_data="color_white_gold")],
+        [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")] # يعود لقائمة موديلات البوكسات
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    # 🌟🌟🌟🌟 نهاية التصحيح 🌟🌟🌟🌟
+
     context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ **{selected_product['label']}**\n\nمن فضلك اختر **لون البوكس**:", reply_markup=reply_markup, parse_mode="Markdown")
     return GET_BOX_COLOR
 
@@ -1021,9 +1027,13 @@ def back_to_box_color(update, context):
         start(update, context)
         return ConversationHandler.END
         
-    # إعادة عرض خيارات الألوان
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")]] 
-    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    # إعادة عرض خيارات الألوان (باستخدام الكيبورد المصحح)
+    keyboard = [
+        [InlineKeyboardButton("أسود في ذهبي", callback_data="color_black_gold")],
+        [InlineKeyboardButton("أبيض في ذهبي", callback_data="color_white_gold")],
+        [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")] 
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
     
     try:
         query.message.delete()
@@ -1760,12 +1770,12 @@ def main():
     )
 
 
-    # 3. تعريف ConversationHandler لبوكسات كتب الكتاب
+    # 3. تعريف ConversationHandler لبوكسات كتب الكتاب ⚠️ (الخيار pattern='^katb_kitab_box$' هو زر الرجوع من قائمة الألوان)
     box_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_box_purchase, pattern='^buy_box_.*')],
         states={
             GET_BOX_COLOR: [
-                # أزرار اختيار اللون (كل زر يحمل اللون)
+                # أزرار اختيار اللون
                 CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*$'),
                 # زر الرجوع من قائمة الألوان يعود لقائمة المنتجات (بوكس موديل 1/2)
                 CallbackQueryHandler(back_to_box_menu, pattern='^katb_kitab_box$'), 
