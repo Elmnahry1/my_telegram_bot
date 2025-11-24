@@ -431,6 +431,8 @@ def start_mug_purchase(update, context):
     context.user_data['mug_product'] = selected_product
     # 🔥 تم التعديل: نستخدم 'mug_photos_ids' لتخزين معرفات الصور بدلاً من الروابط
     context.user_data['mug_photos_ids'] = [] 
+    # 🔥 التعديل الجديد: علامة للانتقال لضمان التنفيذ مرة واحدة فقط في حالة الألبومات
+    context.user_data['mug_transition_done'] = False 
     
     # تحديد زر الرجوع (يعود إلى قائمة مج ابيض أو مج سحري)
     back_callback = product_to_submenu_map.get(product_callback) 
@@ -495,13 +497,15 @@ def receive_mug_photo(update, context):
     # 4. Check Count and Transition
     current_count = len(context.user_data['mug_photos_ids'])
     
-    # 🔥🔥🔥 التعديل الرئيسي: لا نرسل أي رسائل رد حتى اكتمال العدد 3 🔥🔥🔥
-    if current_count < 3:
-        # نعود بصمت لانتظار الصور المتبقية (لتجنب رسائل "تم استلام الصورة رقم 1...")
-        return GET_MUG_PHOTO
-    
-    elif current_count >= 3:
-        # تم استلام الصور الثلاث (أو أكثر)، ننتقل إلى مرحلة الدفع
+    # 🔥 New: Check for the transition flag to prevent multiple transitions in a media group
+    if context.user_data.get('mug_transition_done', False):
+        return GET_MUG_PHOTO # Already transitioning, silently ignore extra photos/updates
+
+    # 🔥🔥🔥 التعديل الرئيسي: الانتقال فقط عند اكتمال العدد 3 وتفعيل علامة القفل 🔥🔥🔥
+    if current_count >= 3:
+        
+        # تفعيل علامة القفل لضمان عدم تنفيذ هذا الكود مرة أخرى
+        context.user_data['mug_transition_done'] = True 
         
         context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -527,6 +531,9 @@ def receive_mug_photo(update, context):
         # مسح المعرفات المؤقتة
         del context.user_data['mug_photos_ids'] 
         return prompt_for_payment_and_receipt(update, context, product_type="مج طباعة")
+    
+    # إذا كان العدد < 3 ولم يتم الانتقال بعد، نعود بصمت
+    return GET_MUG_PHOTO
 
 
 # --------------------------------------------------------------------------------
