@@ -24,54 +24,53 @@ GET_AKRILIK_TAARAT_NAMES = 9 # حالة أسماء طارات اكليريك
 GET_AKRILIK_TAARAT_DATE = 10 # حالة تاريخ طارات اكليريك
 GET_KHASHAB_TAARAT_NAMES = 11 # حالة أسماء طارات خشب
 GET_KHASHAB_TAARAT_DATE = 12 # حالة تاريخ طارات خشب
-
-# حالات البصامات
 GET_BSAMAT_NAMES = 13  # حالة كتابة أسماء العرسان للبصامات
 GET_BSAMAT_DATE = 14   # حالة كتابة التاريخ للبصامات
-
-# حالات مناديل كتب الكتاب (تم إضافتها هنا)
 GET_TISSUE_NAMES = 15  # حالة كتابة أسماء العرسان للمناديل
 GET_TISSUE_DATE = 16   # حالة كتابة التاريخ للمناديل
 
+# 🔥 الحالة الجديدة لطلب إيصال الدفع
+GET_PAYMENT_RECEIPT = 17 
+
 
 # --------------------
-# 2. بيانات القوائم والمنتجات
+# 2. بيانات القوائم والمنتجات (تم إضافة السعر لكل منتج)
 # --------------------
 
 # --- قوائم فرعية مباشرة ---
 bsamat_submenu = [
-    {"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 1."},
-    {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 2."}
+    {"label": "بصامة موديل 1", "callback": "bsamat_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 1.", "price": "180 ج"},
+    {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 2.", "price": "220 ج"}
 ]
 wedding_tissues_submenu = [
-    {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 1."},
-    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 2."}
+    {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 1.", "price": "350 ج"},
+    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 2.", "price": "400 ج"}
 ]
 katb_kitab_box_submenu = [
-    {"label": "بوكس كتب كتاب موديل 1", "callback": "box_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 1، يحتوي على تصميم مميز."},
-    {"label": "بوكس كتب كتاب موديل 2", "callback": "box_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 2، خامة عالية الجودة."}
+    {"label": "بوكس كتب كتاب موديل 1", "callback": "box_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 1، يحتوي على تصميم مميز.", "price": "550 ج"},
+    {"label": "بوكس كتب كتاب موديل 2", "callback": "box_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 2، خامة عالية الجودة.", "price": "620 ج"}
 ]
 abajorat_submenu = [
-    {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 1."},
-    {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2."}
+    {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 1.", "price": "450 ج"},
+    {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2.", "price": "480 ج"}
 ]
 engraved_wallet_submenu = [
-    {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان)."},
-    {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني."},
-    {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود."}
+    {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان).", "price": "200 ج"},
+    {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني.", "price": "200 ج"},
+    {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود.", "price": "200 ج"}
 ]
 aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", 
         "callback": "aqlam_metal", 
         "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/475773348_986832329974720_6197915277469223378_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=107&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=KrebndL4u2oQ7kNvwH3smA2&_nc_oc=AdkT6T_o5SpJKdr9FQ5OhX2vuI5Cp3WjQl0pV9vRotIn9csOIX1DX-I9dC3FpvlBLJM&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=JFYgN-MxG5oy8y3q9Os6Ew&oh=00_AfhJxajOEm9owiAqd00_zEZ4Hy4qzX7DYATV6p4tWdRxeA&oe=6923BE1B", 
-        "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر."
+        "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر.", "price": "120 ج"
     },
     {
         "label": "قلم تاتش مضئ", 
         "callback": "aqlam_luminous", 
         "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/489809156_1164483322357054_6286791651911010777_n.jpg?stp=dst-jpg_s590x590_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ELb9pciSoD0Q7kNvwG_rdLE&_nc_oc=AdkDWLOZBcjZp9AbNO2Fs-zK-suPtGc1D-KC3JP7NlzhwgJB3WZeGQQfCQIsfxZgvrg&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=U5_JMOw_cSsgrQQLv77j7g&oh=00_Afg-wJrTmoGZo5m1kVVh2IU0227UQ7pUtKSjRx_YEFoGWg&oe=6923B3BA", 
-        "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر."
+        "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر.", "price": "150 ج"
     }
 ]
 
@@ -80,95 +79,95 @@ sawany_submenu = [
     {
         "label": "صواني شبكة اكليريك", "callback": "sawany_akerik", 
         "items": [ 
-            {"label": "صينية اكليريك موديل 1", "callback": "akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية اكليريك: وصف المنتج الأول."},
-            {"label": "صينية اكليريك موديل 2", "callback": "akerik_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية اكليريك: وصف المنتج الثاني."}
+            {"label": "صينية اكليريك موديل 1", "callback": "akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية اكليريك: وصف المنتج الأول.", "price": "800 ج"},
+            {"label": "صينية اكليريك موديل 2", "callback": "akerik_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية اكليريك: وصف المنتج الثاني.", "price": "950 ج"}
         ]
     },
     {
         "label": "صواني شبكة خشب", "callback": "sawany_khashab", 
         "items": [ 
-            {"label": "صينية خشب موديل 1", "callback": "khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية خشب: وصف المنتج الأول."},
-            {"label": "صينية خشب موديل 2", "callback": "khashab_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية خشب: وصف المنتج الثاني."}
+            {"label": "صينية خشب موديل 1", "callback": "khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "صينية خشب: وصف المنتج الأول.", "price": "700 ج"},
+            {"label": "صينية خشب موديل 2", "callback": "khashab_m2", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "صينية خشب: وصف المنتج الثاني.", "price": "850 ج"}
         ]
     }
 ]
 taarat_submenu = [
     {
         "label": "طارات اكليريك", "callback": "taarat_akerik", "items": [
-             {"label": "طارة اكليريك موديل 1", "callback": "taarat_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة اكليريك موديل 1"},
-             {"label": "طارة اكليريك موديل 2", "callback": "taarat_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة اكليريك موديل 2"}
+             {"label": "طارة اكليريك موديل 1", "callback": "taarat_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة اكليريك موديل 1", "price": "300 ج"},
+             {"label": "طارة اكليريك موديل 2", "callback": "taarat_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة اكليريك موديل 2", "price": "380 ج"}
         ]
     },
     {
         "label": "طارات خشب", "callback": "taarat_khashab", "items": [
-            {"label": "طارة خشب موديل 1", "callback": "taarat_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 1"},
-            {"label": "طارة خشب موديل 2", "callback": "taarat_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 2"}
+            {"label": "طارة خشب موديل 1", "callback": "taarat_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 1", "price": "250 ج"},
+            {"label": "طارة خشب موديل 2", "callback": "taarat_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف طارة خشب موديل 2", "price": "320 ج"}
         ]
     }
 ]
 haram_submenu = [
     {
         "label": "هرم مكتب اكليريك", "callback": "haram_akerik", "items": [
-             {"label": "هرم اكليريك موديل 1", "callback": "haram_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم اكليريك موديل 1"},
-             {"label": "هرم اكليريك موديل 2", "callback": "haram_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم اكليريك موديل 2"}
+             {"label": "هرم اكليريك موديل 1", "callback": "haram_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم اكليريك موديل 1", "price": "350 ج"},
+             {"label": "هرم اكليريك موديل 2", "callback": "haram_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم اكليريك موديل 2", "price": "420 ج"}
         ]
     },
     {
         "label": "هرم مكتب معدن بديل", "callback": "haram_metal", "items": [
-             {"label": "هرم معدن موديل 1", "callback": "haram_metal_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم معدن موديل 1"},
-             {"label": "هرم معدن موديل 2", "callback": "haram_metal_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم معدن موديل 2"}
+             {"label": "هرم معدن موديل 1", "callback": "haram_metal_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم معدن موديل 1", "price": "300 ج"},
+             {"label": "هرم معدن موديل 2", "callback": "haram_metal_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم معدن موديل 2", "price": "380 ج"}
         ]
     },
     {
         "label": "هرم مكتب خشب", "callback": "haram_khashab", "items": [
-             {"label": "هرم خشب موديل 1", "callback": "haram_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم خشب موديل 1"},
-             {"label": "هرم خشب موديل 2", "callback": "haram_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم خشب موديل 2"}
+             {"label": "هرم خشب موديل 1", "callback": "haram_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم خشب موديل 1", "price": "280 ج"},
+             {"label": "هرم خشب موديل 2", "callback": "haram_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف هرم خشب موديل 2", "price": "330 ج"}
         ]
     }
 ]
 doro3_submenu = [
     {
         "label": "دروع اكليريك", "callback": "doro3_akerik", "items": [
-             {"label": "درع اكليريك موديل 1", "callback": "doro3_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع اكليريك موديل 1"},
-             {"label": "درع اكليريك موديل 2", "callback": "doro3_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع اكليريك موديل 2"}
+             {"label": "درع اكليريك موديل 1", "callback": "doro3_akerik_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع اكليريك موديل 1", "price": "200 ج"},
+             {"label": "درع اكليريك موديل 2", "callback": "doro3_akerik_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع اكليريك موديل 2", "price": "250 ج"}
         ]
     },
     {
         "label": "دروع معدن بديل", "callback": "doro3_metal", "items": [
-             {"label": "درع معدن موديل 1", "callback": "doro3_metal_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع معدن موديل 1"},
-             {"label": "درع معدن موديل 2", "callback": "doro3_metal_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع معدن موديل 2"}
+             {"label": "درع معدن موديل 1", "callback": "doro3_metal_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع معدن موديل 1", "price": "180 ج"},
+             {"label": "درع معدن موديل 2", "callback": "doro3_metal_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع معدن موديل 2", "price": "220 ج"}
         ]
     },
     {
         "label": "دروع قطيفة", "callback": "doro3_qatifah", "items": [
-             {"label": "درع قطيفة موديل 1", "callback": "doro3_qatifah_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع قطيفة موديل 1"},
-             {"label": "درع قطيفة موديل 2", "callback": "doro3_qatifah_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع قطيفة موديل 2"}
+             {"label": "درع قطيفة موديل 1", "callback": "doro3_qatifah_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع قطيفة موديل 1", "price": "280 ج"},
+             {"label": "درع قطيفة موديل 2", "callback": "doro3_qatifah_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع قطيفة موديل 2", "price": "330 ج"}
         ]
     },
     {
         "label": "دروع خشب", "callback": "doro3_khashab", "items": [
-             {"label": "درع خشب موديل 1", "callback": "doro3_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع خشب موديل 1"},
-             {"label": "درع خشب موديل 2", "callback": "doro3_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع خشب موديل 2"}
+             {"label": "درع خشب موديل 1", "callback": "doro3_khashab_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع خشب موديل 1", "price": "150 ج"},
+             {"label": "درع خشب موديل 2", "callback": "doro3_khashab_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف درع خشب موديل 2", "price": "190 ج"}
         ]
     }
 ]
 mugat_submenu = [
     {
         "label": "مج ابيض", "callback": "mugat_white", "items": [
-             {"label": "مج ابيض موديل 1", "callback": "mugat_white_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 1"},
-             {"label": "مج ابيض موديل 2", "callback": "mugat_white_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 2"}
+             {"label": "مج ابيض موديل 1", "callback": "mugat_white_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 1", "price": "100 ج"},
+             {"label": "مج ابيض موديل 2", "callback": "mugat_white_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 2", "price": "120 ج"}
         ]
     },
     {
         "label": "مج سحري", "callback": "mugat_magic", "items": [
-             {"label": "مج سحري موديل 1", "callback": "mugat_magic_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 1"},
-             {"label": "مج سحري موديل 2", "callback": "mugat_magic_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 2"}
+             {"label": "مج سحري موديل 1", "callback": "mugat_magic_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 1", "price": "150 ج"},
+             {"label": "مج سحري موديل 2", "callback": "mugat_magic_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 2", "price": "180 ج"}
         ]
     },
     {
         "label": "مج ديجتال", "callback": "mugat_digital", "items": [
-             {"label": "مج ديجتال موديل 1", "callback": "mugat_digital_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 1"},
-             {"label": "مج ديجتال موديل 2", "callback": "mugat_digital_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 2"}
+             {"label": "مج ديجتال موديل 1", "callback": "mugat_digital_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 1", "price": "220 ج"},
+             {"label": "مج ديجتال موديل 2", "callback": "mugat_digital_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 2", "price": "250 ج"}
         ]
     }
 ]
@@ -326,10 +325,12 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
         item_keyboard = [[InlineKeyboardButton("🛒 شراء", callback_data=f"buy_{item['callback']}")]]
         item_reply_markup = InlineKeyboardMarkup(item_keyboard)
         
+        caption_text = f"**{item['label']}**\n\nالسعر: *{item.get('price', 'غير متوفر')}*\n\n{item['description']}"
+        
         update.effective_message.bot.send_photo(
             chat_id=update.effective_chat.id,
             photo=item['image'],
-            caption=f"**{item['label']}**\n\n{item['description']}",
+            caption=caption_text,
             reply_markup=item_reply_markup,
             parse_mode="Markdown"
         )
@@ -361,7 +362,6 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
 
 
 # --- [دوال المحادثات الخاصة بالبصامات] ---
-
 def get_bsamat_items():
     return bsamat_submenu
 
@@ -391,7 +391,7 @@ def start_bsamat_purchase(update, context):
     except:
         pass
         
-    caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
     
     try:
         context.bot.send_photo(
@@ -453,39 +453,9 @@ def save_bsamat_names_ask_date(update, context):
 
 def receive_bsamat_date_and_finish(update, context):
     date_text = update.message.text
-    product_data = context.user_data.get('bsamat_product')
-    names_text = context.user_data.get('bsamat_names')
+    context.user_data['bsamat_date'] = date_text
     
-    if not product_data or not names_text:
-        update.effective_chat.send_message("حدث خطأ، يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        return ConversationHandler.END
-        
-    user_info = update.message.from_user
-    
-    message_body = (
-        f"🔔 *طلب شراء جديد (بصامة)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f"الأسماء: *{names_text}*\n"
-        f"التاريخ: *{date_text}*\n"
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}"
-    )
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=f"شكراً لك! تفاصيل الطلب:\n\n✋ المنتج: {product_data['label']}\n✍️ الأسماء: {names_text}\n📅 التاريخ: {date_text}\n\nلإتمام الطلب، اضغط على الزر التالي:",
-        reply_markup=reply_markup
-    )
-    context.user_data.clear()
-    return ConversationHandler.END
+    return prompt_for_payment_and_receipt(update, context, product_type="بصامة")
 # --- [دوال المحادثات الخاصة بمناديل كتب الكتاب] --- (تم تعديلها وتأكيدها)
 def get_wedding_tissues_items():
     return wedding_tissues_submenu
@@ -516,7 +486,7 @@ def start_tissue_purchase(update, context):
     except:
         pass
         
-    caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
     
     try:
         context.bot.send_photo(
@@ -578,39 +548,10 @@ def save_tissue_names_ask_date(update, context):
 
 def receive_tissue_date_and_finish(update, context):
     date_text = update.message.text
-    product_data = context.user_data.get('tissue_product')
-    names_text = context.user_data.get('tissue_names')
+    context.user_data['tissue_date'] = date_text
     
-    if not product_data or not names_text:
-        update.effective_chat.send_message("حدث خطأ، يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        return ConversationHandler.END
-        
-    user_info = update.message.from_user
-    
-    message_body = (
-        f"🔔 *طلب شراء جديد (منديل كتب كتاب)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f"الأسماء: *{names_text}*\n"
-        f"التاريخ: *{date_text}*\n"
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}"
-    )
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=f"شكراً لك! تفاصيل الطلب:\n\n📜 المنتج: {product_data['label']}\n✍️ الأسماء: {names_text}\n📅 التاريخ: {date_text}\n\nلإتمام الطلب، اضغط على الزر التالي:",
-        reply_markup=reply_markup
-    )
-    context.user_data.clear()
-    return ConversationHandler.END
+    return prompt_for_payment_and_receipt(update, context, product_type="منديل كتب كتاب")
+
 # --- [دوال المحادثات الأخرى] --- 
 # دوال المحافظ
 def back_to_wallets_color(update, context):
@@ -646,7 +587,7 @@ def prompt_for_name(update, context):
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_wallets_color")]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
     
-    caption_text = (f"**اختيارك: {selected_wallet_data['label']}**\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير لون المحفظة.")
+    caption_text = (f"**اختيارك: {selected_wallet_data['label']}** (السعر: *{selected_wallet_data.get('price', 'غير متوفر')}*)\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير لون المحفظة.")
     
     try:
         update.effective_chat.bot.send_photo(
@@ -668,37 +609,9 @@ def prompt_for_name(update, context):
 
 def receive_wallet_name_and_prepare_whatsapp(update, context):
     engraving_name = update.message.text
-    product_data = context.user_data.get('wallet_data')
+    context.user_data['wallet_engraving_name'] = engraving_name
     
-    if not product_data:
-        update.effective_chat.send_message("عفواً، حدث خطأ. يرجى البدء من القائمة الرئيسية.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        return ConversationHandler.END
-        
-    user_info = update.message.from_user
-
-    message_body = (
-        f"🔔 *طلب شراء جديد (محافظ)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f"الاسم للحفر: *{engraving_name}*\n"
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}"
-    )
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=f"شكراً لك! تفاصيل الطلب:\n\n👝 المنتج: {product_data['label']}\n✍️ الاسم للحفر: {engraving_name}\n\nلإتمام الطلب، اضغط على الزر التالي:",
-        reply_markup=reply_markup
-    )
-    context.user_data.clear()
-    return ConversationHandler.END
+    return prompt_for_payment_and_receipt(update, context, product_type="محافظ")
 
 
 # دوال الأقلام
@@ -735,7 +648,7 @@ def prompt_for_pen_name(update, context):
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_pen_types")]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
     
-    caption_text = (f"**اختيارك: {selected_pen_data['label']}**\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير نوع القلم.")
+    caption_text = (f"**اختيارك: {selected_pen_data['label']}** (السعر: *{selected_pen_data.get('price', 'غير متوفر')}*)\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير نوع القلم.")
     
     try:
         update.effective_chat.bot.send_photo(
@@ -757,37 +670,9 @@ def prompt_for_pen_name(update, context):
 
 def receive_pen_name_and_prepare_whatsapp(update, context):
     engraving_name = update.message.text
-    product_data = context.user_data.get('pen_data')
+    context.user_data['pen_engraving_name'] = engraving_name
     
-    if not product_data:
-        update.effective_chat.send_message("عفواً، حدث خطأ. يرجى البدء من القائمة الرئيسية.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        return ConversationHandler.END
-        
-    user_info = update.message.from_user
-
-    message_body = (
-        f"🔔 *طلب شراء جديد (اقلام)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f"الاسم للحفر: *{engraving_name}*\n"
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}"
-    )
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=f"شكراً لك! تفاصيل الطلب:\n\n✏️ المنتج: {product_data['label']}\n✍️ الاسم للحفر: {engraving_name}\n\nلإتمام الطلب، اضغط على الزر التالي:",
-        reply_markup=reply_markup
-    )
-    context.user_data.clear()
-    return ConversationHandler.END
+    return prompt_for_payment_and_receipt(update, context, product_type="اقلام")
 
 
 # دوال بوكس كتب الكتاب
@@ -822,7 +707,7 @@ def start_box_purchase(update, context):
     except:
         pass
         
-    context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ **{selected_box['label']}**\n\nمن فضلك اختر **لون البوكس**:", reply_markup=reply_markup, parse_mode="Markdown")
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ **{selected_box['label']}** (السعر: *{selected_box.get('price', 'غير متوفر')}*)\n\nمن فضلك اختر **لون البوكس**:", reply_markup=reply_markup, parse_mode="Markdown")
     return GET_BOX_COLOR
 
 def save_box_color_ask_names(update, context):
@@ -880,39 +765,10 @@ def back_to_box_menu(update, context):
 
 def receive_box_names_and_finish(update, context):
     names_text = update.message.text
-    product_data = context.user_data.get('box_product')
-    color_name = context.user_data.get('box_color')
+    context.user_data['box_names'] = names_text
     
-    if not product_data or not color_name:
-        update.effective_chat.send_message("حدث خطأ.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        return ConversationHandler.END
-        
-    user_info = update.message.from_user
+    return prompt_for_payment_and_receipt(update, context, product_type="بوكس كتب كتاب")
 
-    message_body = (
-        f"🔔 *طلب شراء جديد (بوكس كتب كتاب)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f"اللون: *{color_name}*\n"
-        f"الأسماء: *{names_text}*\n"
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}"
-    )
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=f"شكراً لك! تفاصيل الطلب:\n\n🎁 المنتج: {product_data['label']}\n🎨 اللون: {color_name}\n✍️ الأسماء: {names_text}\n\nلإتمام الطلب، اضغط على الزر التالي:",
-        reply_markup=reply_markup
-    )
-    context.user_data.clear()
-    return ConversationHandler.END
 # دوال صواني اكليريك
 def get_akerik_tray_items():
     # صواني شبكة اكليريك هي العنصر الأول في قائمة صواني
@@ -941,7 +797,7 @@ def start_akerik_tray_purchase(update, context):
     except:
         pass
         
-    caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
     
     try:
         context.bot.send_photo(
@@ -1003,39 +859,9 @@ def save_tray_names_ask_date(update, context):
 
 def receive_tray_date_and_finish(update, context):
     date_text = update.message.text
-    product_data = context.user_data.get('tray_product')
-    names_text = context.user_data.get('tray_names')
+    context.user_data['tray_date'] = date_text
     
-    if not product_data or not names_text:
-        update.effective_chat.send_message("حدث خطأ، يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        return ConversationHandler.END
-        
-    user_info = update.message.from_user
-    
-    message_body = (
-        f"🔔 *طلب شراء جديد (صواني شبكة اكليريك)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f"الأسماء: *{names_text}*\n"
-        f"التاريخ: *{date_text}*\n"
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}"
-    )
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=f"شكراً لك! تفاصيل الطلب:\n\n💍 المنتج: {product_data['label']}\n✍️ الأسماء: {names_text}\n📅 التاريخ: {date_text}\n\nلإتمام الطلب، اضغط على الزر التالي:",
-        reply_markup=reply_markup
-    )
-    context.user_data.clear()
-    return ConversationHandler.END
+    return prompt_for_payment_and_receipt(update, context, product_type="صواني شبكة اكليريك")
 
 
 # دوال صواني خشب
@@ -1066,7 +892,7 @@ def start_khashab_tray_purchase(update, context):
     except:
         pass
         
-    caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
     
     try:
         context.bot.send_photo(
@@ -1128,39 +954,9 @@ def save_khashab_tray_names_ask_date(update, context):
 
 def receive_khashab_tray_date_and_finish(update, context):
     date_text = update.message.text
-    product_data = context.user_data.get('khashab_tray_product')
-    names_text = context.user_data.get('khashab_tray_names')
+    context.user_data['khashab_tray_date'] = date_text
     
-    if not product_data or not names_text:
-        update.effective_chat.send_message("حدث خطأ، يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        return ConversationHandler.END
-        
-    user_info = update.message.from_user
-    
-    message_body = (
-        f"🔔 *طلب شراء جديد (صواني شبكة خشب)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f"الأسماء: *{names_text}*\n"
-        f"التاريخ: *{date_text}*\n"
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}"
-    )
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=f"شكراً لك! تفاصيل الطلب:\n\n💍 المنتج: {product_data['label']}\n✍️ الأسماء: {names_text}\n📅 التاريخ: {date_text}\n\nلإتمام الطلب، اضغط على الزر التالي:",
-        reply_markup=reply_markup
-    )
-    context.user_data.clear()
-    return ConversationHandler.END
+    return prompt_for_payment_and_receipt(update, context, product_type="صواني شبكة خشب")
 
 
 # دوال طارات اكليريك
@@ -1190,7 +986,7 @@ def start_akerik_taarat_purchase(update, context):
     except:
         pass
         
-    caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
     
     try:
         context.bot.send_photo(
@@ -1252,39 +1048,9 @@ def save_akerik_taarat_names_ask_date(update, context):
 
 def receive_akerik_taarat_date_and_finish(update, context):
     date_text = update.message.text
-    product_data = context.user_data.get('taarat_akerik_product')
-    names_text = context.user_data.get('taarat_akerik_names')
+    context.user_data['taarat_akerik_date'] = date_text
     
-    if not product_data or not names_text:
-        update.effective_chat.send_message("حدث خطأ، يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        return ConversationHandler.END
-        
-    user_info = update.message.from_user
-    
-    message_body = (
-        f"🔔 *طلب شراء جديد (طارة اكليريك)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f"الأسماء: *{names_text}*\n"
-        f"التاريخ: *{date_text}*\n"
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}"
-    )
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=f"شكراً لك! تفاصيل الطلب:\n\n💍 المنتج: {product_data['label']}\n✍️ الأسماء: {names_text}\n📅 التاريخ: {date_text}\n\nلإتمام الطلب، اضغط على الزر التالي:",
-        reply_markup=reply_markup
-    )
-    context.user_data.clear()
-    return ConversationHandler.END
+    return prompt_for_payment_and_receipt(update, context, product_type="طارة اكليريك")
 
 
 # دوال طارات خشب
@@ -1314,7 +1080,7 @@ def start_khashab_taarat_purchase(update, context):
     except:
         pass
         
-    caption_text = f"✅ **{selected_product['label']}**\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
     
     try:
         context.bot.send_photo(
@@ -1376,42 +1142,12 @@ def save_khashab_taarat_names_ask_date(update, context):
 
 def receive_khashab_taarat_date_and_finish(update, context):
     date_text = update.message.text
-    product_data = context.user_data.get('taarat_khashab_product')
-    names_text = context.user_data.get('taarat_khashab_names')
+    context.user_data['taarat_khashab_date'] = date_text
     
-    if not product_data or not names_text:
-        update.effective_chat.send_message("حدث خطأ، يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
-        return ConversationHandler.END
-        
-    user_info = update.message.from_user
-    
-    message_body = (
-        f"🔔 *طلب شراء جديد (طارة خشب)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f"الأسماء: *{names_text}*\n"
-        f"التاريخ: *{date_text}*\n"
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}"
-    )
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=f"شكراً لك! تفاصيل الطلب:\n\n💍 المنتج: {product_data['label']}\n✍️ الأسماء: {names_text}\n📅 التاريخ: {date_text}\n\nلإتمام الطلب، اضغط على الزر التالي:",
-        reply_markup=reply_markup
-    )
-    context.user_data.clear()
-    return ConversationHandler.END
+    return prompt_for_payment_and_receipt(update, context, product_type="طارة خشب")
 
 
-# دوال الشراء التي لا تحتاج محادثة
+# دوال الشراء التي لا تحتاج محادثة (تم تعديلها لتطلب إيصال الدفع)
 def prepare_whatsapp_link_for_direct_buy(update, context):
     query = update.callback_query
     data = query.data # buy_callback_data
@@ -1420,24 +1156,29 @@ def prepare_whatsapp_link_for_direct_buy(update, context):
     # 1. استخراج مفتاح المنتج
     product_callback = data.replace("buy_", "")
     
-    # 2. البحث عن بيانات المنتج (هذه الدالة تستخدم لـ: أباجورات، أهرامات، دروع، مجات)
+    # 2. البحث عن بيانات المنتج 
     product_data = None
+    product_type = ""
     
     # قائمة الأباجورات (القائمة المباشرة)
     items_list = abajorat_submenu
     product_data = next((item for item in items_list if item["callback"] == product_callback), None)
+    if product_data:
+        product_type = "اباجورة"
     
     if not product_data:
         # البحث في القوائم المتداخلة (هرم مكتب، دروع، مجات)
-        for menu_key in ["haram", "doro3", "mugat"]:
+        for menu_key, menu_label in [("haram", "هرم مكتب"), ("doro3", "درع"), ("mugat", "مج")]:
             for item in all_submenus.get(menu_key, []):
                 if item['callback'] == product_callback:
                     product_data = item
-                    break # وجد المنتج في المستوى الأول (ليس في هذا السيناريو)
+                    product_type = menu_label 
+                    break 
                 if 'items' in item:
                     sub_item = next((si for si in item['items'] if si['callback'] == product_callback), None)
                     if sub_item:
                         product_data = sub_item
+                        product_type = menu_label 
                         break
             if product_data:
                 break
@@ -1446,48 +1187,129 @@ def prepare_whatsapp_link_for_direct_buy(update, context):
         query.answer("عفواً، لا يمكن إتمام هذا الطلب حالياً.", show_alert=True)
         start(update, context)
         return
-        
-    user_info = query.from_user
     
-    message_body = (
-        f"🔔 *طلب شراء جديد (شراء مباشر)* 🔔\n\n"
-        f"المنتج: {product_data['label']}\n"
-        f"الكود: {product_data['callback']}\n\n"
-        f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"🔗 رابط صورة المنتج: {product_data['image']}"
+    # 3. حفظ البيانات وإرسال رسالة الدفع
+    context.user_data['direct_product'] = product_data
+    
+    # يجب حذف رسالة الزر القديمة
+    try:
+        query.message.delete()
+    except:
+        pass
+
+    return prompt_for_payment_and_receipt(update, context, product_type=product_type)
+
+
+# --------------------------------------------------------------------------------
+# 🔥 دالة طلب الدفع (جديدة)
+# --------------------------------------------------------------------------------
+def prompt_for_payment_and_receipt(update, context, product_type):
+    """
+    الدالة الجديدة التي تطلب من العميل الدفع وتحويل الحالة إلى انتظار صورة الإيصال.
+    """
+    
+    # 1. إعداد تفاصيل الطلب حسب نوع المنتج
+    product_data = None
+    names_details = ""
+    date_details = ""
+    
+    if product_type == "بصامة":
+        product_data = context.user_data.get('bsamat_product')
+        names_details = context.user_data.get('bsamat_names')
+        date_details = context.user_data.get('bsamat_date')
+    elif product_type == "منديل كتب كتاب":
+        product_data = context.user_data.get('tissue_product')
+        names_details = context.user_data.get('tissue_names')
+        date_details = context.user_data.get('tissue_date')
+    elif product_type == "محافظ":
+        product_data = context.user_data.get('wallet_data')
+        names_details = context.user_data.get('wallet_engraving_name')
+        product_type = f"{product_type} - {product_data['label']}"
+    elif product_type == "اقلام":
+        product_data = context.user_data.get('pen_data')
+        names_details = context.user_data.get('pen_engraving_name')
+        product_type = f"{product_type} - {product_data['label']}"
+    elif product_type == "بوكس كتب كتاب":
+        product_data = context.user_data.get('box_product')
+        names_details = context.user_data.get('box_names')
+        color_details = context.user_data.get('box_color')
+        product_type = f"{product_type} - {product_data['label']} - {color_details}"
+    elif product_type == "صواني شبكة اكليريك":
+        product_data = context.user_data.get('tray_product')
+        names_details = context.user_data.get('tray_names')
+        date_details = context.user_data.get('tray_date')
+    elif product_type == "صواني شبكة خشب":
+        product_data = context.user_data.get('khashab_tray_product')
+        names_details = context.user_data.get('khashab_tray_names')
+        date_details = context.user_data.get('khashab_tray_date')
+    elif product_type == "طارة اكليريك":
+        product_data = context.user_data.get('taarat_akerik_product')
+        names_details = context.user_data.get('taarat_akerik_names')
+        date_details = context.user_data.get('taarat_akerik_date')
+    elif product_type == "طارة خشب":
+        product_data = context.user_data.get('taarat_khashab_product')
+        names_details = context.user_data.get('taarat_khashab_names')
+        date_details = context.user_data.get('taarat_khashab_date')
+    elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات، الأباجورات
+        product_data = context.user_data.get('direct_product')
+        # product_type is already set from prepare_whatsapp_link_for_direct_buy
+    else:
+        update.effective_chat.send_message("حدث خطأ في تجهيز الطلب. يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
+        context.user_data.clear()
+        return ConversationHandler.END
+
+    # 2. حفظ تفاصيل الطلب بشكل موحد لـ handle_payment_photo
+    context.user_data['final_product_type'] = product_type
+    context.user_data['final_product_label'] = product_data.get('label', product_type)
+    context.user_data['final_price'] = product_data.get('price', 'غير محدد')
+    context.user_data['final_names'] = names_details if names_details else 'غير مطلوب'
+    context.user_data['final_date'] = date_details if date_details else 'غير مطلوب'
+    context.user_data['final_code'] = product_data.get('callback', 'N/A')
+    
+    # 3. إرسال رسالة الدفع
+    payment_message = (
+        f"✅ *طلبك جاهز:* {context.user_data['final_product_label']}\n"
+        f"💰 *السعر الإجمالي:* {context.user_data['final_price']}\n\n"
+        f"من فضلك قم بتحويل المبلغ على إحدى طرق الدفع التالية:\n\n"
+        f"**📞 محفظة فودافون كاش:** 010xxxxxxxx\n"
+        f"**🏦 حساب بنكي:** XXXXXXXX\n\n"
+        f"بعد التحويل، **يرجى إرسال صورة إيصال التحويل في رسالة بالأسفل** لإتمام الطلب.\n\n"
+        f"أو اضغط إلغاء للعودة للقائمة الرئيسية."
     )
     
-    encoded_text = quote_plus(message_body)
-    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
-    
-    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
-    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    query.message.delete()
-    
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=f"شكراً لك! تفاصيل الطلب:\n\n⭐ المنتج: {product_data['label']}\n\nلإتمام الطلب، اضغط على الزر التالي:",
+    back_keyboard = [[InlineKeyboardButton("❌ إلغاء الطلب", callback_data="cancel")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+
+    update.effective_chat.send_message(
+        text=payment_message,
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
 
-# --------------------------------------------------------------------------------
-# 🔥 التعديل المطلوب: إضافة دالة لمعالجة إيصال الدفع (يجب دمج المنطق في دالة معالج الصور لديك)
-# --------------------------------------------------------------------------------
+    # 4. تغيير الحالة لانتظار الصورة
+    context.user_data['state'] = GET_PAYMENT_RECEIPT
+    return GET_PAYMENT_RECEIPT
 
+
+# --------------------------------------------------------------------------------
+# 🔥 دالة معالجة إيصال الدفع (تم تعديلها لاستكمال المحادثة)
+# --------------------------------------------------------------------------------
 def handle_payment_photo(update, context):
     """
-    ⚠️ دالة معالجة صورة إيصال الدفع. (للتطبيق)
-    يرجى استخدام هذا المنطق في دالة معالج الصور العامة لديك (MessageHandler(Filters.photo)).
+    الدالة التي تستقبل صورة إيصال الدفع وتنهي المحادثة بإنشاء رابط الواتساب.
     """
     
+    # التأكد أن المستخدم في حالة انتظار الإيصال
+    if context.user_data.get('state') != GET_PAYMENT_RECEIPT:
+        update.effective_chat.send_message("عفواً، لا يمكنني معالجة هذه الصورة الآن. يرجى البدء بطلب جديد.")
+        context.user_data.clear()
+        return ConversationHandler.END
+
     # 1. الحصول على رابط إيصال الدفع من تليجرام
     if not (update.message and update.message.photo):
-        # ليس صورة، تجاهل أو أرسل رسالة خطأ مناسبة
-        return
+        # ليس صورة، اطلب منه الصورة مرة أخرى
+        update.effective_chat.send_message("عفواً، يرجى إرسال صورة الإيصال فقط في هذه الخطوة.")
+        return GET_PAYMENT_RECEIPT
         
     try:
         # الحصول على الصورة بأعلى دقة
@@ -1497,30 +1319,26 @@ def handle_payment_photo(update, context):
         receipt_url = new_file.file_path 
     except Exception as e:
         context.bot.send_message(update.effective_chat.id, f"حدث خطأ أثناء محاولة الحصول على رابط الصورة: {e}")
-        return
+        return ConversationHandler.END
 
-    # 2. استرجاع بيانات الطلب
-    # **تنبيه هام:** يجب استبدال هذه القيم الافتراضية بمتغيرات حقيقية
-    # تقوم باسترجاع بيانات الطلب (المنتج، الأسماء، السعر، إلخ) 
-    # من context.user_data أو من قاعدة بياناتك هنا.
-    product_type = "طارة خشب" 
-    product_label = "طارة خشب موديل 2"
-    names_text = "5"
-    date_text = "5"
-    paid_amount = "150 ج"
-    product_code = "taarat_khashab_m2"
+    # 2. استرجاع بيانات الطلب النهائية
+    product_type = context.user_data.get('final_product_type', 'غير متوفر')
+    product_label = context.user_data.get('final_product_label', 'غير متوفر')
+    paid_amount = context.user_data.get('final_price', 'غير متوفر')
+    names_text = context.user_data.get('final_names', 'غير مطلوب')
+    date_text = context.user_data.get('final_date', 'غير مطلوب')
+    product_code = context.user_data.get('final_code', 'N/A')
     
     user_info = update.message.from_user
 
     # 3. بناء نص الرسالة للواتساب (التعديل المطلوب: إضافة رابط الإيصال)
-    # ملاحظة: تم حذف سطر "ملاحظة: تم رفع إيصال الدفع على تليجرام." واستبداله بالرابط المباشر
     message_body = (
         f"🔔 *طلب شراء جديد (مدفوع)* 🔔\n\n"
-        f"نوع المنتج: {product_type}\n"
+        f"نوع المنتج: {product_type.replace('-', ' - ')}\n"
         f"المنتج: {product_label}\n"
         f"الأسماء: {names_text}\n"
         f"التاريخ: {date_text}\n"
-        f"السعر المدفوع: {paid_amount}\n"
+        f"السعر المدفوع: *{paid_amount}*\n"
         f"🔗 رابط إيصال الدفع: {receipt_url}\n" 
         f"الكود: {product_code}\n\n"
         f"اسم العميل: {user_info.first_name}\n"
@@ -1537,11 +1355,13 @@ def handle_payment_photo(update, context):
 
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text=f"تم استلام إيصال الدفع بنجاح. لإتمام طلبك ({product_label})، اضغط على الزر التالي:",
+        text=f"تم استلام إيصال الدفع بنجاح. تفاصيل الطلب جاهزة:\n\nالمنتج: {product_label}\nالسعر: {paid_amount}\n\nلإتمام الطلب، اضغط على الزر التالي:",
         reply_markup=reply_markup
     )
     
-# نهاية دالة handle_payment_photo
+    # 5. إنهاء المحادثة ومسح البيانات المؤقتة
+    context.user_data.clear()
+    return ConversationHandler.END
 
 # --------------------------------------------------------------------------------
 # 4. دالة button لمعالجة الأزرار (Callback Queries) 
@@ -1625,6 +1445,8 @@ def main():
     dp = updater.dispatcher
 
     # تعريف معالجات المحادثات
+    # جميع المحادثات تنتهي في حالة GET_PAYMENT_RECEIPT
+    
     # 1. بوكس كتب الكتاب
     box_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_box_purchase, pattern='^buy_box_.*')],
@@ -1632,12 +1454,14 @@ def main():
             GET_BOX_COLOR: [CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*$|^katb_kitab_box$')],
             GET_BOX_NAMES: [
                 MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish),
-                CallbackQueryHandler(back_to_box_menu, pattern='^katb_kitab_box$') # العودة للقائمة الفرعية للبوكسات
-            ]
+                CallbackQueryHandler(back_to_box_menu, pattern='^katb_kitab_box$')
+            ],
+            # 🔥 إضافة حالة انتظار الإيصال هنا
+            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
         },
         fallbacks=[
             CommandHandler('start', start),
-            CallbackQueryHandler(back_to_box_menu, pattern='^back_to_box_color$'), # تم تعديل نمط الرجوع
+            CallbackQueryHandler(back_to_box_menu, pattern='^back_to_box_color$'),
             CallbackQueryHandler(cancel_and_end)
         ]
     )
@@ -1650,7 +1474,9 @@ def main():
                 MessageHandler(Filters.text & ~Filters.command, save_tray_names_ask_date),
                 CallbackQueryHandler(button, pattern='^sawany_akerik$') 
             ],
-            GET_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tray_date_and_finish)]
+            GET_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tray_date_and_finish)],
+            # 🔥 إضافة حالة انتظار الإيصال هنا
+            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1667,7 +1493,9 @@ def main():
                 MessageHandler(Filters.text & ~Filters.command, save_khashab_tray_names_ask_date),
                 CallbackQueryHandler(button, pattern='^sawany_khashab$') 
             ],
-            GET_KHASHAB_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_tray_date_and_finish)]
+            GET_KHASHAB_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_tray_date_and_finish)],
+            # 🔥 إضافة حالة انتظار الإيصال هنا
+            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1684,7 +1512,9 @@ def main():
                 MessageHandler(Filters.text & ~Filters.command, save_akerik_taarat_names_ask_date),
                 CallbackQueryHandler(button, pattern='^taarat_akerik$')
             ],
-            GET_AKRILIK_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_akerik_taarat_date_and_finish)]
+            GET_AKRILIK_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_akerik_taarat_date_and_finish)],
+            # 🔥 إضافة حالة انتظار الإيصال هنا
+            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1701,7 +1531,9 @@ def main():
                 MessageHandler(Filters.text & ~Filters.command, save_khashab_taarat_names_ask_date),
                 CallbackQueryHandler(button, pattern='^taarat_khashab$')
             ],
-            GET_KHASHAB_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_taarat_date_and_finish)]
+            GET_KHASHAB_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_taarat_date_and_finish)],
+            # 🔥 إضافة حالة انتظار الإيصال هنا
+            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1718,7 +1550,9 @@ def main():
                 MessageHandler(Filters.text & ~Filters.command, save_bsamat_names_ask_date),
                 CallbackQueryHandler(button, pattern='^bsamat$')
             ],
-            GET_BSAMAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_bsamat_date_and_finish)]
+            GET_BSAMAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_bsamat_date_and_finish)],
+            # 🔥 إضافة حالة انتظار الإيصال هنا
+            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1735,7 +1569,9 @@ def main():
                 MessageHandler(Filters.text & ~Filters.command, save_tissue_names_ask_date),
                 CallbackQueryHandler(button, pattern='^wedding_tissues$') 
             ],
-            GET_TISSUE_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tissue_date_and_finish)]
+            GET_TISSUE_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tissue_date_and_finish)],
+            # 🔥 إضافة حالة انتظار الإيصال هنا
+            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1748,7 +1584,9 @@ def main():
     engraved_wallet_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^wallet_.*$')],
         states={
-            GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_wallet_name_and_prepare_whatsapp)]
+            GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_wallet_name_and_prepare_whatsapp)],
+            # 🔥 إضافة حالة انتظار الإيصال هنا
+            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1761,11 +1599,27 @@ def main():
     engraved_pen_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^aqlam_.*$')],
         states={
-            GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)]
+            GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)],
+            # 🔥 إضافة حالة انتظار الإيصال هنا
+            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
         },
         fallbacks=[
             CommandHandler('start', start),
             CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$|^aqlam$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+    
+    # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مجات)
+    # نحتاج لمعالج منفصل لحالة الدفع، حيث أن الطلب يبدأ بزر CallbackQuery
+    direct_buy_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|mugat)_.*')],
+        states={
+            # 🔥 حالة انتظار الإيصال تبدأ مباشرة بعد الضغط على زر الشراء
+            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
             CallbackQueryHandler(cancel_and_end)
         ]
     )
@@ -1780,7 +1634,8 @@ def main():
     dp.add_handler(tissue_handler) 
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler)
-    
+    dp.add_handler(direct_buy_handler) # معالج الشراء المباشر
+
     
     # 5. أوامر /start
     dp.add_handler(CommandHandler("start", start))
@@ -1788,12 +1643,12 @@ def main():
     # 6. معالج أزرار القائمة والتنقل (يجب أن يأتي بعد معالجات المحادثة)
     dp.add_handler(CallbackQueryHandler(button)) 
 
-    # 7. معالج للرسائل النصية التي لا تندرج تحت محادثة
+    # 7. معالج الصور العام (يجب إزالته أو وضعه في النهاية كFallback لمنع التعارض مع المحادثات)
+    # ملاحظة: تم إزالة السطر: dp.add_handler(MessageHandler(Filters.photo, handle_payment_photo))
+    # لأن معالجة الصور أصبحت جزءًا من كل ConversationHandler في حالة GET_PAYMENT_RECEIPT.
+    
+    # 8. معالج للرسائل النصية التي لا تندرج تحت محادثة
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_messages))
-
-    # 8. معالج الصور (يجب أن يأتي في النهاية لضمان عدم اعتراضه للمحادثات)
-    # 💡 يجب عليك إضافة دالة handle_payment_photo إلى هذا المعالج:
-    dp.add_handler(MessageHandler(Filters.photo, handle_payment_photo))
 
     # 9. بدء تشغيل البوت
     updater.start_polling()
