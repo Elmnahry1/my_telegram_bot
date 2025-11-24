@@ -4,6 +4,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 # تم استيراد Updater بدلاً من Application
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
 from urllib.parse import quote_plus 
+import time # 🔥 تم إضافة استيراد مكتبة time
 
 # ⚠️ إعدادات الواتساب ورقم فودافون كاش
 WHATSAPP_NUMBER = "201288846355" 
@@ -486,14 +487,13 @@ def receive_mug_photo(update, context):
     try:
         photo_file_id = update.message.photo[-1].file_id
         
-        # 🔥 تخزين الـ file_id
         # نستخدم setdefault للتأكد من وجود القائمة
         mug_photos_ids = context.user_data.setdefault('mug_photos_ids', [])
         
         if photo_file_id not in mug_photos_ids:
             mug_photos_ids.append(photo_file_id)
         else:
-            # 🔥 التعديل الجديد: إذا كانت الصورة مكررة (في حالة الألبوم)، نتجاهلها بصمت
+            # إذا كانت الصورة مكررة (في حالة الألبوم)، نتجاهلها بصمت
             return GET_MUG_PHOTO 
             
     except Exception as e:
@@ -509,6 +509,9 @@ def receive_mug_photo(update, context):
 
     # 🔥🔥🔥 التعديل الرئيسي: الانتقال فقط عند اكتمال العدد 3 وتفعيل علامة القفل 🔥🔥🔥
     if current_count >= 3:
+        
+        # ⚠️ الحل المضاف: انتظار 1 ثانية للسماح لجميع رسائل الألبوم بالوصول والمغادرة
+        time.sleep(1) 
         
         # تفعيل علامة القفل لضمان عدم تنفيذ هذا الكود مرة أخرى
         context.user_data['mug_transition_done'] = True 
@@ -539,7 +542,8 @@ def receive_mug_photo(update, context):
         return prompt_for_payment_and_receipt(update, context, product_type="مج طباعة")
     
     # ⚠️ التعديل الجديد: إرسال رسالة تأكيد استلام الصورة والعدد الحالي
-    # هذا سيساعدنا في تتبع المشكلة
+    # هذه الرسالة ضرورية للمستخدم الذي يرسل الصور واحدة تلو الأخرى.
+    # تم الإبقاء عليها لأن التعديل أعلاه (time.sleep) يحل مشكلة الألبومات.
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=f"✅ تم استلام الصورة بنجاح. (العدد الحالي: {current_count}/3). عند اكتمال 3 صور سننتقل لمرحلة الدفع."
@@ -1058,8 +1062,8 @@ def prepare_whatsapp_link_for_direct_buy(update, context):
         if product_data:
             product_type = "مج ديجتال"
     
+    # البحث في القوائم المتداخلة (هرم مكتب، دروع)
     if not product_data:
-        # البحث في القوائم المتداخلة (هرم مكتب، دروع)
         for menu_key, menu_label in [("haram", "هرم مكتب"), ("doro3", "درع")]:
             for item in all_submenus.get(menu_key, []):
                 if item['callback'] == product_callback:
@@ -1232,7 +1236,7 @@ def handle_payment_photo(update, context):
     product_image_url = context.user_data.get('final_product_image', 'غير متوفر') 
     
     # 🔥 استرجاع روابط صور المج (إذا كانت موجودة)
-    mug_photos_links = context.user_data.get('final_mug_photos_links_str') # 🔥 تم التعديل: استخدام المفتاح الجديد
+    mug_photos_links = context.user_data.get('final_mug_photos_links_str') 
     
     user_info = update.message.from_user
     telegram_contact_link = f"tg://user?id={user_info.id}" 
