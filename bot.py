@@ -16,7 +16,7 @@ VODAFONE_CASH_NUMBER = "01032328500" # 🔥 تم إضافة رقم المحفظ�
 
 GET_WALLET_NAME = 1 # حالة المحافظ
 GET_PEN_NAME = 2    # حالة الأقلام 
-GET_BOX_COLOR = 3   # حالة اختيار لون البوكس
+GET_BOX_COLOR = 3   # حالة اختيار لون البوكس (⚠️ تم تجاهل هذه الحالة في المعالج)
 GET_BOX_NAMES = 4   # حالة كتابة أسماء العرسان للبوكس
 GET_TRAY_NAMES = 5  # حالة كتابة الأسماء للصينية الاكليريك
 GET_TRAY_DATE = 6   # حالة كتابة التاريخ للصينية الاكليريك
@@ -352,7 +352,7 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     # تحديد زر الرجوع
     
     # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات)
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "sublimation"]: # 🔥 إضافة 'sublimation'
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "sublimation", "engraved_wallet"]: # 🔥 تم إضافة engraved_wallet
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -675,18 +675,24 @@ def receive_mug_photos_and_finish(update, context):
         return GET_MUG_PHOTOS 
 
     # 2. استخراج روابط/معرفات الصور
-    # سنخزن file_id لأكبر دقة للصورة المرفقة (يمكن للموظف استخدامه للعثور على الرسالة التي تحتوي على الألبوم)
     file_id = update.message.photo[-1].file_id 
     
-    # ⚠️ نعتبر الرسالة الحالية نقطة الاستلام وننبه العميل على الواتساب بخصوص العدد 3
-    photo_links = [f"Telegram File ID 1: {file_id}"]
+    # نعتبر الرسالة الحالية نقطة الاستلام وننبه العميل على الواتساب بخصوص العدد 3
+    # ⚠️ نستخدم هذه السلسلة لتنبيه الموظف بالتحقق من الشات
+    photos_notes = f"✅ تم استلام صورة. (File ID: {file_id})\nيرجى التحقق من الرسالة السابقة في الشات للتأكد من إرفاق 3 صور." 
     
-    # إذا تم إرسال نص مع الصورة، نعتبره ملاحظات
     caption_text = update.message.caption if update.message.caption else "لا توجد ملاحظات مرفقة"
     
     # 3. تخزين قائمة File IDs
-    context.user_data['mug_photos_ids'] = photo_links
+    context.user_data['mug_photos_ids'] = photos_notes
     context.user_data['mug_photos_caption'] = caption_text
+
+    # ⚠️ رسالة تأكيد قبل الانتقال (للتأكد من وضوح الانتقال)
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="✅ تم استلام إرفاق الصور بنجاح. سننتقل الآن لخطوة الدفع.",
+        parse_mode="Markdown"
+    )
 
     # 4. الانتقال لخطوة الدفع
     return prompt_for_payment_and_receipt(update, context, product_type="مج (مخصص بالصور)")
@@ -746,7 +752,8 @@ def start_wallet_purchase(update, context):
         
     return GET_WALLET_NAME
 
-def back_to_wallets_color(update, context):
+def back_to_wallet_selection(update, context):
+    """ (تم تعديل الاسم) يعود إلى قائمة المحافظ الفرعية. """
     query = update.callback_query
     query.answer()
     context.user_data.clear() # مسح جميع بيانات المحفظة غير المكتملة
@@ -840,6 +847,7 @@ def get_box_items():
     return katb_kitab_box_submenu
 
 def start_box_purchase(update, context):
+    """ (تم التعديل) تبدأ عملية الشراء وتطلب الأسماء مباشرة (بدون خطوة اللون). """
     query = update.callback_query
     query.answer()
     data = query.data  # buy_box_m1
@@ -852,15 +860,11 @@ def start_box_purchase(update, context):
         return ConversationHandler.END
         
     context.user_data['box_product'] = selected_box
-    context.user_data['state'] = GET_BOX_COLOR
+    context.user_data['state'] = GET_BOX_NAMES # ⚠️ الانتقال مباشرة لحالة الأسماء
     
-    # Prepare keyboard (Colors + Back button)
-    keyboard = [
-        [InlineKeyboardButton("أسود", callback_data="color_black"), InlineKeyboardButton("بيج/هافان", callback_data="color_beige")],
-        [InlineKeyboardButton("بني", callback_data="color_brown"), InlineKeyboardButton("رمادي", callback_data="color_gray")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+    # Prepare keyboard (Back button)
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
 
     try:
         query.message.delete()
@@ -869,7 +873,7 @@ def start_box_purchase(update, context):
 
     caption_text = (
         f"✅ **{selected_box['label']}** (السعر: *{selected_box.get('price', 'غير متوفر')}*)\n\n"
-        f"من فضلك **اختر لون البوكس** من الأزرار بالأسفل:\n"
+        f"من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل.\n\n"
         f"أو اضغط زر رجوع للعودة الي القائمة السابقة."
     )
     
@@ -889,94 +893,7 @@ def start_box_purchase(update, context):
             parse_mode="Markdown"
         )
         
-    return GET_BOX_COLOR
-
-def save_box_color_ask_names(update, context):
-    query = update.callback_query
-    data = query.data 
-    
-    # 1. تحقق من الضغط على زر اللون
-    if data.startswith("color_"):
-        color = data.replace("color_", "")
-        context.user_data['box_color'] = color
-        query.answer(f"تم اختيار اللون: {color}", show_alert=True)
-        
-        # حذف رسالة اختيار اللون
-        try:
-            query.message.delete()
-        except:
-            pass
-            
-        context.user_data['state'] = GET_BOX_NAMES
-        
-        # 2. طلب الأسماء
-        back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_box_color")]]
-        reply_markup = InlineKeyboardMarkup(back_keyboard)
-        
-        context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=f"تم اختيار اللون: **{color}**\n\nمن فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل.\n\nأو اضغط زر رجوع للعودة لتغيير اللون:",
-            reply_markup=reply_markup,
-            parse_mode="Markdown"
-        )
-        return GET_BOX_NAMES
-    
-    # 3. معالجة زر الرجوع 
-    elif data == "katb_kitab_box":
-        return back_to_box_menu(update, context) # العودة لقائمة البوكسات
-    
-    query.answer("يرجى اختيار لون البوكس أو الضغط على رجوع.", show_alert=True)
-    return GET_BOX_COLOR # البقاء في نفس الحالة
-
-def back_to_box_color(update, context):
-    # يعود إلى شاشة اختيار اللون
-    query = update.callback_query
-    query.answer()
-    selected_box = context.user_data.get('box_product')
-    if not selected_box:
-        start(update, context)
-        return ConversationHandler.END
-
-    # حذف البيانات المؤقتة للأسماء
-    context.user_data.pop('box_names', None) 
-    context.user_data['state'] = GET_BOX_COLOR
-    
-    # Prepare keyboard (Colors + Back button)
-    keyboard = [
-        [InlineKeyboardButton("أسود", callback_data="color_black"), InlineKeyboardButton("بيج/هافان", callback_data="color_beige")],
-        [InlineKeyboardButton("بني", callback_data="color_brown"), InlineKeyboardButton("رمادي", callback_data="color_gray")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    try:
-        query.message.delete()
-    except Exception:
-        pass
-        
-    caption_text = (
-        f"✅ **{selected_box['label']}** (السعر: *{selected_box.get('price', 'غير متوفر')}*)\n\n"
-        f"من فضلك **اختر لون البوكس مرة أخرى** من الأزرار بالأسفل:\n"
-        f"أو اضغط زر رجوع للعودة الي القائمة السابقة."
-    )
-    
-    try:
-        context.bot.send_photo(
-            chat_id=update.effective_chat.id,
-            photo=selected_box['image'],
-            caption=caption_text,
-            reply_markup=reply_markup,
-            parse_mode="Markdown"
-        )
-    except telegram.error.BadRequest as e:
-        context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=caption_text,
-            reply_markup=reply_markup,
-            parse_mode="Markdown"
-        )
-
-    return GET_BOX_COLOR
+    return GET_BOX_NAMES # ⚠️ العودة لحالة الأسماء مباشرة
 
 
 def back_to_box_menu(update, context):
@@ -995,8 +912,10 @@ def back_to_box_menu(update, context):
     return ConversationHandler.END
 
 def receive_box_names_and_finish(update, context):
+    """ (تم التعديل) تستقبل الأسماء وتنتقل للدفع. (تم حذف خطوة اللون) """
     names_text = update.message.text
     context.user_data['box_names'] = names_text
+    context.user_data['box_color'] = 'افتراضي (غير محدد)' # ⚠️ تعيين قيمة افتراضية لإتمام الطلب
     return prompt_for_payment_and_receipt(update, context, product_type="بوكس كتب كتاب")
 
 # دوال صواني اكليريك
@@ -1487,7 +1406,8 @@ def prompt_for_payment_and_receipt(update, context, product_type):
         date_details = 'غير مطلوب'
     elif product_type == "بوكس كتب كتاب":
         product_data = context.user_data.get('box_product')
-        names_details = f"الأسماء: {context.user_data.get('box_names')}\nاللون: {context.user_data.get('box_color')}"
+        # ⚠️ تم حذف اللون من هنا بسبب إزالة خطوة اختياره
+        names_details = f"الأسماء: {context.user_data.get('box_names')}\nاللون: {context.user_data.get('box_color', 'افتراضي (غير محدد)')}"
         date_details = 'غير مطلوب'
     elif product_type == "صواني شبكة اكليريك":
         product_data = context.user_data.get('tray_product')
@@ -1508,10 +1428,10 @@ def prompt_for_payment_and_receipt(update, context, product_type):
     # 🔥 إضافة معالجة المجات المخصصة بالصور
     elif product_type == "مج (مخصص بالصور)":
         product_data = context.user_data.get('mug_product')
-        photos_ids = context.user_data.get('mug_photos_ids', [])
+        photos_notes = context.user_data.get('mug_photos_ids', 'لم يتم استلام صور.')
         caption = context.user_data.get('mug_photos_caption', 'لا توجد ملاحظات مرفقة')
-        # حفظ File IDs وملاحظة بخصوص 3 صور في حقل names_details
-        names_details = "--- صور المج المطلوبة (مطلوب 3 صور) ---\n" + "\n".join(photos_ids) + f"\nملاحظات العميل: {caption}"
+        # حفظ ملاحظات الصور في حقل names_details
+        names_details = f"--- صور المج المطلوبة (يرجى مراجعة الشات للصور) ---\n{photos_notes}\nملاحظات العميل: {caption}"
         date_details = 'غير مطلوب'
     else:
         # للمنتجات ذات الشراء المباشر (اباجورات، دروع، هرامات، مج ديجتال، سبلميشن)
@@ -1601,7 +1521,7 @@ def handle_payment_photo(update, context):
         f"نوع المنتج: {product_type.replace('-', ' - ')}\n"
         f"المنتج: {product_label}\n"
         f"السعر المدفوع: *{paid_amount}*\n\n"
-        f"الأسماء: {names_text}\n" 
+        f"الأسماء والتخصيص: {names_text}\n" # ⚠️ تم تعديل العنوان ليتضمن تخصيص المج
         f"التاريخ: {date_text}\n\n" 
         f"🔗 رابط صورة المنتج: {product_image_url}\n" 
         f"🔗 رابط إيصال الدفع: {receipt_url}\n" # 🔥 File ID للإيصال
@@ -1655,7 +1575,8 @@ def button(update, context):
         show_submenu(update, context, all_submenus.get(data), main_menu[9]['label'])
         return
     if data == "aqlam":
-        show_submenu(update, context, all_submenus.get(data), main_menu[8]['label'])
+        # ⚠️ القلم له مسار مختلف: عرض القائمة، ثم اختيار القلم يدخل في محادثة
+        show_submenu(update, context, aqlam_submenu, main_menu[8]['label'], back_callback="main_menu")
         return
     
     # 3. معالجة فتح قوائم المستوى الثاني (sawany_akerik, taarat_khashab, mugat_white, mugat_magic)
@@ -1689,7 +1610,7 @@ def button(update, context):
         return
 
     # 6. معالجة الأزرار التي تعيد المستخدم إلى قائمة فرعية سابقة
-    if data in ["back_to_pen_types", "back_to_wallets_color"]:
+    if data in ["back_to_pen_types", "back_to_wallet_selection"]:
         query.answer("يرجى إتمام العملية الجارية أو الضغط على /start للبدء من جديد.", show_alert=True)
         return 
 
@@ -1721,17 +1642,13 @@ def main():
     # تعريف معالجات المحادثات
     # جميع المحادثات تنتهي في حالة GET_PAYMENT_RECEIPT
 
-    # 1. بوكس كتب الكتاب
+    # 1. بوكس كتب الكتاب (⚠️ تم التعديل: إزالة خطوة اختيار اللون)
     box_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(start_box_purchase, pattern='^buy_box_.*')],
         states={
-            GET_BOX_COLOR: [
-                CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*$|^katb_kitab_box$'),
-                CallbackQueryHandler(back_to_box_menu, pattern='^katb_kitab_box$') # معالجة زر الرجوع في شاشة الألوان
-            ],
-            GET_BOX_NAMES: [
+            GET_BOX_NAMES: [ # ⚠️ الانتقال مباشرة إلى الأسماء
                 MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish),
-                CallbackQueryHandler(back_to_box_color, pattern='^back_to_box_color$') # معالجة زر الرجوع لتغيير اللون
+                CallbackQueryHandler(back_to_box_menu, pattern='^katb_kitab_box$') # معالجة زر الرجوع 
             ],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
@@ -1740,7 +1657,6 @@ def main():
         },
         fallbacks=[
             CommandHandler('start', start),
-            CallbackQueryHandler(back_to_box_menu, pattern='^back_to_box_menu$'),
             CallbackQueryHandler(cancel_and_end)
         ]
     )
@@ -1877,7 +1793,7 @@ def main():
         states={
             GET_WALLET_NAME: [
                 MessageHandler(Filters.text & ~Filters.command, receive_wallet_name_and_prepare_whatsapp),
-                CallbackQueryHandler(back_to_wallets_color, pattern='^engraved_wallet$')
+                CallbackQueryHandler(back_to_wallet_selection, pattern='^engraved_wallet$') # ⚠️ استخدام الدالة المصححة
             ],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
@@ -1886,7 +1802,7 @@ def main():
         },
         fallbacks=[
             CommandHandler('start', start),
-            CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'),
+            CallbackQueryHandler(back_to_wallet_selection, pattern='^back_to_wallet_selection$'), # ⚠️ استخدام الدالة المصححة
             CallbackQueryHandler(cancel_and_end)
         ]
     )
@@ -1938,7 +1854,8 @@ def main():
 
     # معالج الشراء المباشر (أباجورات / دروع / هرامات / مجات رقمية / مستلزمات سبلميشن)
     direct_buy_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|mugat|subli)_.*')], # 🔥 تم إضافة 'subli'
+        # ⚠️ يجب أن يسبق هذا المعالج المعالج الخاص بالمجات المخصصة
+        entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|mugat_digital|subli)_.*')], # 🔥 تم تعديل النمط لاستثناء المجات المخصصة
         states={
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
@@ -1961,7 +1878,7 @@ def main():
     dp.add_handler(tissue_handler) 
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler) 
-    # 🔥 إضافة معالج المجات المخصصة بالصور قبل معالج الشراء المباشر لضمان الأولوية
+    # 🔥 يجب أن يوضع معالج المجات المخصصة قبل معالج الشراء المباشر
     dp.add_handler(mug_photo_handler) 
     dp.add_handler(direct_buy_handler) 
 
