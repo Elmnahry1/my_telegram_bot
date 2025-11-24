@@ -4,7 +4,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 # تم استيراد Updater بدلاً من Application
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
 from urllib.parse import quote_plus 
-import time # 🔥 تم إضافة استيراد مكتبة time
+# تم إزالة استيراد مكتبة time لأنها لم تعد ضرورية مع التعديل الجديد
 
 # ⚠️ إعدادات الواتساب ورقم فودافون كاش
 WHATSAPP_NUMBER = "201288846355" 
@@ -503,15 +503,12 @@ def receive_mug_photo(update, context):
     # 4. Check Count and Transition
     current_count = len(context.user_data['mug_photos_ids'])
     
-    # 🔥 New: Check for the transition flag to prevent multiple transitions in a media group
+    # Check for the transition flag to prevent multiple transitions in a media group
     if context.user_data.get('mug_transition_done', False):
         return GET_MUG_PHOTO # Already transitioning, silently ignore extra photos/updates
 
     # 🔥🔥🔥 التعديل الرئيسي: الانتقال فقط عند اكتمال العدد 3 وتفعيل علامة القفل 🔥🔥🔥
     if current_count >= 3:
-        
-        # ⚠️ الحل المضاف: انتظار 1 ثانية للسماح لجميع رسائل الألبوم بالوصول والمغادرة
-        time.sleep(1) 
         
         # تفعيل علامة القفل لضمان عدم تنفيذ هذا الكود مرة أخرى
         context.user_data['mug_transition_done'] = True 
@@ -541,15 +538,10 @@ def receive_mug_photo(update, context):
         del context.user_data['mug_photos_ids'] 
         return prompt_for_payment_and_receipt(update, context, product_type="مج طباعة")
     
-    # ⚠️ التعديل الجديد: إرسال رسالة تأكيد استلام الصورة والعدد الحالي
-    # هذه الرسالة ضرورية للمستخدم الذي يرسل الصور واحدة تلو الأخرى.
-    # تم الإبقاء عليها لأن التعديل أعلاه (time.sleep) يحل مشكلة الألبومات.
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=f"✅ تم استلام الصورة بنجاح. (العدد الحالي: {current_count}/3). عند اكتمال 3 صور سننتقل لمرحلة الدفع."
-    )
+    # 🔥🔥🔥 التعديل الجديد 🔥🔥🔥: 
+    # عند العدد < 3، نعود بصمت لمنع تداخل الرسائل في الألبوم الذي يتسبب في مشكلة "1/3".
+    # نعتمد فقط على رسالة الانتقال النهائية عند اكتمال العدد 3.
     
-    # إذا كان العدد < 3 ولم يتم الانتقال بعد، نعود بصمت
     return GET_MUG_PHOTO
 
 
