@@ -690,11 +690,10 @@ def button(update, context):
             show_product_page(update, data, parent_menu['items'])
             return
 
-    # 3. معالجة أزرار الشراء الفردية التي لم تبدأ محادثة (يتم معالجتها في direct_buy_handler)
-    if data.startswith("buy_"):
-        prepare_whatsapp_link_for_direct_buy(update, context)
-        return
-        
+    # 3. 🔥🔥 تم إزالة منطق معالجة أزرار الشراء الفردية من هنا
+    #    (لتجنب التداخل، حيث يتم التعامل مع كل أزرار الشراء 'buy_' بواسطة ConversationHandler)
+    # -----------------------------------------------------------------------------------
+    
     query.answer("إجراء غير معروف.", show_alert=True)
     start(update, context)
 
@@ -704,11 +703,9 @@ def button(update, context):
 # --------------------
 
 # دوال محادثات الصواني والطارات والبوكسات والمناديل والبصامات والمحافظ والأقلام:
-# ⚠️ تم ترك المنطق الداخلي فارغًا (`pass`) هنا، ويجب أن تضيف المنطق الخاص بها من ملفك الأصلي.
-
 def start_box_purchase(update, context): pass 
 def save_box_color_ask_names(update, context): pass 
-def back_to_box_menu(update, context): return button(update, context) # استخدام الدالة button للرجوع
+def back_to_box_menu(update, context): return button(update, context)
 def receive_box_names_and_finish(update, context): pass 
 
 def start_akerik_tray_purchase(update, context): pass 
@@ -851,7 +848,7 @@ def main():
         }, fallbacks=[ CommandHandler('start', start), CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$'), CallbackQueryHandler(cancel_and_end) ]
     )
     
-    # 10. محادثة المج الأبيض والسحري (طلب 3 صور) 🔥 الإضافة الرئيسية
+    # 10. محادثة المج الأبيض والسحري (طلب 3 صور)
     mug_handler = ConversationHandler(
         entry_points=[
             CallbackQueryHandler(start_mug_purchase, pattern='^buy_mugat_white_.*$'),
