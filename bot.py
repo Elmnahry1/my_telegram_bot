@@ -5,8 +5,10 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CallbackQueryHandler, CommandHandler, MessageHandler, Filters, ConversationHandler
 from urllib.parse import quote_plus 
 
-# ⚠️ إعدادات الواتساب: استبدل بالرقم الخاص بك
+# ⚠️ إعدادات الواتساب ورقم فودافون كاش
 WHATSAPP_NUMBER = "201288846355" 
+VODAFONE_CASH_NUMBER = "01032328500" # 🔥 تم إضافة رقم المحفظة هنا
+
 
 # --------------------
 # 1. تعريف حالات المحادثة
@@ -1265,20 +1267,25 @@ def prompt_for_payment_and_receipt(update, context, product_type):
     context.user_data['final_names'] = names_details if names_details else 'غير مطلوب'
     context.user_data['final_date'] = date_details if date_details else 'غير مطلوب'
     context.user_data['final_code'] = product_data.get('callback', 'N/A')
+    # 🔥 حفظ رابط صورة المنتج
+    context.user_data['final_product_image'] = product_data.get('image', 'غير متوفر') 
     
-    # 3. إرسال رسالة الدفع
+    # 3. إرسال رسالة الدفع (تم التعديل)
     payment_message = (
         f"✅ *طلبك جاهز:* {context.user_data['final_product_label']}\n"
         f"💰 *السعر الإجمالي:* {context.user_data['final_price']}\n\n"
-        f"من فضلك قم بتحويل المبلغ على إحدى طرق الدفع التالية:\n\n"
-        f"**📞 محفظة فودافون كاش:** 010xxxxxxxx\n"
-        f"**🏦 حساب بنكي:** XXXXXXXX\n\n"
+        f"من فضلك قم بتحويل المبلغ على محفظة فودافون كاش:\n"
+        f"**📞 {VODAFONE_CASH_NUMBER}**\n\n"
         f"بعد التحويل، **يرجى إرسال صورة إيصال التحويل في رسالة بالأسفل** لإتمام الطلب.\n\n"
         f"أو اضغط إلغاء للعودة للقائمة الرئيسية."
     )
     
-    back_keyboard = [[InlineKeyboardButton("❌ إلغاء الطلب", callback_data="cancel")]]
-    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    # 🔥 إضافة زر نسخ رقم المحفظة
+    keyboard = [
+        [InlineKeyboardButton(f"📞 نسخ رقم المحفظة ({VODAFONE_CASH_NUMBER})", callback_data="copy_voda_cash")],
+        [InlineKeyboardButton("❌ إلغاء الطلب", callback_data="cancel")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
     update.effective_chat.send_message(
         text=payment_message,
@@ -1328,21 +1335,27 @@ def handle_payment_photo(update, context):
     names_text = context.user_data.get('final_names', 'غير مطلوب')
     date_text = context.user_data.get('final_date', 'غير مطلوب')
     product_code = context.user_data.get('final_code', 'N/A')
+    # 🔥 استرجاع رابط صورة المنتج
+    product_image_url = context.user_data.get('final_product_image', 'غير متوفر') 
     
     user_info = update.message.from_user
+    # 🔥 إنشاء رابط التواصل عبر التليجرام
+    telegram_contact_link = f"tg://user?id={user_info.id}" 
 
-    # 3. بناء نص الرسالة للواتساب (التعديل المطلوب: إضافة رابط الإيصال)
+    # 3. بناء نص الرسالة للواتساب (تم التعديل)
     message_body = (
         f"🔔 *طلب شراء جديد (مدفوع)* 🔔\n\n"
         f"نوع المنتج: {product_type.replace('-', ' - ')}\n"
         f"المنتج: {product_label}\n"
+        f"السعر المدفوع: *{paid_amount}*\n\n"
         f"الأسماء: {names_text}\n"
-        f"التاريخ: {date_text}\n"
-        f"السعر المدفوع: *{paid_amount}*\n"
+        f"التاريخ: {date_text}\n\n"
+        f"🔗 رابط صورة المنتج: {product_image_url}\n" # 🔥 إضافة رابط صورة المنتج
         f"🔗 رابط إيصال الدفع: {receipt_url}\n" 
         f"الكود: {product_code}\n\n"
         f"اسم العميل: {user_info.first_name}\n"
-        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}"
+        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
+        f"رابط التواصل عبر التليجرام: {telegram_contact_link}" # 🔥 إضافة رابط التواصل
     )
     
     encoded_text = quote_plus(message_body)
@@ -1373,6 +1386,12 @@ def button(update, context):
     # 0. معالجة إلغاء المحادثة
     if data == "cancel":
         return cancel_and_end(update, context)
+
+    # 🔥 0.5. معالجة زر نسخ رقم المحفظة
+    if data == "copy_voda_cash":
+        # عرض الرقم في نافذة منبثقة لنسخه بسهولة
+        query.answer(f"تم نسخ رقم المحفظة: {VODAFONE_CASH_NUMBER}", show_alert=True)
+        return
 
     # 1. العودة للقائمة الرئيسية
     if data == "main_menu":
@@ -1643,14 +1662,10 @@ def main():
     # 6. معالج أزرار القائمة والتنقل (يجب أن يأتي بعد معالجات المحادثة)
     dp.add_handler(CallbackQueryHandler(button)) 
 
-    # 7. معالج الصور العام (يجب إزالته أو وضعه في النهاية كFallback لمنع التعارض مع المحادثات)
-    # ملاحظة: تم إزالة السطر: dp.add_handler(MessageHandler(Filters.photo, handle_payment_photo))
-    # لأن معالجة الصور أصبحت جزءًا من كل ConversationHandler في حالة GET_PAYMENT_RECEIPT.
-    
-    # 8. معالج للرسائل النصية التي لا تندرج تحت محادثة
+    # 7. معالج للرسائل النصية التي لا تندرج تحت محادثة
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_messages))
 
-    # 9. بدء تشغيل البوت
+    # 8. بدء تشغيل البوت
     updater.start_polling()
     updater.idle()
 
