@@ -1201,6 +1201,30 @@ def prepare_whatsapp_link_for_direct_buy(update, context):
 
     return prompt_for_payment_and_receipt(update, context, product_type=product_type)
 
+# --------------------------------------------------------------------------------
+# 🔥 دالة معالجة أزرار مرحلة الدفع (جديدة)
+# --------------------------------------------------------------------------------
+def handle_payment_buttons(update, context):
+    """
+    تعالج أزرار النسخ والإلغاء في مرحلة انتظار الإيصال.
+    """
+    query = update.callback_query
+    data = query.data
+    
+    if data == "cancel":
+        # الإلغاء
+        return cancel_and_end(update, context) # returns ConversationHandler.END
+
+    if data == "copy_voda_cash":
+        # عرض الرقم في نافذة منبثقة لنسخه بسهولة
+        query.answer(f"تم نسخ رقم المحفظة: {VODAFONE_CASH_NUMBER}", show_alert=True)
+        # 💡 الأهم: العودة للحالة نفسها لانتظار صورة الإيصال
+        return GET_PAYMENT_RECEIPT 
+        
+    # إذا تم الضغط على أي زر آخر في هذه المرحلة
+    query.answer("يرجى إرسال إيصال الدفع لإتمام الطلب.", show_alert=True)
+    return GET_PAYMENT_RECEIPT
+
 
 # --------------------------------------------------------------------------------
 # 🔥 دالة طلب الدفع (جديدة)
@@ -1383,11 +1407,11 @@ def button(update, context):
     query = update.callback_query
     data = query.data
     
-    # 0. معالجة إلغاء المحادثة
+    # 0. معالجة إلغاء المحادثة (فقط عندما لا نكون في محادثة ConversationHandler)
     if data == "cancel":
         return cancel_and_end(update, context)
 
-    # 🔥 0.5. معالجة زر نسخ رقم المحفظة
+    # 🔥 0.5. معالجة زر نسخ رقم المحفظة (يجب أن يتم معالجته ضمن المحادثة، هذه خطوة احتياطية)
     if data == "copy_voda_cash":
         # عرض الرقم في نافذة منبثقة لنسخه بسهولة
         query.answer(f"تم نسخ رقم المحفظة: {VODAFONE_CASH_NUMBER}", show_alert=True)
@@ -1475,8 +1499,11 @@ def main():
                 MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish),
                 CallbackQueryHandler(back_to_box_menu, pattern='^katb_kitab_box$')
             ],
-            # 🔥 إضافة حالة انتظار الإيصال هنا
-            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+            # 🔥 الإصلاح: إضافة معالج الأزرار هنا لضمان الأولوية
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+            ]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1494,8 +1521,11 @@ def main():
                 CallbackQueryHandler(button, pattern='^sawany_akerik$') 
             ],
             GET_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tray_date_and_finish)],
-            # 🔥 إضافة حالة انتظار الإيصال هنا
-            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+            ]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1513,8 +1543,11 @@ def main():
                 CallbackQueryHandler(button, pattern='^sawany_khashab$') 
             ],
             GET_KHASHAB_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_tray_date_and_finish)],
-            # 🔥 إضافة حالة انتظار الإيصال هنا
-            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+            ]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1532,8 +1565,11 @@ def main():
                 CallbackQueryHandler(button, pattern='^taarat_akerik$')
             ],
             GET_AKRILIK_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_akerik_taarat_date_and_finish)],
-            # 🔥 إضافة حالة انتظار الإيصال هنا
-            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+            ]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1551,8 +1587,11 @@ def main():
                 CallbackQueryHandler(button, pattern='^taarat_khashab$')
             ],
             GET_KHASHAB_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_taarat_date_and_finish)],
-            # 🔥 إضافة حالة انتظار الإيصال هنا
-            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+            ]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1570,8 +1609,11 @@ def main():
                 CallbackQueryHandler(button, pattern='^bsamat$')
             ],
             GET_BSAMAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_bsamat_date_and_finish)],
-            # 🔥 إضافة حالة انتظار الإيصال هنا
-            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+            ]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1589,8 +1631,11 @@ def main():
                 CallbackQueryHandler(button, pattern='^wedding_tissues$') 
             ],
             GET_TISSUE_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tissue_date_and_finish)],
-            # 🔥 إضافة حالة انتظار الإيصال هنا
-            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+            ]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1604,8 +1649,11 @@ def main():
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^wallet_.*$')],
         states={
             GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_wallet_name_and_prepare_whatsapp)],
-            # 🔥 إضافة حالة انتظار الإيصال هنا
-            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+            ]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1619,8 +1667,11 @@ def main():
         entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^aqlam_.*$')],
         states={
             GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)],
-            # 🔥 إضافة حالة انتظار الإيصال هنا
-            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+            ]
         },
         fallbacks=[
             CommandHandler('start', start),
@@ -1630,12 +1681,14 @@ def main():
     )
     
     # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مجات)
-    # نحتاج لمعالج منفصل لحالة الدفع، حيث أن الطلب يبدأ بزر CallbackQuery
     direct_buy_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|mugat)_.*')],
         states={
-            # 🔥 حالة انتظار الإيصال تبدأ مباشرة بعد الضغط على زر الشراء
-            GET_PAYMENT_RECEIPT: [MessageHandler(Filters.photo, handle_payment_photo)]
+            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+            ]
         },
         fallbacks=[
             CommandHandler('start', start),
