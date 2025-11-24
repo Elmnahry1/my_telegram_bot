@@ -502,6 +502,8 @@ def receive_mug_photo(update, context):
 
     # 4. Check Count and Transition
     current_count = len(context.user_data['mug_photos_ids'])
+    # 🔥 التعديل الجديد: تحديد ما إذا كانت الصورة جزءاً من ألبوم
+    is_in_album = update.message.media_group_id is not None 
     
     # Check for the transition flag to prevent multiple transitions in a media group
     if context.user_data.get('mug_transition_done', False):
@@ -520,7 +522,6 @@ def receive_mug_photo(update, context):
         )
         
         # 2. حفظ معرفات الملفات (File IDs) بدلاً من محاولة جلب روابطها (file_path) الآن.
-        # جلب الروابط يتطلب اتصال إضافي ويمكن أن يفشل. نعتمد على الـ ID الأكثر ثباتًا.
         final_file_ids = context.user_data['mug_photos_ids'][:3] 
         
         # 3. تخزين قائمة معرفات الملفات النهائية
@@ -532,7 +533,12 @@ def receive_mug_photo(update, context):
         # 5. الانتقال إلى مرحلة الدفع
         return prompt_for_payment_and_receipt(update, context, product_type="مج طباعة")
     
-    # عند العدد < 3، نعود بصمت لمنع تداخل الرسائل في الألبوم.
+    # 🔥🔥🔥 التعديل الجديد: إعطاء تغذية راجعة للمستخدم عند إرسال صورة فردية (لتجنب الرسائل المزدوجة في الألبوم) 🔥🔥🔥
+    if not is_in_album:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=f"✅ تم استلام الصورة رقم {current_count}/3. يرجى إرسال باقي الصور."
+        )
     
     return GET_MUG_PHOTO
 
