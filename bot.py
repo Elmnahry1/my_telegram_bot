@@ -185,7 +185,7 @@ main_menu = [
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
-    {"label": "✏️ اقلام", "callback": "aqlam"}, 
+    {"label": "✏️ اقلام", "callback": "aqlam"}, # 🔥 هذا الزر سيقود الآن لقائمة فرعية (Submenu)
     {"label": "☕ مجات", "callback": "mugat"},
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
@@ -212,6 +212,7 @@ for menu_key, submenu_list in all_submenus.items():
     if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box"]: 
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
+            # بالنسبة للأقلام والمحافظ (التي تبدأ محادثة مباشرة) يجب أن يتم معالجتها
             product_to_submenu_map[product["callback"]] = menu_key
     else:
         # للقوائم المتداخلة (sawany, taarat, ...)
@@ -291,7 +292,8 @@ def show_submenu(update, context, submenu_list, title, back_callback="main_menu"
     # بناء الأزرار (كل زر في صف منفصل)
     keyboard = []
     for item in submenu_list:
-        keyboard.append([InlineKeyboardButton(item["label"], callback_data=item["callback"])])
+        # ⚠️ ملاحظة: لا نستخدم buy_ هنا بل نستخدم callback_data لتمكين زر الشراء لاحقاً
+        keyboard.append([InlineKeyboardButton(item["label"], callback_data=item["callback"])]) 
 
     # إضافة زر الرجوع
     keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data=back_callback)])
@@ -340,7 +342,7 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     # تحديد زر الرجوع
     
     # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات)
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "engraved_wallet", "aqlam"]:
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "engraved_wallet"]:
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -625,12 +627,11 @@ def back_to_pen_types(update, context):
         query.message.delete()
     except Exception:
         pass
-        
-    keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in aqlam_submenu]
-    keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
     
-    context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ *اقلام محفورة بالاسم*:\n\nمن فضلك اختر نوع القلم المطلوب:", reply_markup=reply_markup, parse_mode="Markdown")
+    # 🔥 نستخدم دالة show_submenu لعرض الأزرار الفرعية للأقلام
+    show_submenu(update, context, aqlam_submenu, "اقلام", back_callback="main_menu")
+
+    # بما أن show_submenu ترسل رسالة جديدة، لا نحتاج لإرسال رسالة هنا
     return ConversationHandler.END
 
 def prompt_for_pen_name(update, context):
@@ -638,16 +639,19 @@ def prompt_for_pen_name(update, context):
     data = query.data
     query.answer()
     
+    # نستخدم data مباشرة لأنها تحمل callback للأقلام (aqlam_metal/aqlam_luminous)
     selected_pen_data = next((item for item in aqlam_submenu if item["callback"] == data), None)
     context.user_data['pen_data'] = selected_pen_data
     context.user_data['state'] = GET_PEN_NAME
     
     try:
-        query.message.delete()
+        # حذف رسالة القائمة الفرعية للأقلام
+        query.message.delete() 
     except Exception:
         pass
 
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_pen_types")]]
+    # زر الرجوع يعود إلى قائمة الأقلام الفرعية
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_pen_types")]] 
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
     
     caption_text = (f"**اختيارك: {selected_pen_data['label']}** (السعر: *{selected_pen_data.get('price', 'غير متوفر')}*)\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير نوع القلم.")
@@ -1409,27 +1413,28 @@ def button(update, context):
     if data == "cancel":
         return cancel_and_end(update, context)
 
-    # ⚠️ ملاحظة: تم حذف معالج 'copy_voda_cash' لأنه تم استبداله بزر Switch Inline Query
-
     # 1. العودة للقائمة الرئيسية
     if data == "main_menu":
         start(update, context)
         return
         
     # 2. معالجة فتح قوائم المستوى الأول (sawany, taarat, haram, doro3, mugat)
-    if data in ["sawany", "taarat", "haram", "doro3", "mugat"]:
+    # 🔥 تم إضافة "aqlam" هنا
+    if data in ["sawany", "taarat", "haram", "doro3", "mugat", "aqlam"]:
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         clean_title = title.split()[-1]
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu")
         return
         
-    # 3. معالجة فتح قوائم المستوى الأول المباشرة (engraved_wallet, aqlam, bsamat, etc.)
-    if data in ["engraved_wallet", "aqlam", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
+    # 3. معالجة فتح قوائم المستوى الأول المباشرة (engraved_wallet, bsamat, etc.)
+    # 🔥 تم حذف "aqlam" من هذه القائمة لجعله قائمة فرعية (submenu)
+    if data in ["engraved_wallet", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
         
         # إذا كانت "بصمات" أو أي قائمة أخرى تحتاج عرض المنتجات أولاً
-        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "engraved_wallet", "aqlam"]:
+        # 🔥 تم حذف "aqlam" من هذه القائمة
+        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "engraved_wallet"]: 
             show_product_page(update, data, submenu_list, is_direct_list=True)
             return
 
@@ -1453,6 +1458,16 @@ def button(update, context):
         # (حيث لم يتم إضافة ConversationHandler لها)
         prepare_whatsapp_link_for_direct_buy(update, context)
         return
+        
+    # 6. معالجة الأزرار التي تعيد المستخدم إلى قائمة فرعية سابقة (مثل العودة من صفحة الأسماء إلى قائمة الأقلام/المحافظ)
+    if data in ["back_to_pen_types", "back_to_wallets_color"]:
+        # يتم معالجة هذه الأزرار بواسطة fallbacks في ConversationHandler لكنها أحياناً تصل إلى هنا.
+        # يجب أن تتم معالجتها داخل الـ ConversationHandler الخاصة بها (مثل engraved_pen_handler).
+        # إذا وصل الزر إلى هنا، فهو زر رجوع من قائمة فرعية مفتوحة. 
+        # على سبيل المثال، إذا قام المستخدم ببدء محادثة، ثم ضغط زر رجوع غير زر إلغاء.
+        query.answer("يرجى إتمام العملية الجارية أو الضغط على /start للبدء من جديد.", show_alert=True)
+        return
+        
 
     query.answer("إجراء غير معروف.", show_alert=True)
     start(update, context) # عودة للقائمة الرئيسية كإجراء احتياطي
@@ -1650,7 +1665,8 @@ def main():
 
     # اقلام محفورة بالاسم
     engraved_pen_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^aqlam_.*$')],
+        # 🔥 تم تعديل entry_points لتبدأ المحادثة عند اختيار نوع القلم من القائمة الفرعية
+        entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^aqlam_metal$|^aqlam_luminous$')],
         states={
             GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)],
             GET_PAYMENT_RECEIPT: [
@@ -1660,6 +1676,7 @@ def main():
         },
         fallbacks=[
             CommandHandler('start', start),
+            # 🔥 زر الرجوع سيعود إلى القائمة الفرعية للأقلام
             CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$|^aqlam$'),
             CallbackQueryHandler(cancel_and_end)
         ]
@@ -1689,7 +1706,7 @@ def main():
     dp.add_handler(bsamat_handler) 
     dp.add_handler(tissue_handler) 
     dp.add_handler(engraved_wallet_handler)
-    dp.add_handler(engraved_pen_handler)
+    dp.add_handler(engraved_pen_handler) # تم تحديثه
     dp.add_handler(direct_buy_handler) # معالج الشراء المباشر
 
     
