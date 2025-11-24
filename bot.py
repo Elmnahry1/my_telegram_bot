@@ -460,31 +460,37 @@ def start_mug_purchase(update, context):
     )
     return GET_MUG_PHOTO 
 
+# 🔥 الدالة الجديدة لمعالجة رسائل النص غير المتوقعة في حالة انتظار الصور
+def handle_mug_photo_text_error(update, context):
+    current_count = len(context.user_data.get('mug_photos_ids', []))
+    message_text = f"عفواً، يرجى إرسال صور فقط. لقد أرسلت الآن **{current_count}/3** صور."
+    
+    product_callback = context.user_data.get('mug_product', {}).get('callback')
+    if not product_callback: 
+        update.effective_chat.send_message("حدث خطأ في تتبع المنتج. يرجى البدء من جديد.")
+        return ConversationHandler.END
+        
+    # الحصول على مفتاح القائمة الفرعية للرجوع
+    parent_callback = product_to_submenu_map.get(product_callback) 
+    
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=message_text,
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 رجوع", callback_data=parent_callback)]]),
+        parse_mode="Markdown"
+    )
+    return GET_MUG_PHOTO
+
 
 def receive_mug_photo(update, context):
-    # 1. Input Check (Ignore text messages, only process photos)
-    if update.message.text:
-        # 🔥 تم التعديل: استخدام 'mug_photos_ids'
-        current_count = len(context.user_data.get('mug_photos_ids', []))
-        message_text = f"عفواً، يرجى إرسال صور فقط. لقد أرسلت الآن **{current_count}/3** صور."
-        
-        product_callback = context.user_data.get('mug_product', {}).get('callback')
-        if not product_callback: return ConversationHandler.END
-        back_callback = product_to_submenu_map.get(product_callback) 
-        
-        context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=message_text,
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 رجوع", callback_data=back_callback)]])
-        )
-        return GET_MUG_PHOTO
-        
-    # 2. Process Photo
+    # 1. Input Check (Only process photos, text is handled by a separate handler)
     if not (update.message and update.message.photo):
+        # في حال تم استدعاء الدالة بدون صورة (لا يجب أن يحدث مع الفلتر الجديد)
         return GET_MUG_PHOTO
     
-    # 3. Store Photo ID (Efficient)
+    # 2. Store Photo ID (Efficient)
     try:
+        # الحصول على ID لأعلى جودة (الصورة الأخيرة في القائمة)
         photo_file_id = update.message.photo[-1].file_id
         
         # نستخدم setdefault للتأكد من وجود القائمة
@@ -500,10 +506,8 @@ def receive_mug_photo(update, context):
         context.bot.send_message(update.effective_chat.id, "حدث خطأ أثناء حفظ الصورة. يرجى إعادة المحاولة.")
         return GET_MUG_PHOTO
 
-    # 4. Check Count and Transition
+    # 3. Check Count and Transition
     current_count = len(context.user_data['mug_photos_ids'])
-    # 🔥 التعديل الجديد: تحديد ما إذا كانت الصورة جزءاً من ألبوم
-    is_in_album = update.message.media_group_id is not None 
     
     # Check for the transition flag to prevent multiple transitions in a media group
     if context.user_data.get('mug_transition_done', False):
@@ -533,12 +537,7 @@ def receive_mug_photo(update, context):
         # 5. الانتقال إلى مرحلة الدفع
         return prompt_for_payment_and_receipt(update, context, product_type="مج طباعة")
     
-    # 🔥🔥🔥 التعديل الجديد: إعطاء تغذية راجعة للمستخدم عند إرسال صورة فردية (لتجنب الرسائل المزدوجة في الألبوم) 🔥🔥🔥
-    if not is_in_album:
-        context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=f"✅ تم استلام الصورة رقم {current_count}/3. يرجى إرسال باقي الصور."
-        )
+    # 🔥🔥🔥 تم إزالة رسائل التأكيد الفردية للصور لتجنب تداخلها مع الألبوم 🔥🔥🔥
     
     return GET_MUG_PHOTO
 
@@ -1364,7 +1363,8 @@ def main():
         states={
             GET_MUG_PHOTO: [
                 MessageHandler(Filters.photo, receive_mug_photo),
-                MessageHandler(Filters.text & ~Filters.command, receive_mug_photo),
+                # 🔥 التعديل الجديد: معالج منفصل لرسائل النص لتجنب تداخلها
+                MessageHandler(Filters.text & ~Filters.command, handle_mug_photo_text_error), 
                 CallbackQueryHandler(back_to_mug_type_menu, pattern='^mugat_(white|magic)$')
             ],
             GET_PAYMENT_RECEIPT: [
