@@ -484,8 +484,7 @@ def receive_mug_photo(update, context):
     try:
         photo_file_id = update.message.photo[-1].file_id
         
-        # 🔥 تم التعديل: تخزين الـ file_id بدلاً من file_path لتسريع عملية العد
-        # والتأكد من عدم تكرار نفس الصورة (حيث أن file_id فريد)
+        # 🔥 تخزين الـ file_id
         if photo_file_id not in context.user_data.get('mug_photos_ids', []):
              # نستخدم setdefault للتأكد من وجود القائمة
             context.user_data.setdefault('mug_photos_ids', []).append(photo_file_id)
@@ -496,26 +495,18 @@ def receive_mug_photo(update, context):
     # 4. Check Count and Transition
     current_count = len(context.user_data['mug_photos_ids'])
     
-    # Determine the back button
-    product_callback = context.user_data['mug_product']['callback']
-    back_callback = product_to_submenu_map.get(product_callback) 
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 رجوع", callback_data=back_callback)]])
-    
+    # 🔥🔥🔥 التعديل الرئيسي: لا نرسل أي رسائل رد حتى اكتمال العدد 3 🔥🔥🔥
     if current_count < 3:
-        # Still waiting for more photos
-        is_media_group = update.message.media_group_id is not None
-        
-        # 🔥 تم التعديل: لا نرسل رسالة رد لكل صورة في الألبوم لتجنب الارتباك
-        if not is_media_group: 
-            context.bot.send_message(
-                chat_id=update.effective_chat.id,
-                text=f"✅ تم استلام الصورة رقم {current_count}. \n\nمطلوب 3 صور إجمالاً. يرجى إرسال الصور المتبقية.",
-                reply_markup=reply_markup
-            )
+        # نعود بصمت لانتظار الصور المتبقية (لتجنب رسائل "تم استلام الصورة رقم 1...")
         return GET_MUG_PHOTO
     
     elif current_count >= 3:
-        # All 3 photos received (or more), proceed to payment prompt
+        # تم استلام الصور الثلاث (أو أكثر)، ننتقل إلى مرحلة الدفع
+        
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="✅ تم استلام الصور الثلاث بنجاح. سننتقل الآن إلى مرحلة الدفع."
+        )
         
         # نأخذ أول 3 معرفات صور
         final_file_ids = context.user_data['mug_photos_ids'][:3] 
@@ -532,11 +523,6 @@ def receive_mug_photo(update, context):
                 
         # تخزين قائمة الروابط/IDs النهائية
         context.user_data['final_mug_photos_links'] = final_photo_paths 
-        
-        context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text="✅ تم استلام الصور الثلاث بنجاح. سننتقل الآن إلى مرحلة الدفع."
-        )
         
         # مسح المعرفات المؤقتة
         del context.user_data['mug_photos_ids'] 
