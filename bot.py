@@ -487,9 +487,15 @@ def receive_mug_photo(update, context):
         photo_file_id = update.message.photo[-1].file_id
         
         # 🔥 تخزين الـ file_id
-        if photo_file_id not in context.user_data.get('mug_photos_ids', []):
-             # نستخدم setdefault للتأكد من وجود القائمة
-            context.user_data.setdefault('mug_photos_ids', []).append(photo_file_id)
+        # نستخدم setdefault للتأكد من وجود القائمة
+        mug_photos_ids = context.user_data.setdefault('mug_photos_ids', [])
+        
+        if photo_file_id not in mug_photos_ids:
+            mug_photos_ids.append(photo_file_id)
+        else:
+            # 🔥 التعديل الجديد: إذا كانت الصورة مكررة (في حالة الألبوم)، نتجاهلها بصمت
+            return GET_MUG_PHOTO 
+            
     except Exception as e:
         context.bot.send_message(update.effective_chat.id, "حدث خطأ أثناء حفظ الصورة. يرجى إعادة المحاولة.")
         return GET_MUG_PHOTO
@@ -531,6 +537,13 @@ def receive_mug_photo(update, context):
         # مسح المعرفات المؤقتة
         del context.user_data['mug_photos_ids'] 
         return prompt_for_payment_and_receipt(update, context, product_type="مج طباعة")
+    
+    # ⚠️ التعديل الجديد: إرسال رسالة تأكيد استلام الصورة والعدد الحالي
+    # هذا سيساعدنا في تتبع المشكلة
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"✅ تم استلام الصورة بنجاح. (العدد الحالي: {current_count}/3). عند اكتمال 3 صور سننتقل لمرحلة الدفع."
+    )
     
     # إذا كان العدد < 3 ولم يتم الانتقال بعد، نعود بصمت
     return GET_MUG_PHOTO
