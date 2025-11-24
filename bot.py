@@ -513,34 +513,26 @@ def receive_mug_photo(update, context):
         # تفعيل علامة القفل لضمان عدم تنفيذ هذا الكود مرة أخرى
         context.user_data['mug_transition_done'] = True 
         
+        # 1. إرسال رسالة الانتقال فوراً لضمان الظهور
         context.bot.send_message(
             chat_id=update.effective_chat.id,
             text="✅ تم استلام الصور الثلاث بنجاح. سننتقل الآن إلى مرحلة الدفع."
         )
         
-        # نأخذ أول 3 معرفات صور
+        # 2. حفظ معرفات الملفات (File IDs) بدلاً من محاولة جلب روابطها (file_path) الآن.
+        # جلب الروابط يتطلب اتصال إضافي ويمكن أن يفشل. نعتمد على الـ ID الأكثر ثباتًا.
         final_file_ids = context.user_data['mug_photos_ids'][:3] 
         
-        # 🔥 نجلب روابط الملفات (file_path) الآن، مرة واحدة للثلاث صور
-        final_photo_paths = []
-        for file_id in final_file_ids:
-            try:
-                new_file = context.bot.get_file(file_id)
-                final_photo_paths.append(new_file.file_path)
-            except Exception:
-                # في حالة فشل الاتصال، نستخدم الـ ID كبديل
-                final_photo_paths.append(f"File ID: {file_id}") 
-                
-        # تخزين قائمة الروابط/IDs النهائية
-        context.user_data['final_mug_photos_links'] = final_photo_paths 
+        # 3. تخزين قائمة معرفات الملفات النهائية
+        context.user_data['final_mug_photos_ids'] = final_file_ids 
         
-        # مسح المعرفات المؤقتة
+        # 4. مسح المعرفات المؤقتة
         del context.user_data['mug_photos_ids'] 
+        
+        # 5. الانتقال إلى مرحلة الدفع
         return prompt_for_payment_and_receipt(update, context, product_type="مج طباعة")
     
-    # 🔥🔥🔥 التعديل الجديد 🔥🔥🔥: 
-    # عند العدد < 3، نعود بصمت لمنع تداخل الرسائل في الألبوم الذي يتسبب في مشكلة "1/3".
-    # نعتمد فقط على رسالة الانتقال النهائية عند اكتمال العدد 3.
+    # عند العدد < 3، نعود بصمت لمنع تداخل الرسائل في الألبوم.
     
     return GET_MUG_PHOTO
 
@@ -1137,9 +1129,12 @@ def prompt_for_payment_and_receipt(update, context, product_type):
     elif product_type == "مج طباعة": # 🔥 مجات الطباعة الجديدة (مج ابيض وسحري)
         product_data = context.user_data.get('mug_product')
         product_type = f"{product_type} - {product_data['label']}"
-        mug_photos = context.user_data.get('final_mug_photos_links', []) # 🔥 تم التعديل: استخدام المفتاح الجديد
-        # تخزين روابط الصور في بيانات المحادثة النهائية كسلسلة نصية
-        context.user_data['final_mug_photos_links_str'] = "\n".join(mug_photos) # 🔥 تم التعديل: مفتاح جديد لسلسلة الروابط
+        # Mug file IDs are now stored under this key
+        mug_file_ids = context.user_data.get('final_mug_photos_ids', []) 
+        
+        # Storing the list of file IDs to be used in handle_payment_photo
+        context.user_data['final_mug_photos_ids_str'] = "\n".join(mug_file_ids) 
+        
     elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات الديجتال، الأباجورات، السبلميشن
         product_data = context.user_data.get('direct_product')
     else:
@@ -1227,8 +1222,8 @@ def handle_payment_photo(update, context):
     product_code = context.user_data.get('final_code', 'N/A')
     product_image_url = context.user_data.get('final_product_image', 'غير متوفر') 
     
-    # 🔥 استرجاع روابط صور المج (إذا كانت موجودة)
-    mug_photos_links = context.user_data.get('final_mug_photos_links_str') 
+    # 🔥 استرجاع معرفات صور المج (إذا كانت موجودة)
+    mug_file_ids_str = context.user_data.get('final_mug_photos_ids_str') 
     
     user_info = update.message.from_user
     telegram_contact_link = f"tg://user?id={user_info.id}" 
@@ -1243,8 +1238,9 @@ def handle_payment_photo(update, context):
         f"التاريخ: {date_text}\n\n"
     )
     
-    if mug_photos_links and mug_photos_links.strip(): # 🔥 إضافة روابط صور المج
-        message_body += f"🔗 *روابط صور الطباعة للمج (3 صور):*\n{mug_photos_links}\n\n"
+    # 🔥 إضافة معرفات صور المج بدلاً من الروابط
+    if mug_file_ids_str and mug_file_ids_str.strip(): 
+        message_body += f"📋 *معرفات صور الطباعة للمج (3 صور) File IDs:*\n{mug_file_ids_str}\n\n"
     
     message_body += (
         f"🔗 رابط صورة المنتج: {product_image_url}\n" 
