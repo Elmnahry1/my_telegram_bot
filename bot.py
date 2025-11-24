@@ -1202,7 +1202,7 @@ def prepare_whatsapp_link_for_direct_buy(update, context):
     return prompt_for_payment_and_receipt(update, context, product_type=product_type)
 
 # --------------------------------------------------------------------------------
-# 🔥 دالة معالجة أزرار مرحلة الدفع (تم التعديل لتوضيح عدم إمكانية النسخ المباشر)
+# 🔥 دالة معالجة أزرار مرحلة الدفع (تم تعديلها لحذف معالج زر النسخ)
 # --------------------------------------------------------------------------------
 def handle_payment_buttons(update, context):
     """
@@ -1215,23 +1215,16 @@ def handle_payment_buttons(update, context):
         # الإلغاء
         return cancel_and_end(update, context) # returns ConversationHandler.END
 
-    if data == "copy_voda_cash":
-        # ⚠️ الإصلاح: تم تغيير الإجراء لتقديم توضيح للمستخدم بدلاً من الادعاء بالنسخ
-        # عرض الرقم في نافذة منبثقة وتوضيح طريقة النسخ الصحيحة
-        query.answer(
-            text=f"ملحوظة هامة: لا يمكن لأزرار تليجرام نسخ النص مباشرة.\n\nالرقم هو: {VODAFONE_CASH_NUMBER}\n\nيرجى الضغط المطول (Long Press) على الرقم في نص الرسالة الرئيسي لنسخه يدوياً.",
-            show_alert=True
-        )
-        # 💡 الأهم: العودة للحالة نفسها لانتظار صورة الإيصال
-        return GET_PAYMENT_RECEIPT 
+    # ⚠️ تم حذف جزء 'copy_voda_cash' هنا لأنه تم استبداله بزر 'switch_inline_query_current_chat'
+    # والذي لا يحتاج إلى معالج CallbackQueryHandler
         
-    # إذا تم الضغط على أي زر آخر في هذه المرحلة
+    # إذا تم الضغط على أي زر آخر في هذه المرحلة (فقط زر الإلغاء هو المتبقي)
     query.answer("يرجى إرسال إيصال الدفع لإتمام الطلب.", show_alert=True)
     return GET_PAYMENT_RECEIPT
 
 
 # --------------------------------------------------------------------------------
-# 🔥 دالة طلب الدفع (جديدة)
+# 🔥 دالة طلب الدفع (تم التعديل لتمكين النسخ المباشر)
 # --------------------------------------------------------------------------------
 def prompt_for_payment_and_receipt(update, context, product_type):
     """
@@ -1302,15 +1295,16 @@ def prompt_for_payment_and_receipt(update, context, product_type):
     payment_message = (
         f"✅ *طلبك جاهز:* {context.user_data['final_product_label']}\n"
         f"💰 *السعر الإجمالي:* {context.user_data['final_price']}\n\n"
-        f"من فضلك قم بتحويل المبلغ على محفظة فودافون كاش:\n"
-        f"**📞 {VODAFONE_CASH_NUMBER}**\n\n"
+        f"من فضلك قم بتحويل المبلغ على محفظة فودافون كاش.\n\n"
+        f"👇 **اضغط على زر النسخ بالأسفل ليظهر الرقم في خانة الرسالة لنسخه بسهولة**.\n\n"
         f"بعد التحويل، **يرجى إرسال صورة إيصال التحويل في رسالة بالأسفل** لإتمام الطلب.\n\n"
         f"أو اضغط إلغاء للعودة للقائمة الرئيسية."
     )
     
-    # 🔥 إضافة زر نسخ رقم المحفظة
+    # 🔥 التعديل الرئيسي: استخدام switch_inline_query_current_chat لتمكين النسخ المباشر
     keyboard = [
-        [InlineKeyboardButton(f"📞 نسخ رقم المحفظة ({VODAFONE_CASH_NUMBER})", callback_data="copy_voda_cash")],
+        # هذا الزر سيضع الرقم مباشرة في خانة إدخال المستخدم
+        [InlineKeyboardButton("📞 نسخ رقم المحفظة مباشرة (اضغط هنا)", switch_inline_query_current_chat=f" {VODAFONE_CASH_NUMBER}")],
         [InlineKeyboardButton("❌ إلغاء الطلب", callback_data="cancel")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -1415,14 +1409,7 @@ def button(update, context):
     if data == "cancel":
         return cancel_and_end(update, context)
 
-    # 🔥 0.5. معالجة زر نسخ رقم المحفظة (يجب أن يتم معالجته ضمن المحادثة، هذه خطوة احتياطية)
-    if data == "copy_voda_cash":
-        # ⚠️ عرض الرقم في نافذة منبثقة وتوضيح طريقة النسخ الصحيحة
-        query.answer(
-            text=f"ملحوظة هامة: لا يمكن لأزرار تليجرام نسخ النص مباشرة.\n\nالرقم هو: {VODAFONE_CASH_NUMBER}\n\nيرجى الضغط المطول (Long Press) على الرقم في نص الرسالة الرئيسي لنسخه يدوياً.",
-            show_alert=True
-        )
-        return
+    # ⚠️ ملاحظة: تم حذف معالج 'copy_voda_cash' لأنه تم استبداله بزر Switch Inline Query
 
     # 1. العودة للقائمة الرئيسية
     if data == "main_menu":
@@ -1506,10 +1493,9 @@ def main():
                 MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish),
                 CallbackQueryHandler(back_to_box_menu, pattern='^katb_kitab_box$')
             ],
-            # 🔥 الإصلاح: إضافة معالج الأزرار هنا لضمان الأولوية
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
             ]
         },
         fallbacks=[
@@ -1528,10 +1514,9 @@ def main():
                 CallbackQueryHandler(button, pattern='^sawany_akerik$') 
             ],
             GET_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tray_date_and_finish)],
-            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
             ]
         },
         fallbacks=[
@@ -1550,10 +1535,9 @@ def main():
                 CallbackQueryHandler(button, pattern='^sawany_khashab$') 
             ],
             GET_KHASHAB_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_tray_date_and_finish)],
-            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
             ]
         },
         fallbacks=[
@@ -1572,10 +1556,9 @@ def main():
                 CallbackQueryHandler(button, pattern='^taarat_akerik$')
             ],
             GET_AKRILIK_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_akerik_taarat_date_and_finish)],
-            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
             ]
         },
         fallbacks=[
@@ -1594,10 +1577,9 @@ def main():
                 CallbackQueryHandler(button, pattern='^taarat_khashab$')
             ],
             GET_KHASHAB_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_taarat_date_and_finish)],
-            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
             ]
         },
         fallbacks=[
@@ -1616,10 +1598,9 @@ def main():
                 CallbackQueryHandler(button, pattern='^bsamat$')
             ],
             GET_BSAMAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_bsamat_date_and_finish)],
-            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
             ]
         },
         fallbacks=[
@@ -1638,10 +1619,9 @@ def main():
                 CallbackQueryHandler(button, pattern='^wedding_tissues$') 
             ],
             GET_TISSUE_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tissue_date_and_finish)],
-            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
             ]
         },
         fallbacks=[
@@ -1656,10 +1636,9 @@ def main():
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^wallet_.*$')],
         states={
             GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_wallet_name_and_prepare_whatsapp)],
-            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
             ]
         },
         fallbacks=[
@@ -1674,10 +1653,9 @@ def main():
         entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^aqlam_.*$')],
         states={
             GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)],
-            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
             ]
         },
         fallbacks=[
@@ -1691,10 +1669,9 @@ def main():
     direct_buy_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|mugat)_.*')],
         states={
-            # 🔥 الإصلاح: إضافة معالج الأزرار هنا
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^copy_voda_cash$|^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
             ]
         },
         fallbacks=[
