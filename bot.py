@@ -1514,12 +1514,22 @@ def handle_payment_photo(update, context):
         file_ids = names_text.split("؛")
         
         mug_photo_details = "--- صور الطباعة ---\n"
-        # ⚠️ ملاحظة: لا يمكننا إنشاء روابط دائمة هنا بدون الـ BOT_TOKEN وعمليات إضافية.
-        # لذا سنمرر الـ File IDs (وهو المطلوب الفعلي في سير العمل)
-        mug_photo_details += "⚠️ *ملاحظة لمسؤول المبيعات: يجب استخدام معرفات الملفات (File ID) التالية لجلب الصور عبر Telegram API، حيث أن الروابط المباشرة مؤقتة وغير مضمونة.* \n"
-        for i, file_id in enumerate(file_ids):
-            # نضع معرف الملف مع ملاحظة لأهميته
-            mug_photo_details += f"صورة {i+1} (ID): {file_id}\n"
+        mug_photo_details += "⚠️ *ملاحظة لمسؤول المبيعات: الروابط المباشرة التالية مؤقتة (صالحة لحوالي ساعة)، يرجى حفظ الصور فوراً.* \n"
+        
+        # 🆕 التعديل هنا: جلب رابط الملف الفعلي لكل صورة
+        photo_urls = []
+        for file_id in file_ids:
+            try:
+                photo_file = context.bot.get_file(file_id)
+                # استخدام file_path لجلب الرابط الكامل المؤقت
+                photo_urls.append(photo_file.file_path) 
+            except Exception as e:
+                # في حالة فشل جلب الرابط، نستخدم معرف الملف كاحتياطي
+                photo_urls.append(f"❌ خطأ في الرابط (ID: {file_id})")
+
+        for i, url in enumerate(photo_urls):
+            mug_photo_details += f"🔗 رابط الصورة {i+1}: {url}\n"
+            
         mug_photo_details += "-----------------------\n"
         
         # نغير محتوى حقلي الأسماء والتاريخ لرسالة الواتساب
@@ -1534,7 +1544,7 @@ def handle_payment_photo(update, context):
         f"المنتج: {product_label}\n"
         f"السعر المدفوع: *{paid_amount}*\n\n"
         
-        f"{mug_photo_details}" # 🔥 إضافة تفاصيل الصور
+        f"{mug_photo_details}" # 🔥 الآن يحتوي على الروابط الكاملة
         
         f"الأسماء: {names_text}\n"
         f"التاريخ: {date_text}\n\n"
@@ -1633,12 +1643,12 @@ def handle_messages(update, context):
 # --------------------
 def main():
     # ⚠️ تم استعادة استخدام متغير البيئة BOT_TOKEN كما طلبت
-    TOKEN = os.environ.get('TOKEN') 
+    TOKEN = os.environ.get('TOKEN')
     if not TOKEN:
-         # يفضل طباعة رسالة خطأ أو استخدام قيمة placeholder إذا لم يتم العثور على التوكن
-         print("Error: BOT_TOKEN environment variable is not set. Please set it or hardcode the token.")
-         return
-         
+        # يفضل طباعة رسالة خطأ أو استخدام قيمة placeholder إذا لم يتم العثور على التوكن
+        print("Error: BOT_TOKEN environment variable is not set. Please set it or hardcode the token.")
+        return
+    
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
 
