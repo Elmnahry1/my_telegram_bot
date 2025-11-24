@@ -65,7 +65,7 @@ aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", 
         "callback": "aqlam_metal", 
-        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/475773348_986832329974720_6197915277469223378_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=107&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=KrebndL4u2oQ7kNvwH3smA2&_nc_oc=AdkT6T_o5SpJKdr9FQ5OhX2vuI5Cp3WjQl0pV9vRotIn9csOIX1DX-I9dC3FpvlBLJM&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=JFYgN-MxG5oy8y3q9Os6Ew&oh=00_AfhJxajOEm9owiAqd00_zEZ4Hy4qzX7DYATV6p4tWdRxeA&oe=6923BE1B", 
+        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/475773348_986832329974720_6197915277469223378_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=107&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=KrebndL4u2oQ7kNvwH3smA2&_nc_oc=AdkT6T_o5SpJKdr9FQ5OhX2vuI5Cp3WjQl0pV9vRotIn9csOIX1DX-I9dC3FpvlBLJM&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=JFYgN-MxG5oy8y3q9Os6Ew&oh=00_AfhJxajOEm9owiAqd00_zEZ4Hy4qz7DYATV6p4tWdRxeA&oe=6923BE1B", 
         "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر.", "price": "120 ج"
     },
     {
@@ -185,9 +185,9 @@ main_menu = [
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
-    {"label": "✏️ اقلام", "callback": "aqlam"}, # 🔥 هذا الزر سيقود الآن لقائمة فرعية (Submenu)
+    {"label": "✏️ اقلام", "callback": "aqlam"}, 
     {"label": "☕ مجات", "callback": "mugat"},
-    {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"},
+    {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"}, # 🔥 سيصبح الآن قائمة فرعية
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
 ]
 
@@ -342,7 +342,7 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     # تحديد زر الرجوع
     
     # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات)
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "engraved_wallet"]:
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -558,21 +558,19 @@ def receive_tissue_date_and_finish(update, context):
 
 # --- [دوال المحادثات الأخرى] --- 
 # دوال المحافظ
+# 🔥 تم تعديل back_to_wallets_color لاستخدام show_submenu لتوحيد مظهر القائمة
 def back_to_wallets_color(update, context):
     query = update.callback_query
     query.answer()
-    context.user_data.clear()
-    try:
-        query.message.delete()
-    except Exception:
-        pass
-        
-    keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in engraved_wallet_submenu]
-    keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
     
-    context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ *محافظ محفورة بالاسم*:\n\nمن فضلك اختر اللون المطلوب:", reply_markup=reply_markup, parse_mode="Markdown")
+    # Clear conversation data before going back to the selection list
+    context.user_data.clear()
+    
+    # Use show_submenu to display the wallet list, mimicking the navigation from main_menu
+    show_submenu(update, context, engraved_wallet_submenu, "محافظ محفورة بالاسم", back_callback="main_menu")
+    
     return ConversationHandler.END
+
 
 def prompt_for_name(update, context):
     query = update.callback_query
@@ -1418,23 +1416,23 @@ def button(update, context):
         start(update, context)
         return
         
-    # 2. معالجة فتح قوائم المستوى الأول (sawany, taarat, haram, doro3, mugat)
-    # 🔥 تم إضافة "aqlam" هنا
-    if data in ["sawany", "taarat", "haram", "doro3", "mugat", "aqlam"]:
+    # 2. معالجة فتح قوائم المستوى الأول (sawany, taarat, haram, doro3, mugat, aqlam, engraved_wallet)
+    # 🔥 تم إضافة "engraved_wallet" لجعلها قائمة فرعية بسيطة
+    if data in ["sawany", "taarat", "haram", "doro3", "mugat", "aqlam", "engraved_wallet"]: 
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         clean_title = title.split()[-1]
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu")
         return
         
-    # 3. معالجة فتح قوائم المستوى الأول المباشرة (engraved_wallet, bsamat, etc.)
-    # 🔥 تم حذف "aqlam" من هذه القائمة لجعله قائمة فرعية (submenu)
-    if data in ["engraved_wallet", "bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
+    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box)
+    # 🔥 تم حذف "engraved_wallet" من هنا
+    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]: 
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
         
         # إذا كانت "بصمات" أو أي قائمة أخرى تحتاج عرض المنتجات أولاً
-        # 🔥 تم حذف "aqlam" من هذه القائمة
-        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "engraved_wallet"]: 
+        # 🔥 تم حذف "engraved_wallet" من هنا
+        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]: 
             show_product_page(update, data, submenu_list, is_direct_list=True)
             return
 
@@ -1464,7 +1462,6 @@ def button(update, context):
         # يتم معالجة هذه الأزرار بواسطة fallbacks في ConversationHandler لكنها أحياناً تصل إلى هنا.
         # يجب أن تتم معالجتها داخل الـ ConversationHandler الخاصة بها (مثل engraved_pen_handler).
         # إذا وصل الزر إلى هنا، فهو زر رجوع من قائمة فرعية مفتوحة. 
-        # على سبيل المثال، إذا قام المستخدم ببدء محادثة، ثم ضغط زر رجوع غير زر إلغاء.
         query.answer("يرجى إتمام العملية الجارية أو الضغط على /start للبدء من جديد.", show_alert=True)
         return
         
@@ -1647,6 +1644,7 @@ def main():
     )
 
     # محافظ محفورة بالاسم
+    # تبدأ المحادثة عند اختيار اللون (wallet_bege/wallet_brown/wallet_black)
     engraved_wallet_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^wallet_.*$')],
         states={
@@ -1658,6 +1656,7 @@ def main():
         },
         fallbacks=[
             CommandHandler('start', start),
+            # زر الرجوع يعود إلى قائمة الألوان (back_to_wallets_color) أو إذا ضغط زر القائمة الرئيسية للمحافظ (engraved_wallet)
             CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$|^engraved_wallet$'),
             CallbackQueryHandler(cancel_and_end)
         ]
@@ -1665,7 +1664,7 @@ def main():
 
     # اقلام محفورة بالاسم
     engraved_pen_handler = ConversationHandler(
-        # 🔥 تم تعديل entry_points لتبدأ المحادثة عند اختيار نوع القلم من القائمة الفرعية
+        # تبدأ المحادثة عند اختيار نوع القلم من القائمة الفرعية
         entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^aqlam_metal$|^aqlam_luminous$')],
         states={
             GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)],
@@ -1676,7 +1675,7 @@ def main():
         },
         fallbacks=[
             CommandHandler('start', start),
-            # 🔥 زر الرجوع سيعود إلى القائمة الفرعية للأقلام
+            # زر الرجوع سيعود إلى القائمة الفرعية للأقلام
             CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$|^aqlam$'),
             CallbackQueryHandler(cancel_and_end)
         ]
@@ -1706,8 +1705,8 @@ def main():
     dp.add_handler(bsamat_handler) 
     dp.add_handler(tissue_handler) 
     dp.add_handler(engraved_wallet_handler)
-    dp.add_handler(engraved_pen_handler) # تم تحديثه
-    dp.add_handler(direct_buy_handler) # معالج الشراء المباشر
+    dp.add_handler(engraved_pen_handler) 
+    dp.add_handler(direct_buy_handler) 
 
     
     # 5. أوامر /start
