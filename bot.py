@@ -76,6 +76,13 @@ aqlam_submenu = [
     }
 ]
 
+# 🔥 قائمة مستلزمات سبلميشن الجديدة
+sublimation_supplies_submenu = [
+    {"label": "مج سحري فارغ (درجة أولي)", "callback": "subli_magic_mug", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "مج سيراميك سحري فارغ جاهز للطباعة الحرارية، درجة أولي ممتاز.", "price": "60 ج"},
+    {"label": "تيشيرت قطن جاهز للسبلميشن", "callback": "subli_tshirt_cotton", "image": "https://e7.pngegg.com/pngimages/577/728/png-clipart-number-number-image-file-formats-orange-thumbnail.png", "description": "تيشيرت قطن مجهز بطبقة سبلميشن، متوفر بجميع المقاسات.", "price": "100 ج"}
+]
+
+
 # --- القوائم المتداخلة ---
 sawany_submenu = [
     {
@@ -187,8 +194,8 @@ main_menu = [
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
     {"label": "✏️ اقلام", "callback": "aqlam"}, 
     {"label": "☕ مجات", "callback": "mugat"},
-    {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"}, # 🔥 سيصبح الآن قائمة فرعية
-    {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"}
+    {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"}, 
+    {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"} # 🔥 الزر الجديد
 ]
 
 
@@ -203,13 +210,14 @@ all_submenus = {
     "wedding_tissues": wedding_tissues_submenu,
     "katb_kitab_box": katb_kitab_box_submenu,
     "abajorat": abajorat_submenu,
-    "engraved_wallet": engraved_wallet_submenu
+    "engraved_wallet": engraved_wallet_submenu,
+    "sublimation": sublimation_supplies_submenu # 🔥 إضافة القائمة الجديدة
 }
 
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box"]: 
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "sublimation"]: # 🔥 إضافة 'sublimation'
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             # بالنسبة للأقلام والمحافظ (التي تبدأ محادثة مباشرة) يجب أن يتم معالجتها
@@ -342,7 +350,7 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     # تحديد زر الرجوع
     
     # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات)
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]:
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "sublimation"]: # 🔥 إضافة 'sublimation'
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -1169,6 +1177,13 @@ def prepare_whatsapp_link_for_direct_buy(update, context):
     product_data = next((item for item in items_list if item["callback"] == product_callback), None)
     if product_data:
         product_type = "اباجورة"
+        
+    # 🔥 البحث في مستلزمات سبلميشن الجديدة
+    if not product_data:
+        items_list = sublimation_supplies_submenu
+        product_data = next((item for item in items_list if item["callback"] == product_callback), None)
+        if product_data:
+            product_type = "مستلزمات سبلميشن"
     
     if not product_data:
         # البحث في القوائم المتداخلة (هرم مكتب، دروع، مجات)
@@ -1275,7 +1290,7 @@ def prompt_for_payment_and_receipt(update, context, product_type):
         product_data = context.user_data.get('taarat_khashab_product')
         names_details = context.user_data.get('taarat_khashab_names')
         date_details = context.user_data.get('taarat_khashab_date')
-    elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات، الأباجورات
+    elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات، الأباجورات، السبلميشن
         product_data = context.user_data.get('direct_product')
         # product_type is already set from prepare_whatsapp_link_for_direct_buy
     else:
@@ -1417,22 +1432,20 @@ def button(update, context):
         return
         
     # 2. معالجة فتح قوائم المستوى الأول (sawany, taarat, haram, doro3, mugat, aqlam, engraved_wallet)
-    # 🔥 تم إضافة "engraved_wallet" لجعلها قائمة فرعية بسيطة
+    # 🔥 ملاحظة: القوائم التي تحتاج عرض منتجات مباشرة تم معالجتها في الخطوة 3
     if data in ["sawany", "taarat", "haram", "doro3", "mugat", "aqlam", "engraved_wallet"]: 
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         clean_title = title.split()[-1]
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu")
         return
         
-    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box)
-    # 🔥 تم حذف "engraved_wallet" من هنا
-    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]: 
+    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, sublimation)
+    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "sublimation"]: # 🔥 إضافة 'sublimation'
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
         
         # إذا كانت "بصمات" أو أي قائمة أخرى تحتاج عرض المنتجات أولاً
-        # 🔥 تم حذف "engraved_wallet" من هنا
-        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box"]: 
+        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "sublimation"]: # 🔥 إضافة 'sublimation'
             show_product_page(update, data, submenu_list, is_direct_list=True)
             return
 
@@ -1452,16 +1465,12 @@ def button(update, context):
 
     # 5. معالجة أزرار الشراء الفردية (للمنتجات التي لا تحتاج محادثة)
     if data.startswith("buy_"):
-        # يجب أن يصل إلى هنا فقط الأباجورات والهرامات والدروع والمجات 
-        # (حيث لم يتم إضافة ConversationHandler لها)
+        # يجب أن يصل إلى هنا فقط الأباجورات والهرامات والدروع والمجات والسبلميشن
         prepare_whatsapp_link_for_direct_buy(update, context)
         return
         
-    # 6. معالجة الأزرار التي تعيد المستخدم إلى قائمة فرعية سابقة (مثل العودة من صفحة الأسماء إلى قائمة الأقلام/المحافظ)
+    # 6. معالجة الأزرار التي تعيد المستخدم إلى قائمة فرعية سابقة
     if data in ["back_to_pen_types", "back_to_wallets_color"]:
-        # يتم معالجة هذه الأزرار بواسطة fallbacks في ConversationHandler لكنها أحياناً تصل إلى هنا.
-        # يجب أن تتم معالجتها داخل الـ ConversationHandler الخاصة بها (مثل engraved_pen_handler).
-        # إذا وصل الزر إلى هنا، فهو زر رجوع من قائمة فرعية مفتوحة. 
         query.answer("يرجى إتمام العملية الجارية أو الضغط على /start للبدء من جديد.", show_alert=True)
         return
         
@@ -1507,7 +1516,7 @@ def main():
             ],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
@@ -1528,7 +1537,7 @@ def main():
             GET_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tray_date_and_finish)],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
@@ -1549,7 +1558,7 @@ def main():
             GET_KHASHAB_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_tray_date_and_finish)],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
@@ -1570,7 +1579,7 @@ def main():
             GET_AKRILIK_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_akerik_taarat_date_and_finish)],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
@@ -1591,7 +1600,7 @@ def main():
             GET_KHASHAB_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_taarat_date_and_finish)],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
@@ -1612,7 +1621,7 @@ def main():
             GET_BSAMAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_bsamat_date_and_finish)],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
@@ -1633,7 +1642,7 @@ def main():
             GET_TISSUE_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tissue_date_and_finish)],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
@@ -1651,7 +1660,7 @@ def main():
             GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_wallet_name_and_prepare_whatsapp)],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
@@ -1670,7 +1679,7 @@ def main():
             GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
@@ -1681,13 +1690,13 @@ def main():
         ]
     )
     
-    # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مجات)
+    # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مجات، مستلزمات سبلميشن)
     direct_buy_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|mugat)_.*')],
+        entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|mugat|subli)_.*')], # 🔥 تم إضافة 'subli'
         states={
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') # تم حذف copy_voda_cash
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
