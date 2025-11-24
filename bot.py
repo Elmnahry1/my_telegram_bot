@@ -429,8 +429,8 @@ def start_mug_purchase(update, context):
         return ConversationHandler.END
         
     context.user_data['mug_product'] = selected_product
-    # تهيئة قائمة لتخزين روابط الصور
-    context.user_data['mug_photos'] = [] 
+    # 🔥 تم التعديل: نستخدم 'mug_photos_ids' لتخزين معرفات الصور بدلاً من الروابط
+    context.user_data['mug_photos_ids'] = [] 
     
     # تحديد زر الرجوع (يعود إلى قائمة مج ابيض أو مج سحري)
     back_callback = product_to_submenu_map.get(product_callback) 
@@ -461,7 +461,8 @@ def start_mug_purchase(update, context):
 def receive_mug_photo(update, context):
     # 1. Input Check (Ignore text messages, only process photos)
     if update.message.text:
-        current_count = len(context.user_data['mug_photos'])
+        # 🔥 تم التعديل: استخدام 'mug_photos_ids'
+        current_count = len(context.user_data.get('mug_photos_ids', []))
         message_text = f"عفواً، يرجى إرسال صور فقط. لقد أرسلت الآن **{current_count}/3** صور."
         
         product_callback = context.user_data.get('mug_product', {}).get('callback')
@@ -477,51 +478,73 @@ def receive_mug_photo(update, context):
         
     # 2. Process Photo
     if not (update.message and update.message.photo):
-        # في حال لم تكن رسالة صور ولكنها ليست نص، نكتفي بالبقاء في نفس الحالة
         return GET_MUG_PHOTO
     
-    # 3. Store Photo Link
+    # 3. Store Photo ID (Efficient)
     try:
         photo_file_id = update.message.photo[-1].file_id
-        new_file = context.bot.get_file(photo_file_id)
         
-        # Check if the photo is already stored (to handle media groups efficiently)
-        if new_file.file_path not in context.user_data['mug_photos']:
-            context.user_data['mug_photos'].append(new_file.file_path)
+        # 🔥 تم التعديل: تخزين الـ file_id بدلاً من file_path لتسريع عملية العد
+        # والتأكد من عدم تكرار نفس الصورة (حيث أن file_id فريد)
+        if photo_file_id not in context.user_data.get('mug_photos_ids', []):
+             # نستخدم setdefault للتأكد من وجود القائمة
+            context.user_data.setdefault('mug_photos_ids', []).append(photo_file_id)
     except Exception as e:
         context.bot.send_message(update.effective_chat.id, "حدث خطأ أثناء حفظ الصورة. يرجى إعادة المحاولة.")
         return GET_MUG_PHOTO
 
     # 4. Check Count and Transition
-    current_count = len(context.user_data['mug_photos'])
+    current_count = len(context.user_data['mug_photos_ids'])
     
-    # تحديد زر الرجوع
+    # Determine the back button
     product_callback = context.user_data['mug_product']['callback']
     back_callback = product_to_submenu_map.get(product_callback) 
     reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔙 رجوع", callback_data=back_callback)]])
     
     if current_count < 3:
         # Still waiting for more photos
-        context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=f"✅ تم استلام الصورة رقم {current_count}. \n\nمطلوب 3 صور إجمالاً. يرجى إرسال الصور المتبقية.",
-            reply_markup=reply_markup
-        )
+        is_media_group = update.message.media_group_id is not None
+        
+        # 🔥 تم التعديل: لا نرسل رسالة رد لكل صورة في الألبوم لتجنب الارتباك
+        if not is_media_group: 
+            context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=f"✅ تم استلام الصورة رقم {current_count}. \n\nمطلوب 3 صور إجمالاً. يرجى إرسال الصور المتبقية.",
+                reply_markup=reply_markup
+            )
         return GET_MUG_PHOTO
     
     elif current_count >= 3:
         # All 3 photos received (or more), proceed to payment prompt
-        context.user_data['mug_photos'] = context.user_data['mug_photos'][:3] # اعتماد أول 3 صور فقط
+        
+        # نأخذ أول 3 معرفات صور
+        final_file_ids = context.user_data['mug_photos_ids'][:3] 
+        
+        # 🔥 نجلب روابط الملفات (file_path) الآن، مرة واحدة للثلاث صور
+        final_photo_paths = []
+        for file_id in final_file_ids:
+            try:
+                new_file = context.bot.get_file(file_id)
+                final_photo_paths.append(new_file.file_path)
+            except Exception:
+                # في حالة فشل الاتصال، نستخدم الـ ID كبديل
+                final_photo_paths.append(f"File ID: {file_id}") 
+                
+        # تخزين قائمة الروابط/IDs النهائية
+        context.user_data['final_mug_photos_links'] = final_photo_paths 
         
         context.bot.send_message(
             chat_id=update.effective_chat.id,
             text="✅ تم استلام الصور الثلاث بنجاح. سننتقل الآن إلى مرحلة الدفع."
         )
+        
+        # مسح المعرفات المؤقتة
+        del context.user_data['mug_photos_ids'] 
         return prompt_for_payment_and_receipt(update, context, product_type="مج طباعة")
 
 
 # --------------------------------------------------------------------------------
-# 🔥 [دوال المحادثات المضافة لتصحيح الخطأ: بوكس كتب الكتاب]
+# 🔥 [باقي دوال المحادثات (بوكس، صواني، طارات، بصامات، مناديل، محافظ، أقلام)]
 # --------------------------------------------------------------------------------
 
 def get_box_product_data(callback_data):
@@ -1112,9 +1135,9 @@ def prompt_for_payment_and_receipt(update, context, product_type):
     elif product_type == "مج طباعة": # 🔥 مجات الطباعة الجديدة (مج ابيض وسحري)
         product_data = context.user_data.get('mug_product')
         product_type = f"{product_type} - {product_data['label']}"
-        mug_photos = context.user_data.get('mug_photos', [])
-        # تخزين روابط الصور في بيانات المحادثة النهائية
-        context.user_data['final_mug_photos_links'] = "\n".join(mug_photos)
+        mug_photos = context.user_data.get('final_mug_photos_links', []) # 🔥 تم التعديل: استخدام المفتاح الجديد
+        # تخزين روابط الصور في بيانات المحادثة النهائية كسلسلة نصية
+        context.user_data['final_mug_photos_links_str'] = "\n".join(mug_photos) # 🔥 تم التعديل: مفتاح جديد لسلسلة الروابط
     elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات الديجتال، الأباجورات، السبلميشن
         product_data = context.user_data.get('direct_product')
     else:
@@ -1203,7 +1226,7 @@ def handle_payment_photo(update, context):
     product_image_url = context.user_data.get('final_product_image', 'غير متوفر') 
     
     # 🔥 استرجاع روابط صور المج (إذا كانت موجودة)
-    mug_photos_links = context.user_data.get('final_mug_photos_links') 
+    mug_photos_links = context.user_data.get('final_mug_photos_links_str') # 🔥 تم التعديل: استخدام المفتاح الجديد
     
     user_info = update.message.from_user
     telegram_contact_link = f"tg://user?id={user_info.id}" 
@@ -1218,7 +1241,7 @@ def handle_payment_photo(update, context):
         f"التاريخ: {date_text}\n\n"
     )
     
-    if mug_photos_links: # 🔥 إضافة روابط صور المج
+    if mug_photos_links and mug_photos_links.strip(): # 🔥 إضافة روابط صور المج
         message_body += f"🔗 *روابط صور الطباعة للمج (3 صور):*\n{mug_photos_links}\n\n"
     
     message_body += (
