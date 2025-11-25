@@ -195,11 +195,16 @@ main_menu = [
     {"label": "✋ بصامات", "callback": "bsamat"}, 
     {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"},
     {"label": "🎁 بوكس كتب الكتاب", "callback": "katb_kitab_box"},
+    {"label": "💍 مرايا محفورة بأسم العروسة", "callback": "Miror_Wedding"},
+    {"label": "💍 يد هوايا محفورة بأسم العروسة", "callback": "hwaya_Wedding"},
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
     {"label": "✏️ اقلام", "callback": "aqlam"}, 
     {"label": "☕ مجات", "callback": "mugat"},
+    {"label": "ساعات زجاج بالصورة", "callback": "clock"},
+    {"label": "تابلوهات", "callback": "tablue"},
+    {"label": "مباخر", "callback": "mbakher"},
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"}, 
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"} # 🔥 الزر الجديد
 ]
