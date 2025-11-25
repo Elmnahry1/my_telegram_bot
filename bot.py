@@ -640,19 +640,26 @@ def receive_wallet_name_and_prepare_whatsapp(update, context):
 def get_pen_items():
     return aqlam_submenu
 
+# 🔥 تم تعديل هذه الدالة: لتنظيف بيانات الأقلام فقط ولضمان انتهاء المحادثة بشكل سليم
 def back_to_pen_types(update, context):
     query = update.callback_query
     query.answer()
-    context.user_data.clear()
     
+    # ⚠️ FIX: Clear only pen-related data to avoid issues with other potential data
+    context.user_data.pop('pen_data', None)
+    context.user_data.pop('pen_engraving_name', None)
+
     try:
         query.message.delete()
     except Exception:
         pass
 
-    # نعود إلى قائمة الأقلام الفرعية
+    # Re-show the product page
     show_product_page(update, "aqlam", aqlam_submenu, is_direct_list=True)
-    return ConversationHandler.END
+    
+    # Since we are returning to a non-conversation state, we must END the conversation.
+    return ConversationHandler.END 
+
 
 def start_pen_purchase(update, context):
     query = update.callback_query
@@ -670,7 +677,7 @@ def start_pen_purchase(update, context):
     try:
         # حذف رسالة قائمة الأقلام
         query.message.delete()
-    except Exception:
+    except:
         pass
 
     # زر الرجوع يعود إلى قائمة الأقلام الفرعية
@@ -1208,8 +1215,7 @@ def back_to_mugat_submenu(update, context):
     
     # مسح جميع البيانات المؤقتة الخاصة بالمنتج
     for key in ['mug_product', 'mug_images']:
-        if key in context.user_data:
-            del context.user_data[key]
+        context.user_data.pop(key, None) # 🔥 تصحيح: استخدام pop لمنع الأخطاء في حالة عدم وجود المفتاح
             
     # نحاكي عملية العودة للقائمة الفرعية للمجات
     try:
