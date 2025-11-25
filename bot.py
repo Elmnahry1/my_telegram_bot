@@ -34,8 +34,11 @@ GET_TISSUE_DATE = 16   # حالة كتابة التاريخ للمناديل
 # 🔥 الحالة الجديدة لطلب إيصال الدفع
 GET_PAYMENT_RECEIPT = 17 
 
-# 🔥🔥 الحالة الجديدة لطلب صور المجات
+# 🔥 الحالة الجديدة لطلب صور المجات (أبيض/سحري)
 GET_MUG_PHOTOS = 18
+
+# 🔥🔥 الحالة الجديدة لاسم المج الديجتال
+GET_DIGITAL_MUG_NAME = 19
 
 
 # --------------------
@@ -1239,6 +1242,61 @@ def receive_mug_photos(update, context):
         return prompt_for_payment_and_receipt(update, context, product_type=p_type)
 
 
+# --- 🔥🔥 دوال خاصة بالمج الديجتال (تتطلب اسم الحفر) 🔥🔥 ---
+
+def start_digital_mug_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data 
+    product_callback = data.replace("buy_", "")
+    
+    # البحث عن المنتج داخل قائمة المج الديجتال
+    items_list = mugat_submenu[2]['items'] # mugat_digital is index 2
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['digital_mug_product'] = selected_product
+    context.user_data['state'] = GET_DIGITAL_MUG_NAME
+    
+    # زر الرجوع يعود لقائمة المجات الديجتال
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="mugat_digital")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\nمن فضلك **اكتب الاسم الذي تريد حفره** على المج الديجتال في رسالة نصية بالأسفل، أو اضغط زر رجوع للعودة:"
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    
+    return GET_DIGITAL_MUG_NAME
+
+def receive_digital_mug_name(update, context):
+    name = update.message.text
+    context.user_data['digital_mug_name'] = name
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="مج ديجتال")
+
+
 # دوال الشراء التي لا تحتاج محادثة (تم تعديلها لتطلب إيصال الدفع)
 def prepare_whatsapp_link_for_direct_buy(update, context):
     query = update.callback_query
@@ -1370,6 +1428,10 @@ def prompt_for_payment_and_receipt(update, context, product_type):
         product_data = context.user_data.get('taarat_khashab_product')
         names_details = context.user_data.get('taarat_khashab_names')
         date_details = context.user_data.get('taarat_khashab_date')
+    elif product_type == "مج ديجتال": # 🔥 إضافة حالة المج الديجتال
+        product_data = context.user_data.get('digital_mug_product')
+        names_details = context.user_data.get('digital_mug_name')
+        # product_type remains "مج ديجتال"
     elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات، الأباجورات، السبلميشن
         product_data = context.user_data.get('direct_product')
         # product_type is already set from prepare_whatsapp_link_for_direct_buy
@@ -1382,6 +1444,7 @@ def prompt_for_payment_and_receipt(update, context, product_type):
     context.user_data['final_product_type'] = product_type
     context.user_data['final_product_label'] = product_data.get('label', product_type)
     context.user_data['final_price'] = product_data.get('price', 'غير محدد')
+    # سيتم استخدام names_details هنا لتخزين اسم الحفر في حالة المج الديجتال
     context.user_data['final_names'] = names_details if names_details else 'غير مطلوب'
     context.user_data['final_date'] = date_details if date_details else 'غير مطلوب'
     context.user_data['final_code'] = product_data.get('callback', 'N/A')
@@ -1475,7 +1538,7 @@ def handle_payment_photo(update, context):
         f"نوع المنتج: {product_type.replace('-', ' - ')}\n"
         f"المنتج: {product_label}\n"
         f"السعر المدفوع: *{paid_amount}*\n\n"
-        f"الأسماء: {names_text}\n"
+        f"الأسماء (أو الحفر): {names_text}\n"
         f"التاريخ: {date_text}\n"
         f"{mug_photos_text}\n" # 🔥 إضافة صور المجات هنا
         f"🔗 رابط صورة المنتج: {product_image_url}\n" 
@@ -1559,6 +1622,11 @@ def button(update, context):
         # 🔥 التحقق إذا كان مج أبيض أو سحري لتحويله للمحادثة الخاصة (إجراء احتياطي)
         if "mugat_white" in data or "mugat_magic" in data:
              start_mug_photos_purchase(update, context)
+             return
+
+        # 🔥 التحقق إذا كان مج ديجتال لتحويله للمحادثة الخاصة (إجراء احتياطي)
+        if "mugat_digital" in data:
+             start_digital_mug_purchase(update, context)
              return
              
         prepare_whatsapp_link_for_direct_buy(update, context)
@@ -1801,11 +1869,30 @@ def main():
         ]
     )
     
-    # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مجات ديجتال فقط، مستلزمات سبلميشن)
+    # 🔥🔥 معالج خاص للمج الديجتال (يطلب اسم الحفر) 🔥🔥
+    digital_mug_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_digital_mug_purchase, pattern='^buy_mugat_digital_.*')],
+        states={
+            GET_DIGITAL_MUG_NAME: [
+                MessageHandler(Filters.text & ~Filters.command, receive_digital_mug_name),
+                CallbackQueryHandler(button, pattern='^mugat_digital$') # زر الرجوع في الرسالة
+            ],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+    
+    # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مستلزمات سبلميشن)
     # ⚠️ تم تعديل الريجيكس الخاص بالمجات ليستثني الأبيض والسحري (حتى لا يحدث تعارض مع الهاندلر السابق)
-    # mugat_digital فقط هو الذي سيمر من هنا
+    # ⚠️ و تم تعديل الريجيكس لحذف mugat_digital أيضاً لأنها أصبحت معالج منفصل
     direct_buy_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|mugat_digital|subli)_.*')], 
+        entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|subli)_.*')], 
         states={
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
@@ -1829,8 +1916,9 @@ def main():
     dp.add_handler(engraved_wallet_handler)
     dp.add_handler(engraved_pen_handler)
     
-    # 🔥 إضافة معالج المجات قبل المعالج العام
+    # 🔥 إضافة معالجات المجات الجديدة
     dp.add_handler(mug_photos_handler)
+    dp.add_handler(digital_mug_handler) # 🔥 إضافة معالج المج الديجتال
     
     dp.add_handler(direct_buy_handler) 
 
