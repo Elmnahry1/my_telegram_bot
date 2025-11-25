@@ -61,6 +61,8 @@ abajorat_submenu = [
     {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 1.", "price": "450 ج"},
     {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2.", "price": "480 ج"}
 ]
+
+# 🔥 قائمة المحافظ تم الإبقاء عليها كما هي في الهيكل الداخلي
 engraved_wallet_submenu = [
     {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان).", "price": "200 ج"},
     {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني.", "price": "200 ج"},
@@ -199,7 +201,7 @@ main_menu = [
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
     {"label": "✏️ اقلام", "callback": "aqlam"}, 
     {"label": "☕ مجات", "callback": "mugat"},
-    {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"}, 
+    {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"}, # 🔥 تم إبقاء الزر الرئيسي هنا
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"} # 🔥 الزر الجديد
 ]
 
@@ -215,22 +217,23 @@ all_submenus = {
     "wedding_tissues": wedding_tissues_submenu,
     "katb_kitab_box": katb_kitab_box_submenu,
     "abajorat": abajorat_submenu,
-    "engraved_wallet": engraved_wallet_submenu,
+    "engraved_wallet": engraved_wallet_submenu, # 🔥 تم الإبقاء على قائمة المنتجات هنا
     "sublimation": sublimation_supplies_submenu # 🔥 إضافة القائمة الجديدة
 }
 
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "sublimation"]: # 🔥 إضافة 'sublimation'
+    # 🔥 تم تعديل هذه القائمة لحذف 'engraved_wallet' منها، ليتم معالجته كقائمة فرعية
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "aqlam", "katb_kitab_box", "sublimation"]: 
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             # بالنسبة للأقلام والمحافظ (التي تبدأ محادثة مباشرة) يجب أن يتم معالجتها
             product_to_submenu_map[product["callback"]] = menu_key
     else:
-        # للقوائم المتداخلة (sawany, taarat, ...)
+        # للقوائم المتداخلة (sawany, taarat, ...) و 'engraved_wallet' الجديدة
         for item in submenu_list:
-            # المستوى الأول (مثل: sawany_akerik)
+            # المستوى الأول (مثل: sawany_akerik أو wallet_bege)
             product_to_submenu_map[item["callback"]] = menu_key 
             if 'items' in item:
                 for sub_item in item['items']:
@@ -354,8 +357,8 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     
     # تحديد زر الرجوع
     
-    # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات)
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "sublimation"]: # 🔥 إضافة 'sublimation'
+    # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات، أقلام، سبلميشن)
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "aqlam", "sublimation"]: # 🔥 تم إضافة 'aqlam' و 'sublimation'
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -578,24 +581,13 @@ def receive_tissue_date_and_finish(update, context):
 def get_wallet_items():
     return engraved_wallet_submenu
 
-def back_to_wallets_color(update, context):
-    query = update.callback_query
-    query.answer()
-    context.user_data.clear() # نمسح بيانات المحفظة إذا كان المستخدم بدأ محادثة بالفعل
-    
-    try:
-        query.message.delete()
-    except Exception:
-        pass
-
-    # نعود إلى قائمة المحافظ الفرعية
-    show_product_page(update, "engraved_wallet", engraved_wallet_submenu, is_direct_list=True)
-    return ConversationHandler.END
-
+# 🔥 تم تعديل هذه الدالة لاستقبال الـ callback مباشرة من زر المحفظة
 def start_wallet_purchase(update, context):
     query = update.callback_query
     query.answer()
-    data = query.data.replace("buy_", "") # wallet_bege
+    
+    # 🔥 لم يعد هناك buy_ prefix، يتم استخدام data مباشرة
+    data = query.data # wallet_bege, wallet_brown, or wallet_black
     
     selected_wallet_data = next((item for item in engraved_wallet_submenu if item["callback"] == data), None)
     if not selected_wallet_data:
@@ -606,7 +598,7 @@ def start_wallet_purchase(update, context):
     context.user_data['state'] = GET_WALLET_NAME
 
     try:
-        # حذف رسالة قائمة المحافظ
+        # حذف رسالة قائمة المحافظ (التي هي الآن قائمة فرعية)
         query.message.delete()
     except Exception:
         pass
@@ -1258,7 +1250,7 @@ def start_mug_purchase(update, context):
         f"✅ *اختيارك: {selected_product['label']}* (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n"
         f"من فضلك، **أرسل صورة التصميم الأولي (الصورة رقم 1)** الآن في رسالة بالأسفل.\n"
         f"يجب إرسال 3 صور تصميم بحد أقصى.\n\n"
-        f"أو اضغط زر رجوع للعودة الي القائمة السابقة."
+        f"أو اضغط زر رجوع للعودة للقائمة السابقة."
     )
     
     try:
@@ -1409,7 +1401,7 @@ def prepare_whatsapp_link_for_direct_buy(update, context):
     return prompt_for_payment_and_receipt(update, context, product_type=product_type)
 
 # --------------------------------------------------------------------------------
-# 🔥 دالة معالجة أزرار مرحلة الدفع (تم تعديلها لحذف معالج زر النسخ)
+# 🔥 دالة معالجة أزرار مرحلة الدفع
 # --------------------------------------------------------------------------------
 def handle_payment_buttons(update, context):
     """ تعالج أزرار النسخ والإلغاء في مرحلة انتظار الإيصال. """
@@ -1419,9 +1411,6 @@ def handle_payment_buttons(update, context):
     if data == "cancel":
         # الإلغاء
         return cancel_and_end(update, context) # returns ConversationHandler.END
-
-    # ⚠️ تم حذف جزء 'copy_voda_cash' هنا لأنه تم استبداله بزر 'switch_inline_query_current_chat'
-    # والذي لا يحتاج إلى معالج CallbackQueryHandler
     
     # إذا تم الضغط على أي زر آخر في هذه المرحلة (فقط زر الإلغاء هو المتبقي)
     query.answer("يرجى إرسال إيصال الدفع لإتمام الطلب.", show_alert=True)
@@ -1613,8 +1602,9 @@ def button(update, context):
         start(update, context)
         return
 
-    # 2. معالجة فتح قوائم المستوى الأول (sawany, taarat, haram, doro3, mugat)
-    if data in ["sawany", "taarat", "haram", "doro3", "mugat"]:
+    # 2. معالجة فتح قوائم المستوى الأول (sawany, taarat, haram, doro3, mugat, engraved_wallet)
+    # 🔥 تم إضافة engraved_wallet هنا ليعمل كقائمة فرعية تفتح أزرار المحافظ
+    if data in ["sawany", "taarat", "haram", "doro3", "mugat", "engraved_wallet"]:
         submenu_list = all_submenus.get(data)
         label = next(item['label'] for item in main_menu if item['callback'] == data)
         show_submenu(update, context, submenu_list, label, back_callback="main_menu")
@@ -1630,8 +1620,9 @@ def button(update, context):
             show_product_page(update, data, parent_menu['items'])
             return
         
-    # 4. معالجة فتح قوائم المستوى الأول التي تظهر المنتجات مباشرة (bsamat, wedding_tissues, ...)
-    if data in ["bsamat", "wedding_tissues", "katb_kitab_box", "abajorat", "engraved_wallet", "aqlam", "sublimation"]:
+    # 4. معالجة فتح قوائم المستوى الأول التي تظهر المنتجات مباشرة (bsamat, wedding_tissues, aqlam, ...)
+    # 🔥 تم حذف engraved_wallet من هذه القائمة
+    if data in ["bsamat", "wedding_tissues", "katb_kitab_box", "abajorat", "aqlam", "sublimation"]:
         submenu_list = all_submenus.get(data)
         show_product_page(update, data, submenu_list, is_direct_list=True)
         return
@@ -1825,12 +1816,15 @@ def main():
     )
     
     # محافظ محفورة بالاسم
+    # 🔥 تم تعديل entry_points ليتناسب مع زر المحفظة الذي أصبح زر فرعي مباشرة
     engraved_wallet_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(start_wallet_purchase, pattern='^buy_wallet_.*')],
+        entry_points=[
+            CallbackQueryHandler(start_wallet_purchase, pattern='^wallet_(bege|brown|black)$')
+        ],
         states={
             GET_WALLET_NAME: [
                 MessageHandler(Filters.text & ~Filters.command, receive_wallet_name_and_prepare_whatsapp),
-                CallbackQueryHandler(back_to_wallets_color, pattern='^engraved_wallet$')
+                CallbackQueryHandler(button, pattern='^engraved_wallet$') # العودة للقائمة الفرعية للمحافظ
             ],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
@@ -1839,7 +1833,6 @@ def main():
         },
         fallbacks=[
             CommandHandler('start', start),
-            CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$'),
             CallbackQueryHandler(cancel_and_end)
         ]
     )
@@ -1894,8 +1887,7 @@ def main():
         ]
     )
 
-    # 3. معالج الشراء المباشر لمنتجات (اباجورات، هرم، دروع، باقي المجّات، مستلزمات السبلميشن)
-    # ⚠️ تعديل: المجّات البيضاء والسحرية حُذفت من النمط ليتم معالجتها في mugat_handler
+    # 3. معالج الشراء المباشر لمنتجات (اباجورات، هرم، دروع، مج ديجتال، مستلزمات السبلميشن)
     direct_buy_handler = ConversationHandler(
         entry_points=[
             # 🔥 التعديل هنا: حذف mugat_white و mugat_magic من النمط
