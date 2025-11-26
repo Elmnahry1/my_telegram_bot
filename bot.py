@@ -40,9 +40,12 @@ GET_MUG_PHOTOS = 18
 # 🔥🔥 الحالة الجديدة لاسم المج الديجتال
 GET_DIGITAL_MUG_NAME = 19
 
-# 🔥🔥 الحالات الجديدة للمرايا (تمت الإضافة)
+# 🔥🔥 الحالات الجديدة للمرايا
 GET_MIRROR_SIZE = 20
 GET_MIRROR_NAME = 21
+
+# 🔥🔥🔥 الحالة الجديدة ليد الهوايا (تمت الإضافة)
+GET_FAN_NAME = 22
 
 
 # --------------------
@@ -63,10 +66,16 @@ katb_kitab_box_submenu = [
     {"label": "بوكس كتب كتاب موديل 2", "callback": "box_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 2، خامة عالية الجودة.", "price": "620 ج"}
 ]
 
-# 🔥 قائمة المرايا الجديدة (تمت الإضافة)
+# 🔥 قائمة المرايا
 mirrors_submenu = [
     {"label": "مرايا موديل 1", "callback": "mirror_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "مرايا موديل 1 بتصميم أنيق.", "price": "حسب المقاس"},
     {"label": "مرايا موديل 2", "callback": "mirror_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "مرايا موديل 2 بتصميم عصري.", "price": "حسب المقاس"}
+]
+
+# 🔥🔥🔥 قائمة يد الهوايا (تمت الإضافة)
+fans_submenu = [
+    {"label": "يد هوايا موديل 1", "callback": "fan_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "يد هوايا مميزة موديل 1.", "price": "150 ج"},
+    {"label": "يد هوايا موديل 2", "callback": "fan_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "يد هوايا مميزة موديل 2.", "price": "180 ج"}
 ]
 
 abajorat_submenu = [
@@ -206,7 +215,8 @@ main_menu = [
     {"label": "✋ بصامات", "callback": "bsamat"}, 
     {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"},
     {"label": "🎁 بوكس كتب الكتاب", "callback": "katb_kitab_box"},
-    {"label": "🪞 مرايا محفورة بأسم العروسة", "callback": "mirrors"}, # 🔥 الزر الجديد (تمت الإضافة)
+    {"label": "🪞 مرايا محفورة بأسم العروسة", "callback": "mirrors"}, 
+    {"label": "💃 يد هوايا محفورة بأسم العروسة", "callback": "fans"}, # 🔥 الزر الجديد (تمت الإضافة)
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
@@ -227,7 +237,8 @@ all_submenus = {
     "bsamat": bsamat_submenu, 
     "wedding_tissues": wedding_tissues_submenu,
     "katb_kitab_box": katb_kitab_box_submenu,
-    "mirrors": mirrors_submenu, # 🔥 إضافة قائمة المرايا (تمت الإضافة)
+    "mirrors": mirrors_submenu,
+    "fans": fans_submenu, # 🔥 إضافة قائمة يد الهوايا (تمت الإضافة)
     "abajorat": abajorat_submenu,
     "engraved_wallet": engraved_wallet_submenu,
     "sublimation": sublimation_supplies_submenu # 🔥 إضافة القائمة الجديدة
@@ -236,7 +247,7 @@ all_submenus = {
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "mirrors", "sublimation"]: # 🔥 إضافة 'mirrors'
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "mirrors", "fans", "sublimation"]: # 🔥 إضافة 'fans'
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             # بالنسبة للأقلام والمحافظ (التي تبدأ محادثة مباشرة) يجب أن يتم معالجتها
@@ -368,8 +379,8 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     
     # تحديد زر الرجوع
     
-    # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات، مرايا)
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "sublimation"]: # 🔥 إضافة 'mirrors'
+    # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات، مرايا، يد هوايا)
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation"]: # 🔥 إضافة 'fans'
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -583,7 +594,7 @@ def receive_tissue_date_and_finish(update, context):
     
     return prompt_for_payment_and_receipt(update, context, product_type="منديل كتب كتاب")
 
-# --- [دوال المحادثات الخاصة بالمرايا (تمت الإضافة)] --- 
+# --- [دوال المحادثات الخاصة بالمرايا] --- 
 def get_mirrors_items():
     return mirrors_submenu
 
@@ -700,6 +711,76 @@ def receive_mirror_name_and_finish(update, context):
     context.user_data['mirror_name'] = name
     
     return prompt_for_payment_and_receipt(update, context, product_type="مرايا")
+
+
+# --- [🔥 دوال المحادثات الخاصة بـ يد الهوايا (تمت الإضافة)] ---
+def get_fans_items():
+    return fans_submenu
+
+def start_fan_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data  # buy_fan_m1
+    product_callback = data.replace("buy_", "")
+    
+    # 1. Get product data
+    items_list = get_fans_items() 
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['fan_product'] = selected_product
+    context.user_data['state'] = GET_FAN_NAME
+    
+    # 2. Prepare keyboard (Back button to fans menu)
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="fans")]] 
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    # 3. Send message
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\nبرجاء كتابة **اسم العروسة المطلوب كتابته علي يد الهوايا** في رسالة نصية بالأسفل،\nأو اضغط رجوع للعودة الي القائمة السابقة."
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+        
+    return GET_FAN_NAME
+
+def back_to_fans_menu(update, context):
+    query = update.callback_query
+    query.answer()
+    context.user_data.clear()
+    
+    try:
+        query.message.delete()
+    except Exception:
+        pass
+        
+    show_product_page(update, "fans", fans_submenu, is_direct_list=True)
+    return ConversationHandler.END
+
+def receive_fan_name_and_finish(update, context):
+    name = update.message.text
+    context.user_data['fan_name'] = name
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="يد هوايا")
 
 
 # --- [دوال المحادثات الأخرى] --- 
@@ -1564,11 +1645,15 @@ def prompt_for_payment_and_receipt(update, context, product_type):
         product_data = context.user_data.get('digital_mug_product')
         names_details = context.user_data.get('digital_mug_name')
         # product_type remains "مج ديجتال"
-    elif product_type == "مرايا": # 🔥 إضافة حالة المرايا (تمت الإضافة)
+    elif product_type == "مرايا": # 🔥 إضافة حالة المرايا
         product_data = context.user_data.get('mirror_product')
         size_label = context.user_data.get('mirror_size')
         names_details = context.user_data.get('mirror_name')
         product_type = f"{product_type} - {size_label}"
+    elif product_type == "يد هوايا": # 🔥 إضافة حالة يد الهوايا (تمت الإضافة)
+        product_data = context.user_data.get('fan_product')
+        names_details = context.user_data.get('fan_name')
+        # product_type remains "يد هوايا"
     elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات، الأباجورات، السبلميشن
         product_data = context.user_data.get('direct_product')
         # product_type is already set from prepare_whatsapp_link_for_direct_buy
@@ -1581,7 +1666,7 @@ def prompt_for_payment_and_receipt(update, context, product_type):
     context.user_data['final_product_type'] = product_type
     context.user_data['final_product_label'] = product_data.get('label', product_type)
     context.user_data['final_price'] = product_data.get('price', 'غير محدد')
-    # سيتم استخدام names_details هنا لتخزين اسم الحفر في حالة المج الديجتال
+    # سيتم استخدام names_details هنا لتخزين اسم الحفر في حالة المج الديجتال أو المرايا أو يد الهوايا
     context.user_data['final_names'] = names_details if names_details else 'غير مطلوب'
     context.user_data['final_date'] = date_details if date_details else 'غير مطلوب'
     context.user_data['final_code'] = product_data.get('callback', 'N/A')
@@ -1728,13 +1813,13 @@ def button(update, context):
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu")
         return
         
-    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, sublimation)
-    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "sublimation"]: # 🔥 إضافة 'mirrors'
+    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, fans, sublimation)
+    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation"]: # 🔥 إضافة 'fans'
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
         
         # إذا كانت "بصمات" أو أي قائمة أخرى تحتاج عرض المنتجات أولاً
-        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "sublimation"]: # 🔥 إضافة 'mirrors'
+        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation"]: # 🔥 إضافة 'fans'
             show_product_page(update, data, submenu_list, is_direct_list=True)
             return
 
@@ -1754,7 +1839,7 @@ def button(update, context):
 
     # 5. معالجة أزرار الشراء الفردية (للمنتجات التي لا تحتاج محادثة)
     if data.startswith("buy_"):
-        # يجب أن يصل إلى هنا فقط الأباجورات والهرامات والدروع والمجات والسبلميشن والمرايا
+        # يجب أن يصل إلى هنا فقط الأباجورات والهرامات والدروع والمجات والسبلميشن والمرايا ويد الهوايا
         
         # 🔥 التحقق إذا كان مج أبيض أو سحري لتحويله للمحادثة الخاصة (إجراء احتياطي)
         if "mugat_white" in data or "mugat_magic" in data:
@@ -1769,6 +1854,11 @@ def button(update, context):
         # 🔥 التحقق إذا كان مرايا (لأنها في conversation handler منفصل)
         if "mirror" in data:
              start_mirror_purchase(update, context)
+             return
+        
+        # 🔥 التحقق إذا كان يد هوايا (لأنها في conversation handler منفصل)
+        if "fan" in data:
+             start_fan_purchase(update, context)
              return
              
         prepare_whatsapp_link_for_direct_buy(update, context)
@@ -2047,6 +2137,23 @@ def main():
             CallbackQueryHandler(cancel_and_end)
         ]
     )
+
+    # 🔥🔥 معالج خاص ليد الهوايا (تمت الإضافة) 🔥🔥
+    fans_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_fan_purchase, pattern='^buy_fan_.*')],
+        states={
+            GET_FAN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_fan_name_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_fans_menu, pattern='^fans$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
     
     # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مستلزمات سبلميشن)
     # ⚠️ تم تعديل الريجيكس الخاص بالمجات ليستثني الأبيض والسحري (حتى لا يحدث تعارض مع الهاندلر السابق)
@@ -2082,6 +2189,9 @@ def main():
 
     # 🔥 إضافة معالج المرايا الجديد
     dp.add_handler(mirrors_handler)
+
+    # 🔥 إضافة معالج يد الهوايا الجديد
+    dp.add_handler(fans_handler)
     
     dp.add_handler(direct_buy_handler) 
 
