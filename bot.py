@@ -1694,7 +1694,7 @@ def prompt_for_payment_and_receipt(update, context, product_type):
     update.effective_chat.send_message(
         text=payment_message,
         reply_markup=reply_markup,
-        parse_mode="Markdown"
+        parse_mode="HTML"
     )
 
     # 4. تغيير الحالة لانتظار الصورة
