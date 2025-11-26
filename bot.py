@@ -44,12 +44,8 @@ GET_DIGITAL_MUG_NAME = 19
 GET_MIRROR_SIZE = 20
 GET_MIRROR_NAME = 21
 
-# 🔥🔥🔥 الحالة الجديدة ليد الهوايا
+# 🔥🔥🔥 الحالة الجديدة ليد الهوايا (تمت الإضافة)
 GET_FAN_NAME = 22
-
-# 🔥🔥🔥 الحالات الجديدة للساعات الزجاجية
-GET_GLASS_CLOCK_SIZE = 23 # حالة اختيار مقاس الساعة
-GET_GLASS_CLOCK_PHOTO = 24 # حالة انتظار صورة الساعة
 
 
 # --------------------
@@ -63,7 +59,7 @@ bsamat_submenu = [
 ]
 wedding_tissues_submenu = [
     {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 1.", "price": "350 ج"},
-    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 2، خامة عالية الجودة.", "price": "400 ج"}
+    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 2.", "price": "400 ج"}
 ]
 katb_kitab_box_submenu = [
     {"label": "بوكس كتب كتاب موديل 1", "callback": "box_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 1، يحتوي على تصميم مميز.", "price": "550 ج"},
@@ -76,21 +72,10 @@ mirrors_submenu = [
     {"label": "مرايا موديل 2", "callback": "mirror_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "مرايا موديل 2 بتصميم عصري.", "price": "حسب المقاس"}
 ]
 
-# 🔥🔥🔥 قائمة يد الهوايا 
+# 🔥🔥🔥 قائمة يد الهوايا (تمت الإضافة)
 fans_submenu = [
     {"label": "يد هوايا موديل 1", "callback": "fan_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "يد هوايا مميزة موديل 1.", "price": "150 ج"},
     {"label": "يد هوايا موديل 2", "callback": "fan_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "يد هوايا مميزة موديل 2.", "price": "180 ج"}
-]
-
-# 🔥🔥🔥 قائمة الساعات الزجاجية الجديدة (منتج واحد)
-glass_clocks_submenu = [
-    {
-        "label": "ساعة زجاج بالصورة", 
-        "callback": "glass_clock_m1", 
-        "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
-        "description": "ساعة زجاجية مدورة طباعة صورة، تصميم عالي الجودة.", 
-        "price": "حسب المقاس"
-    }
 ]
 
 abajorat_submenu = [
@@ -231,15 +216,14 @@ main_menu = [
     {"label": "📜 مناديل كتب الكتاب", "callback": "wedding_tissues"},
     {"label": "🎁 بوكس كتب الكتاب", "callback": "katb_kitab_box"},
     {"label": "🪞 مرايا محفورة بأسم العروسة", "callback": "mirrors"}, 
-    {"label": "💃 يد هوايا محفورة بأسم العروسة", "callback": "fans"}, 
+    {"label": "💃 يد هوايا محفورة بأسم العروسة", "callback": "fans"}, # 🔥 الزر الجديد (تمت الإضافة)
     {"label": "🗄️ هرم مكتب", "callback": "haram"},
     {"label": "🏆 دروع", "callback": "doro3"},
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
     {"label": "✏️ اقلام", "callback": "aqlam"}, 
     {"label": "☕ مجات", "callback": "mugat"},
-    {"label": "🕰️ ساعات زجاج بالصورة", "callback": "glass_clocks"}, # 🔥 الزر الجديد
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"}, 
-    {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"} 
+    {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"} # 🔥 الزر الجديد
 ]
 
 
@@ -250,21 +234,20 @@ all_submenus = {
     "doro3": doro3_submenu,
     "aqlam": aqlam_submenu,
     "mugat": mugat_submenu,
-    "glass_clocks": glass_clocks_submenu, # 🔥 إضافة قائمة الساعات الزجاجية
     "bsamat": bsamat_submenu, 
     "wedding_tissues": wedding_tissues_submenu,
     "katb_kitab_box": katb_kitab_box_submenu,
     "mirrors": mirrors_submenu,
-    "fans": fans_submenu, 
+    "fans": fans_submenu, # 🔥 إضافة قائمة يد الهوايا (تمت الإضافة)
     "abajorat": abajorat_submenu,
     "engraved_wallet": engraved_wallet_submenu,
-    "sublimation": sublimation_supplies_submenu 
+    "sublimation": sublimation_supplies_submenu # 🔥 إضافة القائمة الجديدة
 }
 
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "mirrors", "fans", "sublimation", "glass_clocks"]: # 🔥 إضافة 'glass_clocks'
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "mirrors", "fans", "sublimation"]: # 🔥 إضافة 'fans'
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             # بالنسبة للأقلام والمحافظ (التي تبدأ محادثة مباشرة) يجب أن يتم معالجتها
@@ -396,75 +379,254 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     
     # تحديد زر الرجوع
     
-    # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات، مرايا، يد هوايا، ساعات زجاج)
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "glass_clocks"]: # 🔥 إضافة 'glass_clocks'
+    # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية (مثل بصمات، أباجورات، مرايا، يد هوايا)
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation"]: # 🔥 إضافة 'fans'
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
     elif product_to_submenu_map.get(product_callback_data) in ["sawany", "taarat", "haram", "doro3", "mugat"]:
         back_callback = product_to_submenu_map.get(product_callback_data)
-        back_text = f"🔙 رجوع إلى قائمة {next((item['label'] for item in main_menu if item['callback'] == back_callback), 'القائمة السابقة')}"
+        back_text = "🔙 اضغط للرجوع إلى القائمة الفرعية"
+    # 3. الافتراضي
     else:
-        # إذا لم يتم العثور على زر رجوع، نعود للقائمة الرئيسية كافتراض
         back_callback = "main_menu"
-        back_text = "🔙 رجوع إلى القائمة الرئيسية"
+        back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
 
 
-    # زر الرجوع بعد عرض كل المنتجات
     back_keyboard = [[InlineKeyboardButton(back_text, callback_data=back_callback)]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
-    
-    # إرسال زر الرجوع في رسالة منفصلة في نهاية عرض المنتجات
-    update.effective_chat.send_message(
-        text=back_text, 
-        reply_markup=back_reply_markup,
-        parse_mode="Markdown"
+        
+    update.effective_message.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="---", 
+        reply_markup=back_reply_markup
     )
-    # لا نرجع حالة محادثة هنا، بل نعتمد على الـ CallbackQueryHandler التالي
-    return
 
 
-# --------------------
-# 4. دوال المحادثات المخصصة
-# --------------------
+# --- [دوال المحادثات الخاصة بالبصامات] ---
+def get_bsamat_items():
+    return bsamat_submenu
 
-# ... (بقية الدوال الرئيسية مثل دوال المحافظ، الأقلام، البوكس، الصواني، الطارات، البصمات، المناديل) ...
-
-# --------------------------------------------------------------------------------
-# 🔥🔥 دوال خاصة بالساعات الزجاجية بالصورة 🔥🔥
-# --------------------------------------------------------------------------------
-
-def get_glass_clock_items():
-    return glass_clocks_submenu
-
-def start_glass_clock_purchase(update, context):
+def start_bsamat_purchase(update, context):
     query = update.callback_query
     query.answer()
-    data = query.data # buy_glass_clock_m1 
+    data = query.data  # buy_bsamat_m1
     product_callback = data.replace("buy_", "")
-    items_list = get_glass_clock_items()
+    
+    # 1. Get product data
+    items_list = get_bsamat_items() 
     selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
-
     if not selected_product:
         query.answer("خطأ في العثور على المنتج", show_alert=True)
         return ConversationHandler.END
-
-    context.user_data['glass_clock_product'] = selected_product
-    context.user_data['state'] = GET_GLASS_CLOCK_SIZE
-
-    # اختيار المقاس (2 أزرار + زر رجوع)
-    keyboard = [
-        [InlineKeyboardButton("مقاس 1 بسعر 100 ج", callback_data="size_1_price_100")],
-        [InlineKeyboardButton("مقاس 2 بسعر 200 ج", callback_data="size_2_price_200")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data="glass_clocks")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
+        
+    context.user_data['bsamat_product'] = selected_product
+    context.user_data['state'] = GET_BSAMAT_NAMES
+    
+    # 2. Prepare keyboard (Back button to bsamat menu)
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="bsamat")]] 
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    # 3. Send message
     try:
         query.message.delete()
     except:
         pass
+        
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
     
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        # Fallback in case of image error
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+        
+    return GET_BSAMAT_NAMES
+
+def back_to_bsamat_names(update, context):
+    query = update.callback_query
+    query.answer()
+    selected_product = context.user_data.get('bsamat_product')
+    if not selected_product:
+        start(update, context)
+        return ConversationHandler.END
+        
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="bsamat")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"من فضلك أعد كتابة **اسم العريس والعروسة**:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_BSAMAT_NAMES
+
+def save_bsamat_names_ask_date(update, context):
+    names = update.message.text
+    context.user_data['bsamat_names'] = names
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_bsamat_names")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"تم حفظ الأسماء: **{names}**\n\nمن فضلك الآن **اكتب التاريخ** (مثال: 2024/1/1):",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_BSAMAT_DATE
+
+def receive_bsamat_date_and_finish(update, context):
+    date_text = update.message.text
+    context.user_data['bsamat_date'] = date_text
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="بصامة")
+# --- [دوال المحادثات الخاصة بمناديل كتب الكتاب] --- (تم تعديلها وتأكيدها)
+def get_wedding_tissues_items():
+    return wedding_tissues_submenu
+
+def start_tissue_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data  # buy_tissue_m1
+    product_callback = data.replace("buy_", "")
+    
+    # 1. Get product data
+    items_list = get_wedding_tissues_items() 
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['tissue_product'] = selected_product
+    context.user_data['state'] = GET_TISSUE_NAMES
+    
+    # 2. Prepare keyboard (Back button to tissues menu)
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="wedding_tissues")]] 
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    # 3. Send message
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        # Fallback in case of image error
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+        
+    return GET_TISSUE_NAMES
+
+def back_to_tissue_names(update, context):
+    query = update.callback_query
+    query.answer()
+    selected_product = context.user_data.get('tissue_product')
+    if not selected_product:
+        start(update, context)
+        return ConversationHandler.END
+        
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="wedding_tissues")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"من فضلك أعد كتابة **اسم العريس والعروسة**:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_TISSUE_NAMES
+
+def save_tissue_names_ask_date(update, context):
+    names = update.message.text
+    context.user_data['tissue_names'] = names
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_tissue_names")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"تم حفظ الأسماء: **{names}**\n\nمن فضلك الآن **اكتب التاريخ** (مثال: 2024/1/1):",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_TISSUE_DATE
+
+def receive_tissue_date_and_finish(update, context):
+    date_text = update.message.text
+    context.user_data['tissue_date'] = date_text
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="منديل كتب كتاب")
+
+# --- [دوال المحادثات الخاصة بالمرايا] --- 
+def get_mirrors_items():
+    return mirrors_submenu
+
+def start_mirror_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data  # buy_mirror_m1
+    product_callback = data.replace("buy_", "")
+    
+    items_list = get_mirrors_items() 
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['mirror_product'] = selected_product
+    context.user_data['state'] = GET_MIRROR_SIZE
+    
+    # اختيار المقاس (3 أزرار + زر رجوع)
+    keyboard = [
+        [InlineKeyboardButton("مقاس 1 (سعر 100 ج)", callback_data="size_1")],
+        [InlineKeyboardButton("مقاس 2 (سعر 200 ج)", callback_data="size_2")],
+        [InlineKeyboardButton("مقاس 3 (سعر 300 ج)", callback_data="size_3")],
+        [InlineKeyboardButton("🔙 رجوع", callback_data="mirrors")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
     caption_text = f"✅ **{selected_product['label']}**\n\nبرجاء **تحديد المقاس المطلوب** من القائمة التالية:"
     
     try:
@@ -482,9 +644,207 @@ def start_glass_clock_purchase(update, context):
             reply_markup=reply_markup,
             parse_mode="Markdown"
         )
-    return GET_GLASS_CLOCK_SIZE
+    return GET_MIRROR_SIZE
 
-def back_to_glass_clocks_menu(update, context):
+def back_to_mirrors_menu(update, context):
+    query = update.callback_query
+    query.answer()
+    context.user_data.clear()
+    
+    try:
+        query.message.delete()
+    except Exception:
+        pass
+        
+    show_product_page(update, "mirrors", mirrors_submenu, is_direct_list=True)
+    return ConversationHandler.END
+
+def save_mirror_size_ask_name(update, context):
+    query = update.callback_query
+    data = query.data
+    query.answer()
+    
+    # تحديد السعر واسم المقاس بناءً على الزر المضغوط
+    size_price = ""
+    size_label = ""
+    
+    if data == "size_1":
+        size_price = "100 ج"
+        size_label = "مقاس 1"
+    elif data == "size_2":
+        size_price = "200 ج"
+        size_label = "مقاس 2"
+    elif data == "size_3":
+        size_price = "300 ج"
+        size_label = "مقاس 3"
+    else:
+        # لو حدث خطأ أو ضغط زر غير متوقع
+        return GET_MIRROR_SIZE
+
+    # تحديث سعر المنتج في البيانات المحفوظة
+    if 'mirror_product' in context.user_data:
+        context.user_data['mirror_product']['price'] = size_price
+        
+    context.user_data['mirror_size'] = size_label
+    context.user_data['state'] = GET_MIRROR_NAME
+    
+    # زر رجوع لخطوة اختيار المقاس (سنعود لنفس الدالة start_mirror_purchase لكن نحتاج لتمرير البيانات بشكل صحيح)
+    # للأسهل سنجعله يعود لقائمة المرايا الرئيسية لعدم تعقيد الكود
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="mirrors")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"✅ تم اختيار **{size_label}** بسعر **{size_price}**.\n\nمن فضلك الآن **اكتب اسم العروسة المطلوب حفره على المرايا** في رسالة نصية بالأسفل، أو اضغط زر رجوع للإلغاء:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_MIRROR_NAME
+
+def receive_mirror_name_and_finish(update, context):
+    name = update.message.text
+    context.user_data['mirror_name'] = name
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="مرايا")
+
+
+# --- [🔥 دوال المحادثات الخاصة بـ يد الهوايا (تمت الإضافة)] ---
+def get_fans_items():
+    return fans_submenu
+
+def start_fan_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data  # buy_fan_m1
+    product_callback = data.replace("buy_", "")
+    
+    # 1. Get product data
+    items_list = get_fans_items() 
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['fan_product'] = selected_product
+    context.user_data['state'] = GET_FAN_NAME
+    
+    # 2. Prepare keyboard (Back button to fans menu)
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="fans")]] 
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    # 3. Send message
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\nبرجاء كتابة **اسم العروسة المطلوب كتابته علي يد الهوايا** في رسالة نصية بالأسفل،\nأو اضغط رجوع للعودة الي القائمة السابقة."
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+        
+    return GET_FAN_NAME
+
+def back_to_fans_menu(update, context):
+    query = update.callback_query
+    query.answer()
+    context.user_data.clear()
+    
+    try:
+        query.message.delete()
+    except Exception:
+        pass
+        
+    show_product_page(update, "fans", fans_submenu, is_direct_list=True)
+    return ConversationHandler.END
+
+def receive_fan_name_and_finish(update, context):
+    name = update.message.text
+    context.user_data['fan_name'] = name
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="يد هوايا")
+
+
+# --- [دوال المحادثات الأخرى] --- 
+# دوال المحافظ
+# 🔥 تم تعديل back_to_wallets_color لاستخدام show_submenu لتوحيد مظهر القائمة
+def back_to_wallets_color(update, context):
+    query = update.callback_query
+    query.answer()
+    
+    # Clear conversation data before going back to the selection list
+    context.user_data.clear()
+    
+    # Use show_submenu to display the wallet list, mimicking the navigation from main_menu
+    show_submenu(update, context, engraved_wallet_submenu, "محافظ محفورة بالاسم", back_callback="main_menu")
+    
+    return ConversationHandler.END
+
+
+def prompt_for_name(update, context):
+    query = update.callback_query
+    data = query.data
+    query.answer()
+    
+    selected_wallet_data = next((item for item in engraved_wallet_submenu if item["callback"] == data), None)
+    context.user_data['wallet_data'] = selected_wallet_data
+    context.user_data['state'] = GET_WALLET_NAME
+    
+    try:
+        query.message.delete()
+    except Exception:
+        pass
+
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_wallets_color")]]
+    back_reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    caption_text = (f"**اختيارك: {selected_wallet_data['label']}** (السعر: *{selected_wallet_data.get('price', 'غير متوفر')}*)\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير لون المحفظة.")
+    
+    try:
+        update.effective_chat.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_wallet_data['image'],
+            caption=caption_text,
+            reply_markup=back_reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+         update.effective_chat.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=back_reply_markup,
+            parse_mode="Markdown"
+        )
+
+    return GET_WALLET_NAME
+
+def receive_wallet_name_and_prepare_whatsapp(update, context):
+    engraving_name = update.message.text
+    context.user_data['wallet_engraving_name'] = engraving_name
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="محافظ")
+
+
+# دوال الأقلام
+def back_to_pen_types(update, context):
     query = update.callback_query
     query.answer()
     context.user_data.clear()
@@ -492,33 +852,124 @@ def back_to_glass_clocks_menu(update, context):
         query.message.delete()
     except Exception:
         pass
-    # العودة إلى عرض منتجات الساعات
-    show_product_page(update, "glass_clocks", glass_clocks_submenu, is_direct_list=True)
+    
+    # 🔥 نستخدم دالة show_submenu لعرض الأزرار الفرعية للأقلام
+    show_submenu(update, context, aqlam_submenu, "اقلام", back_callback="main_menu")
+
+    # بما أن show_submenu ترسل رسالة جديدة، لا نحتاج لإرسال رسالة هنا
     return ConversationHandler.END
 
-def back_to_glass_clock_size(update, context):
+def prompt_for_pen_name(update, context):
+    query = update.callback_query
+    data = query.data
+    query.answer()
+    
+    # نستخدم data مباشرة لأنها تحمل callback للأقلام (aqlam_metal/aqlam_luminous)
+    selected_pen_data = next((item for item in aqlam_submenu if item["callback"] == data), None)
+    context.user_data['pen_data'] = selected_pen_data
+    context.user_data['state'] = GET_PEN_NAME
+    
+    try:
+        # حذف رسالة القائمة الفرعية للأقلام
+        query.message.delete() 
+    except Exception:
+        pass
+
+    # زر الرجوع يعود إلى قائمة الأقلام الفرعية
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_pen_types")]] 
+    back_reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    caption_text = (f"**اختيارك: {selected_pen_data['label']}** (السعر: *{selected_pen_data.get('price', 'غير متوفر')}*)\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير نوع القلم.")
+    
+    try:
+        update.effective_chat.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_pen_data['image'],
+            caption=caption_text,
+            reply_markup=back_reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+         update.effective_chat.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=back_reply_markup,
+            parse_mode="Markdown"
+        )
+
+    return GET_PEN_NAME
+
+def receive_pen_name_and_prepare_whatsapp(update, context):
+    engraving_name = update.message.text
+    context.user_data['pen_engraving_name'] = engraving_name
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="اقلام")
+
+
+# دوال بوكس كتب الكتاب
+def get_box_items():
+    return katb_kitab_box_submenu
+
+def start_box_purchase(update, context):
     query = update.callback_query
     query.answer()
-    selected_product = context.user_data.get('glass_clock_product')
+    data = query.data  # buy_box_m1
+    product_callback = data.replace("buy_", "")
     
-    if not selected_product:
-        start(update, context)
+    items_list = get_box_items() 
+    selected_box = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_box:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
         return ConversationHandler.END
-
-    # اختيار المقاس (2 أزرار + زر رجوع)
+        
+    context.user_data['box_product'] = selected_box
+    context.user_data['state'] = GET_BOX_COLOR
+    
+    # اختيار اللون
     keyboard = [
-        [InlineKeyboardButton("مقاس 1 بسعر 100 ج", callback_data="size_1_price_100")],
-        [InlineKeyboardButton("مقاس 2 بسعر 200 ج", callback_data="size_2_price_200")],
-        [InlineKeyboardButton("🔙 رجوع", callback_data="glass_clocks")]
+        [InlineKeyboardButton("أسود في ذهبي", callback_data="color_black_gold")],
+        [InlineKeyboardButton("أبيض في ذهبي", callback_data="color_white_gold")]
     ]
+    keyboard.append([InlineKeyboardButton("🔙 رجوع", callback_data="katb_kitab_box")]) # الرجوع لقائمة البوكسات
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     try:
         query.message.delete()
     except:
         pass
+        
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ **{selected_box['label']}** (السعر: *{selected_box.get('price', 'غير متوفر')}*)\n\nمن فضلك اختر **لون البوكس**:", reply_markup=reply_markup, parse_mode="Markdown")
+    return GET_BOX_COLOR
+
+def save_box_color_ask_names(update, context):
+    query = update.callback_query
+    data = query.data
+    query.answer()
     
-    caption_text = f"✅ **{selected_product['label']}**\n\nبرجاء **تحديد المقاس المطلوب** من القائمة التالية:"
+    # Check for explicit return to previous menu
+    if data == "katb_kitab_box":
+        return back_to_box_menu(update, context)
+
+    # Extract color name from callback_data
+    color_name = "أسود في ذهبي" if data == "color_black_gold" else "أبيض في ذهبي" if data == "color_white_gold" else "غير محدد"
+    context.user_data['box_color'] = color_name
+    
+    selected_box = context.user_data.get('box_product')
+    if not selected_box:
+        start(update, context)
+        return ConversationHandler.END
+        
+    context.user_data['state'] = GET_BOX_NAMES
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_box_color")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ اختيارك: **{selected_box['label']}** باللون **{color_name}**\n\nمن فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
     
     context.bot.send_message(
         chat_id=update.effective_chat.id,
@@ -526,225 +977,761 @@ def back_to_glass_clock_size(update, context):
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
-    # العودة لحالة اختيار المقاس
-    return GET_GLASS_CLOCK_SIZE
+    return GET_BOX_NAMES
 
-def receive_glass_clock_size_ask_photo(update, context):
+def back_to_box_menu(update, context):
     query = update.callback_query
     query.answer()
+    context.user_data.clear()
     
-    data = query.data # size_1_price_100 or size_2_price_200
-    
-    # استخراج المقاس والسعر
-    if data == "size_1_price_100":
-        size_label = "مقاس 1"
-        price_value = "100 ج"
-    elif data == "size_2_price_200":
-        size_label = "مقاس 2"
-        price_value = "200 ج"
-    else:
-        # خطأ غير متوقع
-        query.answer("خطأ في اختيار المقاس", show_alert=True)
-        return back_to_glass_clock_size(update, context) # الرجوع لاختيار المقاس
-    
-    context.user_data['glass_clock_size'] = size_label
-    context.user_data['glass_clock_price'] = price_value
-    
-    selected_product = context.user_data.get('glass_clock_product')
+    # نحاكي عملية العودة للقائمة الفرعية للبوكسات
+    try:
+        query.message.delete()
+    except Exception:
+        pass
+        
+    # إعادة عرض قائمة بوكسات كتب الكتاب
+    show_product_page(update, "katb_kitab_box", katb_kitab_box_submenu, is_direct_list=True)
+    return ConversationHandler.END
 
-    context.user_data['state'] = GET_GLASS_CLOCK_PHOTO
+def receive_box_names_and_finish(update, context):
+    names_text = update.message.text
+    context.user_data['box_names'] = names_text
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="بوكس كتب كتاب")
 
-    # طلب الصورة
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع للعودة للقائمة السابقة", callback_data="back_to_glass_clock_size")]]
+# دوال صواني اكليريك
+def get_akerik_tray_items():
+    # صواني شبكة اكليريك هي العنصر الأول في قائمة صواني
+    return sawany_submenu[0]['items']
+
+def start_akerik_tray_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data  # buy_akerik_m1
+    product_callback = data.replace("buy_", "")
+    
+    items_list = get_akerik_tray_items()
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['tray_product'] = selected_product
+    context.user_data['state'] = GET_TRAY_NAMES
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="sawany_akerik")]] 
     reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        # Fallback in case of image error
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+        
+    return GET_TRAY_NAMES
 
+def back_to_tray_names(update, context):
+    query = update.callback_query
+    query.answer()
+    selected_tray = context.user_data.get('tray_product')
+    if not selected_tray:
+        start(update, context)
+        return ConversationHandler.END
+        
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="sawany_akerik")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"من فضلك أعد كتابة **اسم العريس والعروسة**:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_TRAY_NAMES
+
+def save_tray_names_ask_date(update, context):
+    names = update.message.text
+    context.user_data['tray_names'] = names
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_tray_names")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"تم حفظ الأسماء: **{names}**\n\nمن فضلك الآن **اكتب التاريخ** (مثال: 2024/1/1):",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_TRAY_DATE
+
+def receive_tray_date_and_finish(update, context):
+    date_text = update.message.text
+    context.user_data['tray_date'] = date_text
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="صواني شبكة اكليريك")
+
+
+# دوال صواني خشب
+def get_khashab_tray_items():
+    # صواني شبكة خشب هي العنصر الثاني في قائمة صواني
+    return sawany_submenu[1]['items']
+
+def start_khashab_tray_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data  # buy_khashab_m1
+    product_callback = data.replace("buy_", "")
+    
+    items_list = get_khashab_tray_items()
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['khashab_tray_product'] = selected_product
+    context.user_data['state'] = GET_KHASHAB_TRAY_NAMES
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="sawany_khashab")]] 
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        # Fallback in case of image error
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+        
+    return GET_KHASHAB_TRAY_NAMES
+
+def back_to_khashab_tray_names(update, context):
+    query = update.callback_query
+    query.answer()
+    selected_tray = context.user_data.get('khashab_tray_product')
+    if not selected_tray:
+        start(update, context)
+        return ConversationHandler.END
+        
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="sawany_khashab")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"من فضلك أعد كتابة **اسم العريس والعروسة**:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_KHASHAB_TRAY_NAMES
+
+def save_khashab_tray_names_ask_date(update, context):
+    names = update.message.text
+    context.user_data['khashab_tray_names'] = names
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_khashab_tray_names")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"تم حفظ الأسماء: **{names}**\n\nمن فضلك الآن **اكتب التاريخ** (مثال: 2024/1/1):",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_KHASHAB_TRAY_DATE
+
+def receive_khashab_tray_date_and_finish(update, context):
+    date_text = update.message.text
+    context.user_data['khashab_tray_date'] = date_text
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="صواني شبكة خشب")
+
+
+# دوال طارات اكليريك
+def get_akerik_taarat_items():
+    return taarat_submenu[0]['items']
+
+def start_akerik_taarat_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data # buy_taarat_akerik_m1
+    product_callback = data.replace("buy_", "")
+    
+    items_list = get_akerik_taarat_items()
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['taarat_akerik_product'] = selected_product
+    context.user_data['state'] = GET_AKRILIK_TAARAT_NAMES
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="taarat_akerik")]] 
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        # Fallback in case of image error
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+        
+    return GET_AKRILIK_TAARAT_NAMES
+
+def back_to_akerik_taarat_names(update, context):
+    query = update.callback_query
+    query.answer()
+    selected_taara = context.user_data.get('taarat_akerik_product')
+    if not selected_taara:
+        start(update, context)
+        return ConversationHandler.END
+        
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="taarat_akerik")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"من فضلك أعد كتابة **اسم العريس والعروسة**:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_AKRILIK_TAARAT_NAMES
+
+def save_akerik_taarat_names_ask_date(update, context):
+    names = update.message.text
+    context.user_data['taarat_akerik_names'] = names
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_akerik_taarat_names")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"تم حفظ الأسماء: **{names}**\n\nمن فضلك الآن **اكتب التاريخ** (مثال: 2024/1/1):",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_AKRILIK_TAARAT_DATE
+
+def receive_akerik_taarat_date_and_finish(update, context):
+    date_text = update.message.text
+    context.user_data['taarat_akerik_date'] = date_text
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="طارة اكليريك")
+
+
+# دوال طارات خشب
+def get_khashab_taarat_items():
+    return taarat_submenu[1]['items']
+
+def start_khashab_taarat_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data # buy_taarat_khashab_m1
+    product_callback = data.replace("buy_", "")
+    
+    items_list = get_khashab_taarat_items()
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['taarat_khashab_product'] = selected_product
+    context.user_data['state'] = GET_KHASHAB_TAARAT_NAMES
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="taarat_khashab")]] 
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n من فضلك **اكتب اسم العريس والعروسة** في رسالة نصية بالأسفل او اضغط زر رجوع للعودة الي القائمة السابقة:"
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        # Fallback in case of image error
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+        
+    return GET_KHASHAB_TAARAT_NAMES
+
+def back_to_khashab_taarat_names(update, context):
+    query = update.callback_query
+    query.answer()
+    selected_taara = context.user_data.get('taarat_khashab_product')
+    if not selected_taara:
+        start(update, context)
+        return ConversationHandler.END
+        
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="taarat_khashab")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"من فضلك أعد كتابة **اسم العريس والعروسة**:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_KHASHAB_TAARAT_NAMES
+
+def save_khashab_taarat_names_ask_date(update, context):
+    names = update.message.text
+    context.user_data['taarat_khashab_names'] = names
+    
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_khashab_taarat_names")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"تم حفظ الأسماء: **{names}**\n\nمن فضلك الآن **اكتب التاريخ** (مثال: 2024/1/1):",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_KHASHAB_TAARAT_DATE
+
+def receive_khashab_taarat_date_and_finish(update, context):
+    date_text = update.message.text
+    context.user_data['taarat_khashab_date'] = date_text
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="طارة خشب")
+
+
+# --- 🔥🔥 دوال خاصة بالمجات الأبيض والسحري (تتطلب صور) 🔥🔥 ---
+def start_mug_photos_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data 
+    product_callback = data.replace("buy_", "")
+
+    # البحث عن المنتج (ابيض او سحري)
+    product_data = None
+    product_type = ""
+    
+    # البحث في قائمة المجات
+    for item in mugat_submenu:
+        # items contains list of mugs
+        for sub_item in item['items']:
+            if sub_item['callback'] == product_callback:
+                product_data = sub_item
+                product_type = item['label'] # مج ابيض او مج سحري
+                break
+        if product_data:
+            break
+            
+    if not product_data:
+        query.answer("خطأ في المنتج", show_alert=True)
+        return ConversationHandler.END
+
+    # حفظ بيانات المنتج لاستخدامها لاحقاً في الدفع (بنفس طريقة direct_product)
+    context.user_data['direct_product'] = product_data 
+    context.user_data['mug_photos_links'] = [] # قائمة لحفظ روابط الصور
+    
+    # حذف الرسالة السابقة
     try:
         query.message.delete()
     except:
         pass
 
-    caption_text = (
-        f"✅ تم اختيار: **{selected_product['label']} - {size_label}** (السعر: *{price_value}*)\n\n"
-        "من فضلك، **أرسل الصورة المطلوب طباعتها علي الساعة** في رسالة بالأسفل.\n"
-        "أو اضغط زر الرجوع للعودة للقائمة السابقة"
-    )
-
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=caption_text,
-        reply_markup=reply_markup,
+        text=f"✅ **{product_data['label']}**\n\nلتنفيذ هذا الطلب، نحتاج إلى **3 صور** للتصميم.\n\n📸 من فضلك أرسل **الصورة الأولى** الآن:",
         parse_mode="Markdown"
     )
-    return GET_GLASS_CLOCK_PHOTO
+    
+    return GET_MUG_PHOTOS
 
-def receive_glass_clock_photo_and_finish(update, context):
-    # نستخدم نفس منطق الـ Mirrors أو الـ Mugs للحصول على رابط الصورة
+def receive_mug_photos(update, context):
+    # التأكد من أن الرسالة تحتوي على صورة
     if not update.message.photo:
-        update.message.reply_text("❌ من فضلك أرسل *صورة* لإتمام الطلب.", parse_mode="Markdown")
-        return GET_GLASS_CLOCK_PHOTO
+        update.effective_message.reply_text("⛔️ عذراً، يجب إرسال صورة فقط. يرجى إرسال الصورة المطلوبة.")
+        return GET_MUG_PHOTOS
 
-    # 1. حفظ file_id للصورة المرفقة
-    photo_file = update.message.photo[-1]
+    # الحصول على رابط الصورة
+    photo_file = update.message.photo[-1].get_file()
+    photo_link = photo_file.file_path
     
-    # 2. حفظ بيانات المنتج النهائية قبل مرحلة الدفع
-    product_data = context.user_data['glass_clock_product']
-    size_label = context.user_data['glass_clock_size']
-    price_value = context.user_data['glass_clock_price']
+    # إضافة الصورة للقائمة
+    current_photos = context.user_data.get('mug_photos_links', [])
+    current_photos.append(photo_link)
+    context.user_data['mug_photos_links'] = current_photos
+    
+    count = len(current_photos)
+    
+    if count < 3:
+        remaining = 3 - count
+        update.effective_message.reply_text(f"✅ تم استلام الصورة رقم {count}.\n📸 متبقي {remaining} صور. من فضلك أرسل الصورة التالية:")
+        return GET_MUG_PHOTOS
+    else:
+        # تم استلام 3 صور
+        update.effective_message.reply_text("✅ تم استلام الصور الثلاث بنجاح.\nجاري تحضير تفاصيل الدفع...")
+        
+        # الانتقال لمرحلة الدفع
+        # بما أننا حفظنا المنتج في direct_product، يمكننا استخدام product_type المناسب
+        # نستخرج النوع من direct_product label او نحدده
+        p_data = context.user_data.get('direct_product')
+        p_type = "مج (تصميم خاص)" 
+        return prompt_for_payment_and_receipt(update, context, product_type=p_type)
 
-    # إعداد البيانات لـ prompt_for_payment_and_receipt
+
+# --- 🔥🔥 دوال خاصة بالمج الديجتال (تتطلب اسم الحفر) 🔥🔥 ---
+
+def start_digital_mug_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data 
+    product_callback = data.replace("buy_", "")
     
-    # نجهز بيانات الدفع النهائية 
-    product_type_label = "ساعة زجاج بالصورة"
-    context.user_data['final_product_type'] = product_type_label
-    context.user_data['final_product_label'] = product_data['label']
-    context.user_data['final_price'] = price_value
-    context.user_data['final_names'] = size_label # استخدام حقل names لتخزين المقاس مبدئياً
-    context.user_data['final_date'] = "صورة مرفقة"
-    context.user_data['final_code'] = product_data['callback']
+    # البحث عن المنتج داخل قائمة المج الديجتال
+    items_list = mugat_submenu[2]['items'] # mugat_digital is index 2
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
     
-    # ⚠️ حقل جديد لحفظ file_id الصورة المرفقة لطباعتها
-    context.user_data['printing_image_file_id'] = photo_file.file_id
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['digital_mug_product'] = selected_product
+    context.user_data['state'] = GET_DIGITAL_MUG_NAME
     
-    update.message.reply_text("✅ تم استلام الصورة بنجاح.\nجاري تحضير تفاصيل الدفع...")
+    # زر الرجوع يعود لقائمة المجات الديجتال
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="mugat_digital")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
     
-    # الانتقال لمرحلة الدفع
-    return prompt_for_payment_and_receipt(update, context, product_type=product_type_label)
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\nمن فضلك **اكتب الاسم الذي تريد حفره** على المج الديجتال في رسالة نصية بالأسفل، أو اضغط زر رجوع للعودة:"
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest as e:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    
+    return GET_DIGITAL_MUG_NAME
+
+def receive_digital_mug_name(update, context):
+    name = update.message.text
+    context.user_data['digital_mug_name'] = name
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="مج ديجتال")
+
+
+# دوال الشراء التي لا تحتاج محادثة (تم تعديلها لتطلب إيصال الدفع)
+def prepare_whatsapp_link_for_direct_buy(update, context):
+    query = update.callback_query
+    data = query.data # buy_callback_data
+    query.answer()
+    
+    # 1. استخراج مفتاح المنتج
+    product_callback = data.replace("buy_", "")
+    
+    # 2. البحث عن بيانات المنتج 
+    product_data = None
+    product_type = ""
+    
+    # قائمة الأباجورات (القائمة المباشرة)
+    items_list = abajorat_submenu
+    product_data = next((item for item in items_list if item["callback"] == product_callback), None)
+    if product_data:
+        product_type = "اباجورة"
+        
+    # 🔥 البحث في مستلزمات سبلميشن الجديدة
+    if not product_data:
+        items_list = sublimation_supplies_submenu
+        product_data = next((item for item in items_list if item["callback"] == product_callback), None)
+        if product_data:
+            product_type = "مستلزمات سبلميشن"
+    
+    if not product_data:
+        # البحث في القوائم المتداخلة (هرم مكتب، دروع، مجات)
+        for menu_key, menu_label in [("haram", "هرم مكتب"), ("doro3", "درع"), ("mugat", "مج")]:
+            for item in all_submenus.get(menu_key, []):
+                if item['callback'] == product_callback:
+                    product_data = item
+                    product_type = menu_label 
+                    break 
+                if 'items' in item:
+                    sub_item = next((si for si in item['items'] if si['callback'] == product_callback), None)
+                    if sub_item:
+                        product_data = sub_item
+                        product_type = menu_label 
+                        break
+            if product_data:
+                break
+                
+    if not product_data:
+        query.answer("عفواً، لا يمكن إتمام هذا الطلب حالياً.", show_alert=True)
+        start(update, context)
+        return
+    
+    # 3. حفظ البيانات وإرسال رسالة الدفع
+    context.user_data['direct_product'] = product_data
+    
+    # يجب حذف رسالة الزر القديمة
+    try:
+        query.message.delete()
+    except:
+        pass
+
+    return prompt_for_payment_and_receipt(update, context, product_type=product_type)
+
+# --------------------------------------------------------------------------------
+# 🔥 دالة معالجة أزرار مرحلة الدفع (تم تعديلها لحذف معالج زر النسخ)
+# --------------------------------------------------------------------------------
+def handle_payment_buttons(update, context):
+    """
+    تعالج أزرار النسخ والإلغاء في مرحلة انتظار الإيصال.
+    """
+    query = update.callback_query
+    data = query.data
+    
+    if data == "cancel":
+        # الإلغاء
+        return cancel_and_end(update, context) # returns ConversationHandler.END
+
+    # ⚠️ تم حذف جزء 'copy_voda_cash' هنا لأنه تم استبداله بزر 'switch_inline_query_current_chat'
+    # والذي لا يحتاج إلى معالج CallbackQueryHandler
+        
+    # إذا تم الضغط على أي زر آخر في هذه المرحلة (فقط زر الإلغاء هو المتبقي)
+    query.answer("يرجى إرسال إيصال الدفع لإتمام الطلب.", show_alert=True)
+    return GET_PAYMENT_RECEIPT
 
 
 # --------------------------------------------------------------------------------
-# 🔥 دالة طلب الدفع (تم التعديل لتمكين النسخ المباشر ومعالجة رابط صورة الساعة)
+# 🔥 دالة طلب الدفع (تم التعديل لتمكين النسخ المباشر)
 # --------------------------------------------------------------------------------
 def prompt_for_payment_and_receipt(update, context, product_type):
-    """ الدالة الجديدة التي تطلب من العميل الدفع وتحويل الحالة إلى انتظار صورة الإيصال. """
+    """
+    الدالة الجديدة التي تطلب من العميل الدفع وتحويل الحالة إلى انتظار صورة الإيصال.
+    """
+    
     # 1. إعداد تفاصيل الطلب حسب نوع المنتج
     product_data = None
     names_details = ""
     date_details = ""
     
-    if product_type == "محفظة":
-        # ... (بقية دوال المحافظ)
-    elif product_type == "اقلام":
-        # ... (بقية دوال الأقلام)
-    elif product_type == "بوكس كتب كتاب":
-        # ... (بقية دوال البوكس)
-    elif product_type == "صواني شبكة اكليريك":
-        # ... (بقية دوال الصواني)
-    elif product_type == "صواني شبكة خشب":
-        # ... (بقية دوال الصواني)
-    elif product_type == "طارات اكليريك":
-        # ... (بقية دوال الطارات)
-    elif product_type == "طارات خشب":
-        # ... (بقية دوال الطارات)
-    elif product_type == "بصامة":
-        # ... (بقية دوال البصمات)
+    if product_type == "بصامة":
+        product_data = context.user_data.get('bsamat_product')
+        names_details = context.user_data.get('bsamat_names')
+        date_details = context.user_data.get('bsamat_date')
     elif product_type == "منديل كتب كتاب":
-        # ... (بقية دوال المناديل)
-    elif product_type == "مج أبيض" or product_type == "مج سحري":
-        # ... (بقية دوال المجات)
-    elif product_type == "مج ديجتال":
-        # ... (بقية دوال المج الديجتال)
-    elif product_type == "مرايا":
-        # ... (بقية دوال المرايا)
-    elif product_type == "يد هوايا":
-        # ... (بقية دوال يد الهوايا)
-    elif product_type == "ساعة زجاج بالصورة": # 🔥 إضافة حالة الساعة الزجاجية
-        product_data = context.user_data.get('glass_clock_product')
-        size_label = context.user_data.get('glass_clock_size')
-        product_price = context.user_data.get('glass_clock_price')
-        
-        # ⚠️ هنا نحتاج للحصول على رابط الصورة من Telegram file_id
-        image_file_id = context.user_data.get('printing_image_file_id')
-        
-        if image_file_id:
-            try:
-                # الحصول على كائن الملف من file_id
-                new_file = context.bot.get_file(image_file_id)
-                # ⚠️ حفظ رابط الصورة المطلوب طباعتها (يحتوي على التوكن ويجب استخدامه مباشرة)
-                context.user_data['printing_image_url'] = new_file.file_path 
-                
-                # تحديث تفاصيل الاسم/المقاس لتظهر في رسالة الدفع (مؤقتا)
-                names_details = f"المقاس: {size_label}" # الرابط سيتم إضافته في النهاية في handle_payment_photo
-                product_data['price'] = product_price # تحديث السعر الفعلي
-            except Exception as e:
-                names_details = f"المقاس: {size_label}\n❌ فشل الحصول على رابط الصورة: {e}"
-                context.user_data['printing_image_url'] = "فشل الحصول على الرابط"
-        else:
-            names_details = f"المقاس: {size_label}"
-        
-        # نضبط البيانات النهائية مرة أخرى للتأكد من استخدام السعر الصحيح
-        context.user_data['final_price'] = product_data.get('price', 'غير محدد')
-        context.user_data['final_names'] = names_details if names_details else 'غير مطلوب'
-        context.user_data['final_date'] = date_details if date_details else 'غير مطلوب'
-        context.user_data['final_product_image'] = product_data.get('image', 'غير متوفر')
-        context.user_data['final_product_type'] = product_type
-        context.user_data['final_product_label'] = product_data.get('label', product_type)
-        context.user_data['final_code'] = product_data.get('callback', 'N/A')
-        
-    elif 'direct_product' in context.user_data:
-        # الأهرامات، الدروع، الأباجورات، السبلميشن
+        product_data = context.user_data.get('tissue_product')
+        names_details = context.user_data.get('tissue_names')
+        date_details = context.user_data.get('tissue_date')
+    elif product_type == "محافظ":
+        product_data = context.user_data.get('wallet_data')
+        names_details = context.user_data.get('wallet_engraving_name')
+        product_type = f"{product_type} - {product_data['label']}"
+    elif product_type == "اقلام":
+        product_data = context.user_data.get('pen_data')
+        names_details = context.user_data.get('pen_engraving_name')
+        product_type = f"{product_type} - {product_data['label']}"
+    elif product_type == "بوكس كتب كتاب":
+        product_data = context.user_data.get('box_product')
+        names_details = context.user_data.get('box_names')
+        color_details = context.user_data.get('box_color')
+        product_type = f"{product_type} - {product_data['label']} - {color_details}"
+    elif product_type == "صواني شبكة اكليريك":
+        product_data = context.user_data.get('tray_product')
+        names_details = context.user_data.get('tray_names')
+        date_details = context.user_data.get('tray_date')
+    elif product_type == "صواني شبكة خشب":
+        product_data = context.user_data.get('khashab_tray_product')
+        names_details = context.user_data.get('khashab_tray_names')
+        date_details = context.user_data.get('khashab_tray_date')
+    elif product_type == "طارة اكليريك":
+        product_data = context.user_data.get('taarat_akerik_product')
+        names_details = context.user_data.get('taarat_akerik_names')
+        date_details = context.user_data.get('taarat_akerik_date')
+    elif product_type == "طارة خشب":
+        product_data = context.user_data.get('taarat_khashab_product')
+        names_details = context.user_data.get('taarat_khashab_names')
+        date_details = context.user_data.get('taarat_khashab_date')
+    elif product_type == "مج ديجتال": # 🔥 إضافة حالة المج الديجتال
+        product_data = context.user_data.get('digital_mug_product')
+        names_details = context.user_data.get('digital_mug_name')
+        # product_type remains "مج ديجتال"
+    elif product_type == "مرايا": # 🔥 إضافة حالة المرايا
+        product_data = context.user_data.get('mirror_product')
+        size_label = context.user_data.get('mirror_size')
+        names_details = context.user_data.get('mirror_name')
+        product_type = f"{product_type} - {size_label}"
+    elif product_type == "يد هوايا": # 🔥 إضافة حالة يد الهوايا (تمت الإضافة)
+        product_data = context.user_data.get('fan_product')
+        names_details = context.user_data.get('fan_name')
+        # product_type remains "يد هوايا"
+    elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات، الأباجورات، السبلميشن
         product_data = context.user_data.get('direct_product')
-        
+        # product_type is already set from prepare_whatsapp_link_for_direct_buy
     else:
         update.effective_chat.send_message("حدث خطأ في تجهيز الطلب. يرجى البدء من جديد.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]]))
         context.user_data.clear()
         return ConversationHandler.END
 
-    # 2. حفظ تفاصيل الطلب بشكل موحد لـ handle_payment_photo (إذا لم تكن من نوع 'ساعة زجاج بالصورة')
-    if product_type != "ساعة زجاج بالصورة":
-        context.user_data['final_product_type'] = product_type
-        context.user_data['final_product_label'] = product_data.get('label', product_type)
-        context.user_data['final_price'] = product_data.get('price', 'غير محدد')
-        context.user_data['final_names'] = names_details if names_details else 'غير مطلوب'
-        context.user_data['final_date'] = date_details if date_details else 'غير مطلوب'
-        context.user_data['final_code'] = product_data.get('callback', 'N/A')
-        context.user_data['final_product_image'] = product_data.get('image', 'غير متوفر')
-
-    # ... (بقية كود دالة prompt_for_payment_and_receipt) ...
-
-    context.user_data['state'] = GET_PAYMENT_RECEIPT
+    # 2. حفظ تفاصيل الطلب بشكل موحد لـ handle_payment_photo
+    context.user_data['final_product_type'] = product_type
+    context.user_data['final_product_label'] = product_data.get('label', product_type)
+    context.user_data['final_price'] = product_data.get('price', 'غير محدد')
+    # سيتم استخدام names_details هنا لتخزين اسم الحفر في حالة المج الديجتال أو المرايا أو يد الهوايا
+    context.user_data['final_names'] = names_details if names_details else 'غير مطلوب'
+    context.user_data['final_date'] = date_details if date_details else 'غير مطلوب'
+    context.user_data['final_code'] = product_data.get('callback', 'N/A')
+    # 🔥 حفظ رابط صورة المنتج
+    context.user_data['final_product_image'] = product_data.get('image', 'غير متوفر') 
     
-    final_price = context.user_data['final_price']
-    
-    # 3. إعداد رسالة الدفع
-    message_text = (
-        f"✅ تم تأكيد طلبك لمنتج **{context.user_data['final_product_label']}** "
-        f"بسعر إجمالي **{final_price}**.\n\n"
-        "لإتمام الطلب، برجاء تحويل المبلغ على رقم فودافون كاش:\n"
-        f"💰 **{VODAFONE_CASH_NUMBER}**\n\n"
-        "⚠️ بعد إتمام عملية التحويل، يرجى إرسال **صورة إيصال الدفع** في رسالة بالأسفل. "
-        "بدونها لن يتم تأكيد الطلب. شكرًا لتعاونكم."
+    # 3. إرسال رسالة الدفع (تم التعديل)
+    payment_message = (
+        f"✅ *طلبك جاهز:* {context.user_data['final_product_label']}\n"
+        f"💰 *السعر الإجمالي:* {context.user_data['final_price']}\n\n"
+        f"من فضلك قم بتحويل المبلغ على محفظة فودافون كاش.\n\n"
+        f"👇 **اضغط على زر النسخ بالأسفل ليظهر الرقم في خانة الرسالة لنسخه بسهولة**.\n\n"
+        f"بعد التحويل، **يرجى إرسال صورة إيصال التحويل في رسالة بالأسفل** لإتمام الطلب.\n\n"
+        f"أو اضغط إلغاء للعودة للقائمة الرئيسية."
     )
     
-    # زر نسخ رقم المحفظة وزر إلغاء
+    # 🔥 التعديل الرئيسي: استخدام switch_inline_query_current_chat لتمكين النسخ المباشر
     keyboard = [
-        # زر نسخ (يستخدم الـ inline query)
-        [InlineKeyboardButton("📋 نسخ رقم فودافون كاش", switch_inline_query_current_chat=VODAFONE_CASH_NUMBER)],
-        [InlineKeyboardButton("❌ إلغاء الطلب والعودة للرئيسية", callback_data="cancel")]
+        # هذا الزر سيضع الرقم مباشرة في خانة إدخال المستخدم
+        [InlineKeyboardButton("📞 نسخ رقم المحفظة مباشرة (اضغط هنا)", switch_inline_query_current_chat=f" {VODAFONE_CASH_NUMBER}")],
+        [InlineKeyboardButton("❌ إلغاء الطلب", callback_data="cancel")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    # إرسال الرسالة
     update.effective_chat.send_message(
-        text=message_text,
+        text=payment_message,
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
+
+    # 4. تغيير الحالة لانتظار الصورة
+    context.user_data['state'] = GET_PAYMENT_RECEIPT
     return GET_PAYMENT_RECEIPT
 
 
 # --------------------------------------------------------------------------------
-# 🔥 دالة معالجة صورة الإيصال (تم التعديل لإضافة رابط صورة الطباعة لرسالة الواتساب)
+# 🔥 دالة معالجة إيصال الدفع (تم تعديلها لاستكمال المحادثة)
 # --------------------------------------------------------------------------------
 def handle_payment_photo(update, context):
-    # ... (بقية كود دالة handle_payment_photo) ...
+    """
+    الدالة التي تستقبل صورة إيصال الدفع وتنهي المحادثة بإنشاء رابط الواتساب.
+    """
+    
+    # التأكد أن المستخدم في حالة انتظار الإيصال
+    if context.user_data.get('state') != GET_PAYMENT_RECEIPT:
+        update.effective_chat.send_message("عفواً، لا يمكنني معالجة هذه الصورة الآن. يرجى البدء بطلب جديد.")
+        context.user_data.clear()
+        return ConversationHandler.END
 
-    # 1. حفظ صورة الإيصال والحصول على رابط الصورة
-    if not update.message.photo:
-        update.message.reply_text("❌ من فضلك أرسل *صورة* الإيصال لإتمام الطلب.", parse_mode="Markdown")
+    # 1. الحصول على رابط إيصال الدفع من تليجرام
+    if not (update.message and update.message.photo):
+        # ليس صورة، اطلب منه الصورة مرة أخرى
+        update.effective_chat.send_message("عفواً، يرجى إرسال صورة الإيصال فقط في هذه الخطوة.")
         return GET_PAYMENT_RECEIPT
-    
-    # ... (بقية كود دالة handle_payment_photo) ...
-    
+        
+    try:
+        # الحصول على الصورة بأعلى دقة
+        photo_file_id = update.message.photo[-1].file_id
+        new_file = context.bot.get_file(photo_file_id)
+        # هذا هو رابط الصورة المطلوب إرساله إلى الواتساب
+        receipt_url = new_file.file_path 
+    except Exception as e:
+        context.bot.send_message(update.effective_chat.id, f"حدث خطأ أثناء محاولة الحصول على رابط الصورة: {e}")
+        return ConversationHandler.END
+
     # 2. استرجاع بيانات الطلب النهائية
     product_type = context.user_data.get('final_product_type', 'غير متوفر')
     product_label = context.user_data.get('final_product_label', 'غير متوفر')
@@ -752,10 +1739,9 @@ def handle_payment_photo(update, context):
     names_text = context.user_data.get('final_names', 'غير مطلوب')
     date_text = context.user_data.get('final_date', 'غير مطلوب')
     product_code = context.user_data.get('final_code', 'N/A')
-    
     # 🔥 استرجاع رابط صورة المنتج
-    product_image_url = context.user_data.get('final_product_image', 'غير متوفر')
-    
+    product_image_url = context.user_data.get('final_product_image', 'غير متوفر') 
+
     # 🔥🔥 استرجاع روابط صور المجات (إن وجدت)
     mug_photos = context.user_data.get('mug_photos_links', [])
     mug_photos_text = ""
@@ -763,96 +1749,369 @@ def handle_payment_photo(update, context):
         mug_photos_text = "\n\n🔗 **صور التصميم المرفقة:**\n"
         for i, link in enumerate(mug_photos):
             mug_photos_text += f" صورة {i+1}: {link}\n"
-            
-    # 🔥🔥🔥 استرجاع رابط الصورة المطلوب طباعتها على الساعة (الحالة الجديدة)
-    printing_image_url = context.user_data.get('printing_image_url')
-    image_to_print_text = ""
-    if printing_image_url and product_type == "ساعة زجاج بالصورة":
-        # إضافة رابط الصورة المطلوب طباعتها ضمن تفاصيل الطلب
-        image_to_print_text = f"\n🔗 *رابط الصورة المطلوب طباعتها علي الساعة:* {printing_image_url}\n"
-        
-        # يتم دمج المقاس مع اسم المنتج في حقل product_type
-        # names_text already holds the size and is enough
-        
+    
     user_info = update.message.from_user
     # 🔥 إنشاء رابط التواصل عبر التليجرام
-    telegram_contact_link = f"tg://user?id={user_info.id}"
+    telegram_contact_link = f"tg://user?id={user_info.id}" 
 
     # 3. بناء نص الرسالة للواتساب (تم التعديل)
     message_body = (
-        f"🔔 *طلب منتج جديد* 🔔\n\n"
-        f"👤 *العميل:* {user_info.first_name} {user_info.last_name if user_info.last_name else ''} (ID: {user_info.id})\n"
-        f"📞 *للتواصل عبر تليجرام:* {telegram_contact_link}\n\n"
-        f"📦 *المنتج:* {product_label} ({product_type})\n"
-        f"💰 *السعر المتفق عليه:* {paid_amount}\n"
-        
-        # 🔥 إضافة رابط الصورة المطلوب طباعتها هنا
-        f"{image_to_print_text}" # يتم إضافته هنا إذا كانت ساعة زجاج
-        
-        f"📝 *تفاصيل الطلب (الأسماء/المقاس):* {names_text}\n"
-        f"🗓️ *التاريخ:* {date_text}\n"
-        f"🔗 *رابط صورة الإيصال:* {receipt_url}\n"
-        f"📷 *رابط صورة المنتج المعروض:* {product_image_url}\n"
-        f"🔢 *كود المنتج:* {product_code}\n"
-        f"{mug_photos_text}"
-        "\n--- رسالة تلقائية من البوت ---"
+        f"🔔 *طلب شراء جديد (مدفوع)* 🔔\n\n"
+        f"نوع المنتج: {product_type.replace('-', ' - ')}\n"
+        f"المنتج: {product_label}\n"
+        f"السعر المدفوع: *{paid_amount}*\n\n"
+        f"الأسماء (أو الحفر): {names_text}\n"
+        f"التاريخ: {date_text}\n"
+        f"{mug_photos_text}\n" # 🔥 إضافة صور المجات هنا
+        f"🔗 رابط صورة المنتج: {product_image_url}\n" 
+        f"🔗 رابط إيصال الدفع: {receipt_url}\n" 
+        f"الكود: {product_code}\n\n"
+        f"اسم العميل: {user_info.first_name}\n"
+        f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
+        f"رابط التواصل عبر التليجرام: {telegram_contact_link}" 
     )
-
-    # ... (بقية كود دالة handle_payment_photo) ...
     
+    encoded_text = quote_plus(message_body)
+    wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_text}"
+    
+    # 4. إرسال رسالة التأكيد في تليجرام
+    keyboard = [[InlineKeyboardButton("✅ اضغط هنا لإرسال الطلب على واتساب", url=wa_link)]]
+    keyboard.append([InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text=f"تم استلام إيصال الدفع بنجاح. تفاصيل الطلب جاهزة:\n\nالمنتج: {product_label}\nالسعر: {paid_amount}\n\nلإتمام الطلب، اضغط على الزر التالي:",
+        reply_markup=reply_markup
+    )
+    
+    # 5. إنهاء المحادثة ومسح البيانات المؤقتة
+    context.user_data.clear()
     return ConversationHandler.END
 
-# --------------------
-# 5. دالة إضافة المعالجات (setup_handlers)
-# --------------------
-def setup_handlers(dp):
-    # ... (بقية كود دالة setup_handlers) ...
+# --------------------------------------------------------------------------------
+# 4. دالة button لمعالجة الأزرار (Callback Queries) 
+# --------------------------------------------------------------------------------
+def button(update, context):
+    query = update.callback_query
+    data = query.data
+    
+    # 0. معالجة إلغاء المحادثة (فقط عندما لا نكون في محادثة ConversationHandler)
+    if data == "cancel":
+        return cancel_and_end(update, context)
 
-    # دوال المحافظ
+    # 1. العودة للقائمة الرئيسية
+    if data == "main_menu":
+        start(update, context)
+        return
+        
+    # 2. معالجة فتح قوائم المستوى الأول (sawany, taarat, haram, doro3, mugat, aqlam, engraved_wallet)
+    # 🔥 ملاحظة: القوائم التي تحتاج عرض منتجات مباشرة تم معالجتها في الخطوة 3
+    if data in ["sawany", "taarat", "haram", "doro3", "mugat", "aqlam", "engraved_wallet"]: 
+        title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
+        clean_title = title.split()[-1]
+        show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu")
+        return
+        
+    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, fans, sublimation)
+    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation"]: # 🔥 إضافة 'fans'
+        # Find the correct submenu list
+        submenu_list = all_submenus.get(data)
+        
+        # إذا كانت "بصمات" أو أي قائمة أخرى تحتاج عرض المنتجات أولاً
+        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation"]: # 🔥 إضافة 'fans'
+            show_product_page(update, data, submenu_list, is_direct_list=True)
+            return
+
+    # 4. معالجة عرض صفحات المنتجات مباشرة (قوائم المستوى الثاني)
+    product_list_keys = [
+        "sawany_akerik", "sawany_khashab", "taarat_akerik", "taarat_khashab", 
+        "haram_akerik", "haram_metal", "haram_khashab", "doro3_akerik", 
+        "doro3_metal", "doro3_qatifah", "doro3_khashab", "mugat_white", 
+        "mugat_magic", "mugat_digital"
+    ]
+    if data in product_list_keys:
+        # البحث عن القائمة الفرعية المناسبة في all_submenus
+        submenu_list = next((item['items'] for menu_list in all_submenus.values() for item in menu_list if item['callback'] == data), None)
+        if submenu_list:
+            show_product_page(update, data, submenu_list, is_direct_list=False)
+            return
+
+    # 5. معالجة أزرار الشراء الفردية (للمنتجات التي لا تحتاج محادثة)
+    if data.startswith("buy_"):
+        # يجب أن يصل إلى هنا فقط الأباجورات والهرامات والدروع والمجات والسبلميشن والمرايا ويد الهوايا
+        
+        # 🔥 التحقق إذا كان مج أبيض أو سحري لتحويله للمحادثة الخاصة (إجراء احتياطي)
+        if "mugat_white" in data or "mugat_magic" in data:
+             start_mug_photos_purchase(update, context)
+             return
+
+        # 🔥 التحقق إذا كان مج ديجتال لتحويله للمحادثة الخاصة (إجراء احتياطي)
+        if "mugat_digital" in data:
+             start_digital_mug_purchase(update, context)
+             return
+             
+        # 🔥 التحقق إذا كان مرايا (لأنها في conversation handler منفصل)
+        if "mirror" in data:
+             start_mirror_purchase(update, context)
+             return
+        
+        # 🔥 التحقق إذا كان يد هوايا (لأنها في conversation handler منفصل)
+        if "fan" in data:
+             start_fan_purchase(update, context)
+             return
+             
+        prepare_whatsapp_link_for_direct_buy(update, context)
+        return
+        
+    # 6. معالجة الأزرار التي تعيد المستخدم إلى قائمة فرعية سابقة
+    if data in ["back_to_pen_types", "back_to_wallets_color"]:
+        query.answer("يرجى إتمام العملية الجارية أو الضغط على /start للبدء من جديد.", show_alert=True)
+        return
+        
+
+    query.answer("إجراء غير معروف.", show_alert=True)
+    start(update, context) # عودة للقائمة الرئيسية كإجراء احتياطي
+
+def handle_messages(update, context):
+    # وظيفة لمعالجة أي رسائل نصية لا تندرج تحت محادثة نشطة
+    user_name = update.effective_user.first_name
+    update.effective_message.reply_text(
+        f"عفواً {user_name}، لا يمكنني فهم طلبك حالياً. يمكنك استخدام /start للبدء من جديد أو اختيار منتج من القوائم.", 
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 القائمة الرئيسية", callback_data="main_menu")]])
+    )
+    
+
+# --------------------
+# 5. دالة main لتشغيل البوت
+# --------------------
+
+def main():
+    # ⚠️ تم استعادة استخدام متغير البيئة BOT_TOKEN كما طلبت
+    TOKEN = os.environ.get('TOKEN') 
+    if not TOKEN:
+         # يفضل طباعة رسالة خطأ أو استخدام قيمة placeholder إذا لم يتم العثور على التوكن
+         print("Error: BOT_TOKEN environment variable is not set. Please set it or hardcode the token.")
+         return
+         
+    updater = Updater(TOKEN, use_context=True)
+    dp = updater.dispatcher
+
+    # تعريف معالجات المحادثات
+    # جميع المحادثات تنتهي في حالة GET_PAYMENT_RECEIPT
+    
+    # 1. بوكس كتب الكتاب
+    box_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_box_purchase, pattern='^buy_box_.*')],
+        states={
+            GET_BOX_COLOR: [CallbackQueryHandler(save_box_color_ask_names, pattern='^color_.*$|^katb_kitab_box$')],
+            GET_BOX_NAMES: [
+                MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish),
+                CallbackQueryHandler(back_to_box_menu, pattern='^katb_kitab_box$')
+            ],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_box_menu, pattern='^back_to_box_color$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+
+    # 2. صواني شبكة اكليريك
+    tray_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_akerik_tray_purchase, pattern='^buy_akerik_.*')],
+        states={
+            GET_TRAY_NAMES: [
+                MessageHandler(Filters.text & ~Filters.command, save_tray_names_ask_date),
+                CallbackQueryHandler(button, pattern='^sawany_akerik$') 
+            ],
+            GET_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tray_date_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_tray_names, pattern='^back_to_tray_names$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+
+    # صواني شبكة خشب
+    khashab_tray_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_khashab_tray_purchase, pattern='^buy_khashab_.*')],
+        states={
+            GET_KHASHAB_TRAY_NAMES: [
+                MessageHandler(Filters.text & ~Filters.command, save_khashab_tray_names_ask_date),
+                CallbackQueryHandler(button, pattern='^sawany_khashab$') 
+            ],
+            GET_KHASHAB_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_tray_date_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_khashab_tray_names, pattern='^back_to_khashab_tray_names$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+
+    # طارات اكليريك
+    akerik_taarat_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_akerik_taarat_purchase, pattern='^buy_taarat_akerik_.*')],
+        states={
+            GET_AKRILIK_TAARAT_NAMES: [
+                MessageHandler(Filters.text & ~Filters.command, save_akerik_taarat_names_ask_date),
+                CallbackQueryHandler(button, pattern='^taarat_akerik$')
+            ],
+            GET_AKRILIK_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_akerik_taarat_date_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_akerik_taarat_names, pattern='^back_to_akerik_taarat_names$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+
+    # طارات خشب
+    khashab_taarat_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_khashab_taarat_purchase, pattern='^buy_taarat_khashab_.*')],
+        states={
+            GET_KHASHAB_TAARAT_NAMES: [
+                MessageHandler(Filters.text & ~Filters.command, save_khashab_taarat_names_ask_date),
+                CallbackQueryHandler(button, pattern='^taarat_khashab$')
+            ],
+            GET_KHASHAB_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_taarat_date_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_khashab_taarat_names, pattern='^back_to_khashab_taarat_names$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+    
+    # بصامات
+    bsamat_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_bsamat_purchase, pattern='^buy_bsamat_.*')],
+        states={
+            GET_BSAMAT_NAMES: [
+                MessageHandler(Filters.text & ~Filters.command, save_bsamat_names_ask_date),
+                CallbackQueryHandler(button, pattern='^bsamat$')
+            ],
+            GET_BSAMAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_bsamat_date_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_bsamat_names, pattern='^back_to_bsamat_names$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+    
+    # مناديل كتب الكتاب
+    tissue_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_tissue_purchase, pattern='^buy_tissue_.*')],
+        states={
+            GET_TISSUE_NAMES: [
+                MessageHandler(Filters.text & ~Filters.command, save_tissue_names_ask_date),
+                CallbackQueryHandler(button, pattern='^wedding_tissues$') 
+            ],
+            GET_TISSUE_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tissue_date_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_tissue_names, pattern='^back_to_tissue_names$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+
+    # محافظ محفورة بالاسم
+    # تبدأ المحادثة عند اختيار اللون (wallet_bege/wallet_brown/wallet_black)
     engraved_wallet_handler = ConversationHandler(
-    # ...
+        entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^wallet_.*$')],
+        states={
+            GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_wallet_name_and_prepare_whatsapp)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            # زر الرجوع يعود إلى قائمة الألوان (back_to_wallets_color) أو إذا ضغط زر القائمة الرئيسية للمحافظ (engraved_wallet)
+            CallbackQueryHandler(back_to_wallets_color, pattern='^back_to_wallets_color$|^engraved_wallet$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
     )
 
     # اقلام محفورة بالاسم
     engraved_pen_handler = ConversationHandler(
-    # ...
-    )
-
-    # 🔥🔥 دوال خاصة بالمجات التي تتطلب صور (أبيض / سحري)
-    mug_photos_handler = ConversationHandler(
-    # ...
-    )
-
-    # 🔥🔥 دوال خاصة بالمج الديجتال (تتطلب اسم الحفر)
-    digital_mug_handler = ConversationHandler(
-    # ...
-    )
-    
-    # 🔥🔥 دوال المرايا
-    mirrors_handler = ConversationHandler(
-    # ...
-    )
-
-    # 🔥🔥 دوال يد الهوايا
-    fans_handler = ConversationHandler(
-    # ...
-    )
-    
-    # 🔥🔥🔥 دوال الساعات الزجاجية بالصورة (المعالج الجديد)
-    glass_clock_handler = ConversationHandler(
-        entry_points=[CallbackQueryHandler(start_glass_clock_purchase, pattern='^buy_glass_clock_.*')],
+        # تبدأ المحادثة عند اختيار نوع القلم من القائمة الفرعية
+        entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^aqlam_metal$|^aqlam_luminous$')],
         states={
-            GET_GLASS_CLOCK_SIZE: [
-                CallbackQueryHandler(receive_glass_clock_size_ask_photo, pattern='^size_1_price_100$|^size_2_price_200$'),
-                CallbackQueryHandler(back_to_glass_clocks_menu, pattern='^glass_clocks$')
-            ],
-            GET_GLASS_CLOCK_PHOTO: [
-                MessageHandler(Filters.photo, receive_glass_clock_photo_and_finish),
-                CallbackQueryHandler(back_to_glass_clock_size, pattern='^back_to_glass_clock_size$')
+            GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            # زر الرجوع سيعود إلى القائمة الفرعية للأقلام
+            CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$|^aqlam$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+
+    # 🔥🔥 معالج خاص للمجات الأبيض والسحري (يطلب صور) 🔥🔥
+    mug_photos_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_mug_photos_purchase, pattern='^buy_mugat_(white|magic)_.*')],
+        states={
+            GET_MUG_PHOTOS: [MessageHandler(Filters.photo, receive_mug_photos)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+    
+    # 🔥🔥 معالج خاص للمج الديجتال (يطلب اسم الحفر) 🔥🔥
+    digital_mug_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_digital_mug_purchase, pattern='^buy_mugat_digital_.*')],
+        states={
+            GET_DIGITAL_MUG_NAME: [
+                MessageHandler(Filters.text & ~Filters.command, receive_digital_mug_name),
+                CallbackQueryHandler(button, pattern='^mugat_digital$') # زر الرجوع في الرسالة
             ],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
-                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$')
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
             ]
         },
         fallbacks=[
@@ -861,11 +2120,58 @@ def setup_handlers(dp):
         ]
     )
 
-    # 3. معالج الشراء المباشر للمنتجات التي لا تحتاج محادثة
-    direct_buy_handler = CallbackQueryHandler(
-    # ...
+    # 🔥🔥 معالج خاص للمرايا (تمت الإضافة) 🔥🔥
+    mirrors_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_mirror_purchase, pattern='^buy_mirror_.*')],
+        states={
+            GET_MIRROR_SIZE: [CallbackQueryHandler(save_mirror_size_ask_name, pattern='^size_.*')],
+            GET_MIRROR_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_mirror_name_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_mirrors_menu, pattern='^mirrors$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
     )
 
+    # 🔥🔥 معالج خاص ليد الهوايا (تمت الإضافة) 🔥🔥
+    fans_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_fan_purchase, pattern='^buy_fan_.*')],
+        states={
+            GET_FAN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_fan_name_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_fans_menu, pattern='^fans$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+    
+    # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مستلزمات سبلميشن)
+    # ⚠️ تم تعديل الريجيكس الخاص بالمجات ليستثني الأبيض والسحري (حتى لا يحدث تعارض مع الهاندلر السابق)
+    # ⚠️ و تم تعديل الريجيكس لحذف mugat_digital أيضاً لأنها أصبحت معالج منفصل
+    direct_buy_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|subli)_.*')], 
+        states={
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
+    
     # 4. إضافة جميع ConversationHandler أولاً لضمان الأولوية
     dp.add_handler(box_handler)
     dp.add_handler(tray_handler)
@@ -879,7 +2185,7 @@ def setup_handlers(dp):
     
     # 🔥 إضافة معالجات المجات الجديدة
     dp.add_handler(mug_photos_handler)
-    dp.add_handler(digital_mug_handler) 
+    dp.add_handler(digital_mug_handler) # 🔥 إضافة معالج المج الديجتال
 
     # 🔥 إضافة معالج المرايا الجديد
     dp.add_handler(mirrors_handler)
@@ -887,17 +2193,21 @@ def setup_handlers(dp):
     # 🔥 إضافة معالج يد الهوايا الجديد
     dp.add_handler(fans_handler)
     
-    # 🔥 إضافة معالج الساعات الزجاجية الجديد
-    dp.add_handler(glass_clock_handler) # 🔥🔥🔥 إضافة المعالج الجديد
-    
     dp.add_handler(direct_buy_handler) 
 
     
     # 5. أوامر /start
-    dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CommandHandler("start", start))
     
-    # 6. معالج أزرار القوائم الفرعية 
-    # ... (بقية كود دالة setup_handlers) ...
+    # 6. معالج أزرار القائمة والتنقل (يجب أن يأتي بعد معالجات المحادثة)
+    dp.add_handler(CallbackQueryHandler(button)) 
+
+    # 7. معالج للرسائل النصية التي لا تندرج تحت محادثة
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_messages))
+
+    # 8. بدء تشغيل البوت
+    updater.start_polling()
+    updater.idle()
 
 if __name__ == '__main__':
     main()
