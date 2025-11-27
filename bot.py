@@ -51,6 +51,9 @@ GET_FAN_NAME = 22
 GET_CLOCK_SIZE = 23
 GET_CLOCK_PHOTO = 24
 
+# 🔥🔥🔥 الحالة الجديدة للتابلوهات (تمت الإضافة)
+GET_TABLOH_SIZE = 25
+
 
 # --------------------
 # 2. بيانات القوائم والمنتجات (تم إضافة السعر لكل منتج)
@@ -231,7 +234,8 @@ main_menu = [
     {"label": "💡 اباجورات", "callback": "abajorat"}, 
     {"label": "✏️ اقلام", "callback": "aqlam"}, 
     {"label": "☕ مجات", "callback": "mugat"},
-    {"label": "🕰️ ساعات زجاج بالصورة", "callback": "clocks"}, # 🔥 الزر الجديد أسفل المجات
+    {"label": "🕰️ ساعات زجاج بالصورة", "callback": "clocks"}, 
+    {"label": "🖼️ تابلوهات", "callback": "tablohat"}, # 🔥 الزر الجديد (تمت الإضافة)
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"}, 
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"} 
 ]
@@ -249,7 +253,7 @@ all_submenus = {
     "katb_kitab_box": katb_kitab_box_submenu,
     "mirrors": mirrors_submenu,
     "fans": fans_submenu, 
-    "clocks": clocks_submenu, # 🔥 إضافة قائمة الساعات
+    "clocks": clocks_submenu, 
     "abajorat": abajorat_submenu,
     "engraved_wallet": engraved_wallet_submenu,
     "sublimation": sublimation_supplies_submenu 
@@ -258,7 +262,7 @@ all_submenus = {
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: # 🔥 إضافة 'clocks'
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: 
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             # بالنسبة للأقلام والمحافظ (التي تبدأ محادثة مباشرة) يجب أن يتم معالجتها
@@ -391,7 +395,7 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     # تحديد زر الرجوع
     
     # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: # 🔥 إضافة 'clocks'
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: 
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -914,6 +918,85 @@ def receive_clock_photo_and_finish(update, context):
     context.user_data['clock_photo_link'] = photo_link
     
     return prompt_for_payment_and_receipt(update, context, product_type="ساعة زجاج")
+
+
+# --- [🔥 دوال المحادثات الخاصة بـ التابلوهات (تمت الإضافة)] ---
+
+def start_tabloh_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    
+    # حالة التابلوهات
+    context.user_data['state'] = GET_TABLOH_SIZE
+    
+    # 4 أزرار للمقاسات
+    keyboard = [
+        [InlineKeyboardButton("مقاس 1 (سعر 100 ج)", callback_data="tabloh_100")],
+        [InlineKeyboardButton("مقاس 2 (سعر 200 ج)", callback_data="tabloh_200")],
+        [InlineKeyboardButton("مقاس 3 (سعر 300 ج)", callback_data="tabloh_300")],
+        [InlineKeyboardButton("مقاس 4 (سعر 400 ج)", callback_data="tabloh_400")],
+        [InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    message_text = "🖼️ **قسم التابلوهات**\n\nيرجي اختيار المقاس المطلوب من القائمة التالية:"
+    
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=message_text,
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+        
+    return GET_TABLOH_SIZE
+
+def save_tabloh_size_and_finish(update, context):
+    query = update.callback_query
+    data = query.data
+    query.answer()
+    
+    price = ""
+    size_label = ""
+    
+    if data == "tabloh_100":
+        price = "100 ج"
+        size_label = "مقاس 1"
+    elif data == "tabloh_200":
+        price = "200 ج"
+        size_label = "مقاس 2"
+    elif data == "tabloh_300":
+        price = "300 ج"
+        size_label = "مقاس 3"
+    elif data == "tabloh_400":
+        price = "400 ج"
+        size_label = "مقاس 4"
+    else:
+        # عودة للقائمة الرئيسية
+        if data == "main_menu":
+            start(update, context)
+            return ConversationHandler.END
+        return GET_TABLOH_SIZE
+
+    # حفظ البيانات
+    context.user_data['tabloh_size'] = size_label
+    context.user_data['tabloh_price'] = price
+    
+    # إرسال الملحوظة
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    note_text = "⚠️ **ملحوظة :** سيتم طلب صورة التصميم المطلوب والصور المطلوب تنفيذها علي التصميم في متابعة الطلب علي الواتساب"
+    context.bot.send_message(chat_id=update.effective_chat.id, text=note_text, parse_mode="Markdown")
+    
+    # الانتقال للدفع مباشرة
+    return prompt_for_payment_and_receipt(update, context, product_type="تابلوه")
 
 
 # --- [دوال المحادثات الأخرى] --- 
@@ -1770,6 +1853,11 @@ def prompt_for_payment_and_receipt(update, context, product_type):
         product_data = context.user_data.get('clock_product')
         size_label = context.user_data.get('clock_size')
         product_type = f"{product_type} - {size_label}"
+    elif product_type == "تابلوه": # 🔥 إضافة حالة التابلوهات (جديد)
+        size_label = context.user_data.get('tabloh_size')
+        price = context.user_data.get('tabloh_price')
+        product_data = {'label': 'تابلوه', 'price': price, 'callback': 'tablohat', 'image': 'غير متوفر'}
+        product_type = f"{product_type} - {size_label}"
     elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات، الأباجورات، السبلميشن
         product_data = context.user_data.get('direct_product')
         # product_type is already set from prepare_whatsapp_link_for_direct_buy
@@ -1935,12 +2023,13 @@ def button(update, context):
         return
         
     # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, fans, sublimation, clocks)
-    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: # 🔥 إضافة 'clocks'
+    # 🔥 ملاحظة: تم حذف "tablohat" من هنا لأن لها معالج محادثة خاص بها
+    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: 
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
         
         # إذا كانت "بصمات" أو أي قائمة أخرى تحتاج عرض المنتجات أولاً
-        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: # 🔥 إضافة 'clocks'
+        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: 
             show_product_page(update, data, submenu_list, is_direct_list=True)
             return
 
@@ -2297,6 +2386,22 @@ def main():
             CallbackQueryHandler(cancel_and_end)
         ]
     )
+
+    # 🔥🔥 معالج خاص للتابلوهات (جديد) 🔥🔥
+    tablohat_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_tabloh_purchase, pattern='^tablohat$')],
+        states={
+            GET_TABLOH_SIZE: [CallbackQueryHandler(save_tabloh_size_and_finish, pattern='^tabloh_.*')],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
     
     # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مستلزمات سبلميشن)
     # ⚠️ تم تعديل الريجيكس الخاص بالمجات ليستثني الأبيض والسحري (حتى لا يحدث تعارض مع الهاندلر السابق)
@@ -2338,6 +2443,9 @@ def main():
     
     # 🔥 إضافة معالج ساعات الزجاج الجديد
     dp.add_handler(clocks_handler)
+
+    # 🔥 إضافة معالج التابلوهات الجديد
+    dp.add_handler(tablohat_handler)
     
     dp.add_handler(direct_buy_handler) 
 
