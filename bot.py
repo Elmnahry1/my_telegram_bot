@@ -419,7 +419,7 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     # تحديد زر الرجوع
     
     # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: 
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher", "aqlam"]: 
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -1165,15 +1165,19 @@ def back_to_pen_types(update, context):
     except Exception:
         pass
     
-    show_submenu(update, context, aqlam_submenu, "اقلام", back_callback="main_menu")
+    # 🔥 تم تعديل زر الرجوع ليعود لمعرض الصور بدلاً من القائمة النصية
+    show_product_page(update, "aqlam", aqlam_submenu, is_direct_list=True)
     return ConversationHandler.END
 
 def prompt_for_pen_name(update, context):
     query = update.callback_query
     data = query.data
     query.answer()
+
+    # 🔥 تعديل: إزالة buy_ لأننا قادمون من صفحة المنتجات
+    product_callback = data.replace("buy_", "")
     
-    selected_pen_data = next((item for item in aqlam_submenu if item["callback"] == data), None)
+    selected_pen_data = next((item for item in aqlam_submenu if item["callback"] == product_callback), None)
     context.user_data['pen_data'] = selected_pen_data
     context.user_data['state'] = GET_PEN_NAME
     
@@ -2119,22 +2123,21 @@ def button(update, context):
         start(update, context)
         return
         
-    # 2. معالجة فتح قوائم المستوى الأول (sawany, taarat, haram, doro3, mugat, aqlam, engraved_wallet)
-    # 🔥 ملاحظة: القوائم التي تحتاج عرض منتجات مباشرة تم معالجتها في الخطوة 3
-    if data in ["sawany", "taarat", "haram", "doro3", "mugat", "aqlam", "engraved_wallet"]: 
+    # 2. معالجة فتح قوائم المستوى الأول (sawany, taarat, haram, doro3, mugat, engraved_wallet)
+    # 🔥 ملاحظة: تم حذف "aqlam" من هنا لأنها أصبحت قائمة صور مباشرة
+    if data in ["sawany", "taarat", "haram", "doro3", "mugat", "engraved_wallet"]: 
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
         clean_title = title.split()[-1]
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu")
         return
         
-    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, fans, sublimation, clocks, mabakher)
-    # 🔥 ملاحظة: تم حذف "tablohat" من هنا لأن لها معالج محادثة خاص بها
-    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: # 🔥 تمت الإضافة
+    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, fans, sublimation, clocks, mabakher, aqlam)
+    # 🔥 ملاحظة: تمت إضافة "aqlam" هنا
+    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher", "aqlam"]: 
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
         
-        # إذا كانت "بصمات" أو أي قائمة أخرى تحتاج عرض المنتجات أولاً
-        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: # 🔥 تمت الإضافة
+        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher", "aqlam"]: 
             show_product_page(update, data, submenu_list, is_direct_list=True)
             return
 
@@ -2391,9 +2394,9 @@ def main():
     )
 
     # اقلام محفورة بالاسم
+    # 🔥 تم تحديث الهاندلر لاستقبال الأزرار بنمط buy_aqlam_.*
     engraved_pen_handler = ConversationHandler(
-        # تبدأ المحادثة عند اختيار نوع القلم من القائمة الفرعية
-        entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^aqlam_metal$|^aqlam_luminous$')],
+        entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^buy_aqlam_.*')],
         states={
             GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)],
             GET_PAYMENT_RECEIPT: [
@@ -2403,7 +2406,7 @@ def main():
         },
         fallbacks=[
             CommandHandler('start', start),
-            # زر الرجوع سيعود إلى القائمة الفرعية للأقلام
+            # زر الرجوع سيعود إلى معرض الأقلام
             CallbackQueryHandler(back_to_pen_types, pattern='^back_to_pen_types$|^aqlam$'),
             CallbackQueryHandler(cancel_and_end)
         ]
