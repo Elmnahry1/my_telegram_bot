@@ -54,6 +54,9 @@ GET_CLOCK_PHOTO = 24
 # 🔥🔥🔥 الحالة الجديدة للتابلوهات (تمت الإضافة)
 GET_TABLOH_SIZE = 25
 
+# 🔥🔥🔥 الحالة الجديدة للمباخر (تمت الإضافة)
+GET_MABKHARA_DETAILS = 26
+
 
 # --------------------
 # 2. بيانات القوائم والمنتجات (تم إضافة السعر لكل منتج)
@@ -99,6 +102,25 @@ engraved_wallet_submenu = [
     {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني.", "price": "200 ج"},
     {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود.", "price": "200 ج"}
 ]
+
+# 🔥 قائمة المباخر الجديدة (تمت الإضافة)
+mabakher_submenu = [
+    {
+        "label": "مبخرة موديل 1", 
+        "callback": "mabkhara_m1", 
+        "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
+        "description": "مبخرة خشبية بتصميم إسلامي مميز، مناسبة للإهداء.", 
+        "price": "250 ج"
+    },
+    {
+        "label": "مبخرة موديل 2", 
+        "callback": "mabkhara_m2", 
+        "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
+        "description": "مبخرة اكليريك مع خشب بتصميم عصري وكتابة الاسم.", 
+        "price": "300 ج"
+    }
+]
+
 aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", 
@@ -237,6 +259,7 @@ main_menu = [
     {"label": "🕰️ ساعات زجاج بالصورة", "callback": "clocks"}, 
     {"label": "🖼️ تابلوهات", "callback": "tablohat"}, # 🔥 الزر الجديد (تمت الإضافة)
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"}, 
+    {"label": "♨️ مباخر", "callback": "mabakher"}, # 🔥 الزر الجديد (تمت الإضافة)
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"} 
 ]
 
@@ -256,13 +279,14 @@ all_submenus = {
     "clocks": clocks_submenu, 
     "abajorat": abajorat_submenu,
     "engraved_wallet": engraved_wallet_submenu,
+    "mabakher": mabakher_submenu, # 🔥 تمت الإضافة
     "sublimation": sublimation_supplies_submenu 
 }
 
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: 
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: 
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             # بالنسبة للأقلام والمحافظ (التي تبدأ محادثة مباشرة) يجب أن يتم معالجتها
@@ -395,7 +419,7 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     # تحديد زر الرجوع
     
     # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: 
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: 
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -997,6 +1021,83 @@ def save_tabloh_size_and_finish(update, context):
     
     # الانتقال للدفع مباشرة
     return prompt_for_payment_and_receipt(update, context, product_type="تابلوه")
+
+
+# --- [🔥 دوال المحادثات الخاصة بالمباخر (تمت الإضافة)] ---
+
+def get_mabakher_items():
+    return mabakher_submenu
+
+def start_mabkhara_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data  # buy_mabkhara_m1
+    product_callback = data.replace("buy_", "")
+    
+    # 1. الحصول على بيانات المنتج
+    items_list = get_mabakher_items() 
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['mabkhara_product'] = selected_product
+    context.user_data['state'] = GET_MABKHARA_DETAILS
+    
+    # 2. زر الرجوع
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="mabakher")]] 
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = (
+        f"✅ **{selected_product['label']}** (السعر: *{selected_product.get('price', 'غير متوفر')}*)\n\n"
+        "📝 من فضلك **اكتب هنا أي تفاصيل إضافية خاصة بك** (مثل الاسم المطلوب كتابته).\n\n"
+        "أو اكتب **'لا يوجد'** إذا لم يكن لديك أي تفاصيل إضافية.\n\n"
+        "أو اضغط زر **رجوع** للعودة إلى القائمة السابقة."
+    )
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+        
+    return GET_MABKHARA_DETAILS
+
+def back_to_mabakher_menu(update, context):
+    query = update.callback_query
+    query.answer()
+    context.user_data.clear()
+    
+    try:
+        query.message.delete()
+    except Exception:
+        pass
+        
+    # إعادة عرض قائمة المباخر
+    show_product_page(update, "mabakher", mabakher_submenu, is_direct_list=True)
+    return ConversationHandler.END
+
+def receive_mabkhara_details_and_finish(update, context):
+    details = update.message.text
+    context.user_data['mabkhara_details'] = details
+    
+    # الانتقال لمرحلة الدفع
+    return prompt_for_payment_and_receipt(update, context, product_type="مبخرة")
 
 
 # --- [دوال المحادثات الأخرى] --- 
@@ -1858,6 +1959,10 @@ def prompt_for_payment_and_receipt(update, context, product_type):
         price = context.user_data.get('tabloh_price')
         product_data = {'label': 'تابلوه', 'price': price, 'callback': 'tablohat', 'image': 'غير متوفر'}
         product_type = f"{product_type} - {size_label}"
+    elif product_type == "مبخرة": # 🔥 إضافة حالة المباخر
+        product_data = context.user_data.get('mabkhara_product')
+        names_details = context.user_data.get('mabkhara_details')
+        # product_type remains "مبخرة"
     elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات، الأباجورات، السبلميشن
         product_data = context.user_data.get('direct_product')
         # product_type is already set from prepare_whatsapp_link_for_direct_buy
@@ -2022,14 +2127,14 @@ def button(update, context):
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu")
         return
         
-    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, fans, sublimation, clocks)
+    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, fans, sublimation, clocks, mabakher)
     # 🔥 ملاحظة: تم حذف "tablohat" من هنا لأن لها معالج محادثة خاص بها
-    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: 
+    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: # 🔥 تمت الإضافة
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
         
         # إذا كانت "بصمات" أو أي قائمة أخرى تحتاج عرض المنتجات أولاً
-        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks"]: 
+        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: # 🔥 تمت الإضافة
             show_product_page(update, data, submenu_list, is_direct_list=True)
             return
 
@@ -2073,6 +2178,11 @@ def button(update, context):
         # 🔥 التحقق إذا كان ساعة زجاج (لأنها في conversation handler منفصل)
         if "clock" in data:
              start_clock_purchase(update, context)
+             return
+
+        # 🔥 التحقق إذا كان مباخر (لأنها في conversation handler منفصل)
+        if "mabkhara" in data:
+             start_mabkhara_purchase(update, context)
              return
              
         prepare_whatsapp_link_for_direct_buy(update, context)
@@ -2402,6 +2512,23 @@ def main():
             CallbackQueryHandler(cancel_and_end)
         ]
     )
+
+    # 🔥🔥 معالج خاص للمباخر (تمت الإضافة)
+    mabakher_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_mabkhara_purchase, pattern='^buy_mabkhara_.*')],
+        states={
+            GET_MABKHARA_DETAILS: [MessageHandler(Filters.text & ~Filters.command, receive_mabkhara_details_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_mabakher_menu, pattern='^mabakher$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
     
     # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مستلزمات سبلميشن)
     # ⚠️ تم تعديل الريجيكس الخاص بالمجات ليستثني الأبيض والسحري (حتى لا يحدث تعارض مع الهاندلر السابق)
@@ -2446,6 +2573,9 @@ def main():
 
     # 🔥 إضافة معالج التابلوهات الجديد
     dp.add_handler(tablohat_handler)
+
+    # 🔥 إضافة معالج المباخر الجديد (تمت الإضافة)
+    dp.add_handler(mabakher_handler)
     
     dp.add_handler(direct_buy_handler) 
 
