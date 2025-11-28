@@ -357,7 +357,15 @@ def start(update, context):
     
     user_name = update.effective_user.first_name
     greeting_text = f"✅ مرحباً بك {user_name} في البوت الرسمي لمصنع المناهري للحفر بالليزر وجميع مستلزمات الزفاف والسبلميشن\n\nمن فضلك اختر طلبك من القائمة:"
-    keyboard = [[InlineKeyboardButton(item["label"], callback_data=item["callback"])] for item in main_menu]
+    
+    # 🔥 التعديل: جعل الأزرار صفين صفين
+    keyboard = []
+    for i in range(0, len(main_menu), 2):
+        row = [InlineKeyboardButton(main_menu[i]["label"], callback_data=main_menu[i]["callback"])]
+        if i + 1 < len(main_menu):
+            row.append(InlineKeyboardButton(main_menu[i+1]["label"], callback_data=main_menu[i+1]["callback"]))
+        keyboard.append(row)
+        
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     # منطق عرض القائمة الرئيسية (حذف الرسالة القديمة وإرسال رسالة جديدة)
@@ -395,7 +403,8 @@ def show_submenu(update, context, submenu_list, title, back_callback="main_menu"
     # إنشاء لوحة المفاتيح النهائية
     reply_markup = InlineKeyboardMarkup(keyboard)
     
-    message_text = f"✅ *{title}*:\n\nمن فضلك اختر طلبك من القائمة:"
+    # 🔥 التعديل: تعديل نص الرسالة ليظهر الاسم الكامل بجانب علامة الصح
+    message_text = f"✅ {title}\n\nمن فضلك اختر طلبك من القائمة:"
 
     # إرسال رسالة جديدة
     update.effective_chat.send_message(
@@ -2261,8 +2270,8 @@ def button(update, context):
     # 🔥 ملاحظة: القوائم التي تحتاج عرض منتجات مباشرة تم معالجتها في الخطوة 3
     if data in ["sawany", "taarat", "haram", "doro3", "mugat", "aqlam", "engraved_wallet"]: 
         title = next((item["label"] for item in main_menu if item["callback"] == data), "القائمة")
-        clean_title = title.split()[-1]
-        show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu")
+        # 🔥 التعديل: تم إلغاء قص الاسم لعرض الاسم بالكامل
+        show_submenu(update, context, all_submenus[data], title, back_callback="main_menu")
         return
         
     # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, fans, sublimation, clocks, mabakher, hasalat)
