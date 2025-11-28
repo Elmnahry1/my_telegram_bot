@@ -57,6 +57,10 @@ GET_TABLOH_SIZE = 25
 # 🔥🔥🔥 الحالة الجديدة للمباخر (تمت الإضافة)
 GET_MABKHARA_DETAILS = 26
 
+# 🔥🔥🔥 الحالة الجديدة للحصالات (تمت الإضافة)
+GET_HASALA_TYPE = 27
+GET_HASALA_NAME = 28
+
 
 # --------------------
 # 2. بيانات القوائم والمنتجات (تم إضافة السعر لكل منتج)
@@ -118,6 +122,17 @@ mabakher_submenu = [
         "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
         "description": "مبخرة اكليريك مع خشب بتصميم عصري وكتابة الاسم.", 
         "price": "300 ج"
+    }
+]
+
+# 🔥 قائمة الحصالات الجديدة (تمت الإضافة)
+hasalat_submenu = [
+    {
+        "label": "حصالة خشبية مميزة", 
+        "callback": "hasala_product", 
+        "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
+        "description": "حصالة خشبية أنيقة لتوفير المال، متوفرة بعدة فئات (5000 - 1000 - 2000) مع إمكانية كتابة الاسم.", 
+        "price": "حسب الفئة"
     }
 ]
 
@@ -257,9 +272,10 @@ main_menu = [
     {"label": "✏️ اقلام", "callback": "aqlam"}, 
     {"label": "☕ مجات", "callback": "mugat"},
     {"label": "🕰️ ساعات زجاج بالصورة", "callback": "clocks"}, 
-    {"label": "🖼️ تابلوهات", "callback": "tablohat"}, # 🔥 الزر الجديد (تمت الإضافة)
+    {"label": "🖼️ تابلوهات", "callback": "tablohat"}, 
     {"label": "👝 محافظ محفورة بالاسم", "callback": "engraved_wallet"}, 
-    {"label": "♨️ مباخر", "callback": "mabakher"}, # 🔥 الزر الجديد (تمت الإضافة)
+    {"label": "♨️ مباخر", "callback": "mabakher"}, 
+    {"label": "💰 حصالات", "callback": "hasalat"}, # 🔥 الزر الجديد (تمت الإضافة هنا)
     {"label": "🖨️ مستلزمات سبلميشن", "callback": "sublimation"} 
 ]
 
@@ -279,14 +295,15 @@ all_submenus = {
     "clocks": clocks_submenu, 
     "abajorat": abajorat_submenu,
     "engraved_wallet": engraved_wallet_submenu,
-    "mabakher": mabakher_submenu, # 🔥 تمت الإضافة
+    "mabakher": mabakher_submenu, 
+    "hasalat": hasalat_submenu, # 🔥 تمت الإضافة
     "sublimation": sublimation_supplies_submenu 
 }
 
 # بناء خريطة المنتجات (مفتاح المنتج > مفتاح القائمة الأم)
 product_to_submenu_map = {}
 for menu_key, submenu_list in all_submenus.items():
-    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: 
+    if menu_key in ["bsamat", "wedding_tissues", "abajorat", "engraved_wallet", "aqlam", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher", "hasalat"]: # 🔥 تمت إضافة hasalat
         # للقوائم المباشرة، نضيف كل منتج مباشرة
         for product in submenu_list:
             # بالنسبة للأقلام والمحافظ (التي تبدأ محادثة مباشرة) يجب أن يتم معالجتها
@@ -419,7 +436,7 @@ def show_product_page(update, product_callback_data, product_list, is_direct_lis
     # تحديد زر الرجوع
     
     # 1. إذا كانت قائمة مباشرة من القائمة الرئيسية
-    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: 
+    if product_callback_data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher", "hasalat"]: # 🔥 تمت إضافة hasalat
         back_callback = "main_menu"
         back_text = "🔙 اضغط للرجوع إلى القائمة الرئيسية"
     # 2. قوائم المستوى الثاني (مثل صواني اكليريك/خشب) تعود للقائمة الأم (صواني)
@@ -1098,6 +1115,122 @@ def receive_mabkhara_details_and_finish(update, context):
     
     # الانتقال لمرحلة الدفع
     return prompt_for_payment_and_receipt(update, context, product_type="مبخرة")
+
+
+# --- [🔥 دوال المحادثات الخاصة بالحصالات (تمت الإضافة)] ---
+
+def start_hasala_purchase(update, context):
+    query = update.callback_query
+    query.answer()
+    data = query.data  # buy_hasala_product
+    product_callback = data.replace("buy_", "")
+    
+    # 1. الحصول على بيانات المنتج
+    items_list = hasalat_submenu 
+    selected_product = next((item for item in items_list if item["callback"] == product_callback), None)
+    if not selected_product:
+        query.answer("خطأ في العثور على المنتج", show_alert=True)
+        return ConversationHandler.END
+        
+    context.user_data['hasala_product'] = selected_product
+    context.user_data['state'] = GET_HASALA_TYPE
+    
+    # 2. إعداد أزرار أنواع الحصالات
+    keyboard = [
+        [InlineKeyboardButton("حصالة 5000 (سعر 150 ج)", callback_data="hasala_5000")],
+        [InlineKeyboardButton("حصالة 1000 (سعر 100 ج)", callback_data="hasala_1000")],
+        [InlineKeyboardButton("حصالة 2000 (سعر 120 ج)", callback_data="hasala_2000")],
+        [InlineKeyboardButton("🔙 رجوع", callback_data="hasalat")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    caption_text = f"✅ **{selected_product['label']}**\n\nبرجاء **تحديد فئة الحصالة المطلوبة** من القائمة التالية:"
+    
+    try:
+        context.bot.send_photo(
+            chat_id=update.effective_chat.id,
+            photo=selected_product['image'],
+            caption=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+    except telegram.error.BadRequest:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=caption_text,
+            reply_markup=reply_markup,
+            parse_mode="Markdown"
+        )
+        
+    return GET_HASALA_TYPE
+
+def back_to_hasalat_menu(update, context):
+    query = update.callback_query
+    query.answer()
+    context.user_data.clear()
+    
+    try:
+        query.message.delete()
+    except Exception:
+        pass
+        
+    show_product_page(update, "hasalat", hasalat_submenu, is_direct_list=True)
+    return ConversationHandler.END
+
+def save_hasala_type_ask_name(update, context):
+    query = update.callback_query
+    data = query.data
+    query.answer()
+    
+    price = ""
+    type_label = ""
+    
+    if data == "hasala_5000":
+        price = "150 ج"
+        type_label = "حصالة 5000"
+    elif data == "hasala_1000":
+        price = "100 ج"
+        type_label = "حصالة 1000"
+    elif data == "hasala_2000":
+        price = "120 ج"
+        type_label = "حصالة 2000"
+    else:
+        return GET_HASALA_TYPE
+
+    # تحديث السعر
+    if 'hasala_product' in context.user_data:
+        context.user_data['hasala_product']['price'] = price
+        
+    context.user_data['hasala_type'] = type_label
+    context.user_data['state'] = GET_HASALA_NAME
+    
+    # زر رجوع
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="hasalat")]]
+    reply_markup = InlineKeyboardMarkup(back_keyboard)
+    
+    try:
+        query.message.delete()
+    except:
+        pass
+        
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"✅ تم اختيار **{type_label}** بسعر **{price}**.\n\nمن فضلك الآن **اكتب الاسم المطلوب طباعته على الحصالة** في رسالة نصية بالأسفل، أو اضغط زر رجوع للإلغاء:",
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
+    )
+    return GET_HASALA_NAME
+
+def receive_hasala_name_and_finish(update, context):
+    name = update.message.text
+    context.user_data['hasala_name'] = name
+    
+    return prompt_for_payment_and_receipt(update, context, product_type="حصالة")
 
 
 # --- [دوال المحادثات الأخرى] --- 
@@ -1963,6 +2096,11 @@ def prompt_for_payment_and_receipt(update, context, product_type):
         product_data = context.user_data.get('mabkhara_product')
         names_details = context.user_data.get('mabkhara_details')
         # product_type remains "مبخرة"
+    elif product_type == "حصالة": # 🔥 إضافة حالة الحصالات
+        product_data = context.user_data.get('hasala_product')
+        type_label = context.user_data.get('hasala_type')
+        names_details = context.user_data.get('hasala_name')
+        product_type = f"{product_type} - {type_label}"
     elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات، الأباجورات، السبلميشن
         product_data = context.user_data.get('direct_product')
         # product_type is already set from prepare_whatsapp_link_for_direct_buy
@@ -2127,14 +2265,14 @@ def button(update, context):
         show_submenu(update, context, all_submenus[data], clean_title, back_callback="main_menu")
         return
         
-    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, fans, sublimation, clocks, mabakher)
+    # 3. معالجة فتح قوائم المستوى الأول المباشرة (bsamat, wedding_tissues, abajorat, katb_kitab_box, mirrors, fans, sublimation, clocks, mabakher, hasalat)
     # 🔥 ملاحظة: تم حذف "tablohat" من هنا لأن لها معالج محادثة خاص بها
-    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: # 🔥 تمت الإضافة
+    if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher", "hasalat"]: # 🔥 تمت إضافة hasalat
         # Find the correct submenu list
         submenu_list = all_submenus.get(data)
         
         # إذا كانت "بصمات" أو أي قائمة أخرى تحتاج عرض المنتجات أولاً
-        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher"]: # 🔥 تمت الإضافة
+        if data in ["bsamat", "wedding_tissues", "abajorat", "katb_kitab_box", "mirrors", "fans", "sublimation", "clocks", "mabakher", "hasalat"]: # 🔥 تمت إضافة hasalat
             show_product_page(update, data, submenu_list, is_direct_list=True)
             return
 
@@ -2183,6 +2321,11 @@ def button(update, context):
         # 🔥 التحقق إذا كان مباخر (لأنها في conversation handler منفصل)
         if "mabkhara" in data:
              start_mabkhara_purchase(update, context)
+             return
+
+        # 🔥 التحقق إذا كان حصالة (لأنها في conversation handler منفصل)
+        if "hasala" in data:
+             start_hasala_purchase(update, context)
              return
              
         prepare_whatsapp_link_for_direct_buy(update, context)
@@ -2529,6 +2672,24 @@ def main():
             CallbackQueryHandler(cancel_and_end)
         ]
     )
+
+    # 🔥🔥 معالج خاص للحصالات (تمت الإضافة)
+    hasalat_handler = ConversationHandler(
+        entry_points=[CallbackQueryHandler(start_hasala_purchase, pattern='^buy_hasala_.*')],
+        states={
+            GET_HASALA_TYPE: [CallbackQueryHandler(save_hasala_type_ask_name, pattern='^hasala_.*')],
+            GET_HASALA_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_hasala_name_and_finish)],
+            GET_PAYMENT_RECEIPT: [
+                MessageHandler(Filters.photo, handle_payment_photo),
+                CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
+            ]
+        },
+        fallbacks=[
+            CommandHandler('start', start),
+            CallbackQueryHandler(back_to_hasalat_menu, pattern='^hasalat$'),
+            CallbackQueryHandler(cancel_and_end)
+        ]
+    )
     
     # معالج الطلبات المباشرة (اباجورات، هرم، دروع، مستلزمات سبلميشن)
     # ⚠️ تم تعديل الريجيكس الخاص بالمجات ليستثني الأبيض والسحري (حتى لا يحدث تعارض مع الهاندلر السابق)
@@ -2576,6 +2737,9 @@ def main():
 
     # 🔥 إضافة معالج المباخر الجديد (تمت الإضافة)
     dp.add_handler(mabakher_handler)
+
+    # 🔥 إضافة معالج الحصالات الجديد (تمت الإضافة)
+    dp.add_handler(hasalat_handler)
     
     dp.add_handler(direct_buy_handler) 
 
