@@ -1,5 +1,4 @@
 ﻿import os
-import re # 🔥 تم استيراد re لمعالجة الأرقام في السعر
 import telegram 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 # تم استيراد Updater بدلاً من Application
@@ -61,9 +60,6 @@ GET_MABKHARA_DETAILS = 26
 # 🔥🔥🔥 الحالة الجديدة للحصالات (تمت الإضافة)
 GET_HASALA_TYPE = 27
 GET_HASALA_NAME = 28
-
-# 🔥🔥🔥 الحالة الجديدة لاختيار طريقة الاستلام (التعديل الجديد)
-GET_DELIVERY_METHOD = 29
 
 
 # --------------------
@@ -327,24 +323,6 @@ for menu_key, submenu_list in all_submenus.items():
 # 3. الدوال الرئيسية والمساعدة
 # --------------------
 
-# دالة مساعدة لحساب السعر النهائي (نصي + رقمي)
-def get_total_price_string(price_str, delivery_cost):
-    # محاولة استخراج رقم من السعر
-    match = re.search(r'\d+', price_str)
-    if match and delivery_cost > 0:
-        try:
-            val = int(match.group())
-            new_val = val + delivery_cost
-            return f"{new_val} ج"
-        except:
-            pass
-    
-    # إذا لم يكن هناك رقم أو فشل التحويل (مثل "حسب المقاس")
-    if delivery_cost > 0:
-        return f"{price_str} + {delivery_cost} ج (توصيل)"
-    return price_str
-
-
 # 🛑 الدالة الجديدة: لإلغاء أي محادثة جارية والعودة للقائمة الرئيسية
 def cancel_and_end(update, context):
     query = update.callback_query
@@ -584,7 +562,7 @@ def receive_bsamat_date_and_finish(update, context):
     date_text = update.message.text
     context.user_data['bsamat_date'] = date_text
     
-    return prompt_for_delivery_method(update, context, product_type="بصامة")
+    return prompt_for_payment_and_receipt(update, context, product_type="بصامة")
 # --- [دوال المحادثات الخاصة بمناديل كتب الكتاب] --- (تم تعديلها وتأكيدها)
 def get_wedding_tissues_items():
     return wedding_tissues_submenu
@@ -679,7 +657,7 @@ def receive_tissue_date_and_finish(update, context):
     date_text = update.message.text
     context.user_data['tissue_date'] = date_text
     
-    return prompt_for_delivery_method(update, context, product_type="منديل كتب كتاب")
+    return prompt_for_payment_and_receipt(update, context, product_type="منديل كتب كتاب")
 
 # --- [دوال المحادثات الخاصة بالمرايا] --- 
 def get_mirrors_items():
@@ -796,7 +774,7 @@ def receive_mirror_name_and_finish(update, context):
     name = update.message.text
     context.user_data['mirror_name'] = name
     
-    return prompt_for_delivery_method(update, context, product_type="مرايا")
+    return prompt_for_payment_and_receipt(update, context, product_type="مرايا")
 
 
 # --- [🔥 دوال المحادثات الخاصة بـ يد الهوايا (تمت الإضافة)] ---
@@ -866,7 +844,7 @@ def receive_fan_name_and_finish(update, context):
     name = update.message.text
     context.user_data['fan_name'] = name
     
-    return prompt_for_delivery_method(update, context, product_type="يد هوايا")
+    return prompt_for_payment_and_receipt(update, context, product_type="يد هوايا")
 
 
 # --- [🔥 دوال المحادثات الخاصة بـ ساعات الزجاج (تمت الإضافة)] ---
@@ -989,7 +967,7 @@ def receive_clock_photo_and_finish(update, context):
     
     context.user_data['clock_photo_link'] = photo_link
     
-    return prompt_for_delivery_method(update, context, product_type="ساعة زجاج")
+    return prompt_for_payment_and_receipt(update, context, product_type="ساعة زجاج")
 
 
 # --- [🔥 دوال المحادثات الخاصة بـ التابلوهات (تمت الإضافة)] ---
@@ -1067,8 +1045,8 @@ def save_tabloh_size_and_finish(update, context):
     note_text = "⚠️ **ملحوظة :** سيتم طلب صورة التصميم المطلوب والصور المطلوب تنفيذها علي التصميم في متابعة الطلب علي الواتساب"
     context.bot.send_message(chat_id=update.effective_chat.id, text=note_text, parse_mode="Markdown")
     
-    # الانتقال لاختيار طريقة الاستلام
-    return prompt_for_delivery_method(update, context, product_type="تابلوه")
+    # الانتقال للدفع مباشرة
+    return prompt_for_payment_and_receipt(update, context, product_type="تابلوه")
 
 
 # --- [🔥 دوال المحادثات الخاصة بالمباخر (تمت الإضافة)] ---
@@ -1144,8 +1122,8 @@ def receive_mabkhara_details_and_finish(update, context):
     details = update.message.text
     context.user_data['mabkhara_details'] = details
     
-    # الانتقال لمرحلة طريقة الاستلام
-    return prompt_for_delivery_method(update, context, product_type="مبخرة")
+    # الانتقال لمرحلة الدفع
+    return prompt_for_payment_and_receipt(update, context, product_type="مبخرة")
 
 
 # --- [🔥 دوال المحادثات الخاصة بالحصالات (تمت الإضافة)] ---
@@ -1241,7 +1219,7 @@ def save_hasala_type_ask_name(update, context):
     context.user_data['state'] = GET_HASALA_NAME
     
     # زر رجوع
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="hasalat")]] # تم إصلاح القوس هنا
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="hasalat")]]
     reply_markup = InlineKeyboardMarkup(back_keyboard)
     
     try:
@@ -1261,7 +1239,7 @@ def receive_hasala_name_and_finish(update, context):
     name = update.message.text
     context.user_data['hasala_name'] = name
     
-    return prompt_for_delivery_method(update, context, product_type="حصالة")
+    return prompt_for_payment_and_receipt(update, context, product_type="حصالة")
 
 
 # --- [دوال المحادثات الأخرى] --- 
@@ -1316,7 +1294,7 @@ def receive_wallet_name_and_prepare_whatsapp(update, context):
     engraving_name = update.message.text
     context.user_data['wallet_engraving_name'] = engraving_name
     
-    return prompt_for_delivery_method(update, context, product_type="محافظ")
+    return prompt_for_payment_and_receipt(update, context, product_type="محافظ")
 
 
 # دوال الأقلام
@@ -1373,7 +1351,7 @@ def receive_pen_name_and_prepare_whatsapp(update, context):
     engraving_name = update.message.text
     context.user_data['pen_engraving_name'] = engraving_name
     
-    return prompt_for_delivery_method(update, context, product_type="اقلام")
+    return prompt_for_payment_and_receipt(update, context, product_type="اقلام")
 
 
 # دوال بوكس كتب الكتاب
@@ -1464,7 +1442,7 @@ def receive_box_names_and_finish(update, context):
     names_text = update.message.text
     context.user_data['box_names'] = names_text
     
-    return prompt_for_delivery_method(update, context, product_type="بوكس كتب كتاب")
+    return prompt_for_payment_and_receipt(update, context, product_type="بوكس كتب كتاب")
 
 # دوال صواني اكليريك
 def get_akerik_tray_items():
@@ -1556,7 +1534,7 @@ def receive_tray_date_and_finish(update, context):
     date_text = update.message.text
     context.user_data['tray_date'] = date_text
     
-    return prompt_for_delivery_method(update, context, product_type="صواني شبكة اكليريك")
+    return prompt_for_payment_and_receipt(update, context, product_type="صواني شبكة اكليريك")
 
 
 # دوال صواني خشب
@@ -1649,7 +1627,7 @@ def receive_khashab_tray_date_and_finish(update, context):
     date_text = update.message.text
     context.user_data['khashab_tray_date'] = date_text
     
-    return prompt_for_delivery_method(update, context, product_type="صواني شبكة خشب")
+    return prompt_for_payment_and_receipt(update, context, product_type="صواني شبكة خشب")
 
 
 # دوال طارات اكليريك
@@ -1742,7 +1720,7 @@ def receive_akerik_taarat_date_and_finish(update, context):
     date_text = update.message.text
     context.user_data['taarat_akerik_date'] = date_text
     
-    return prompt_for_delivery_method(update, context, product_type="طارة اكليريك")
+    return prompt_for_payment_and_receipt(update, context, product_type="طارة اكليريك")
 
 
 # دوال طارات خشب
@@ -1835,7 +1813,7 @@ def receive_khashab_taarat_date_and_finish(update, context):
     date_text = update.message.text
     context.user_data['taarat_khashab_date'] = date_text
     
-    return prompt_for_delivery_method(update, context, product_type="طارة خشب")
+    return prompt_for_payment_and_receipt(update, context, product_type="طارة خشب")
 
 
 # --- 🔥🔥 دوال خاصة بالمجات الأبيض والسحري (تتطلب صور) 🔥🔥 ---
@@ -1907,10 +1885,12 @@ def receive_mug_photos(update, context):
         # تم استلام 3 صور
         update.effective_message.reply_text("✅ تم استلام الصور الثلاث بنجاح.\nجاري تحضير تفاصيل الدفع...")
         
-        # الانتقال لاختيار طريقة الاستلام
+        # الانتقال لمرحلة الدفع
+        # بما أننا حفظنا المنتج في direct_product، يمكننا استخدام product_type المناسب
+        # نستخرج النوع من direct_product label او نحدده
         p_data = context.user_data.get('direct_product')
         p_type = "مج (تصميم خاص)" 
-        return prompt_for_delivery_method(update, context, product_type=p_type)
+        return prompt_for_payment_and_receipt(update, context, product_type=p_type)
 
 
 # --- 🔥🔥 دوال خاصة بالمج الديجتال (تتطلب اسم الحفر) 🔥🔥 ---
@@ -1965,7 +1945,7 @@ def receive_digital_mug_name(update, context):
     name = update.message.text
     context.user_data['digital_mug_name'] = name
     
-    return prompt_for_delivery_method(update, context, product_type="مج ديجتال")
+    return prompt_for_payment_and_receipt(update, context, product_type="مج ديجتال")
 
 
 # دوال الشراء التي لا تحتاج محادثة (تم تعديلها لتطلب إيصال الدفع)
@@ -2025,10 +2005,10 @@ def prepare_whatsapp_link_for_direct_buy(update, context):
     except:
         pass
 
-    return prompt_for_delivery_method(update, context, product_type=product_type)
+    return prompt_for_payment_and_receipt(update, context, product_type=product_type)
 
 # --------------------------------------------------------------------------------
-# 🔥 دالة معالجة أزرار مرحلة الدفع
+# 🔥 دالة معالجة أزرار مرحلة الدفع (تم تعديلها لحذف معالج زر النسخ)
 # --------------------------------------------------------------------------------
 def handle_payment_buttons(update, context):
     """
@@ -2050,99 +2030,11 @@ def handle_payment_buttons(update, context):
 
 
 # --------------------------------------------------------------------------------
-# 🔥 دوال جديدة: لاختيار طريقة الاستلام قبل الدفع
-# --------------------------------------------------------------------------------
-
-def prompt_for_delivery_method(update, context, product_type):
-    """
-    تعرض رسالة اختيار طريقة الاستلام (من المتجر أو دليفري)
-    """
-    # حفظ نوع المنتج مؤقتاً في user_data لأن callback_handler لا يمرر arguments
-    context.user_data['temp_product_type_for_delivery'] = product_type
-    
-    # تغيير الحالة
-    context.user_data['state'] = GET_DELIVERY_METHOD
-    
-    keyboard = [
-        [InlineKeyboardButton("🏪 استلام من متجرنا (مجاناً)", callback_data="deliv_store")],
-        [InlineKeyboardButton("🛵 دليفري داخل مركز البلينا (+30 ج)", callback_data="deliv_balyana")]
-    ]
-    # إضافة زر إلغاء للعودة للقائمة الرئيسية
-    keyboard.append([InlineKeyboardButton("❌ إلغاء الطلب", callback_data="cancel")])
-    
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    msg_text = (
-        "🚚 **طريقة الاستلام**\n\n"
-        "برجاء اختيار طريقة استلام الطلب:\n"
-        "1️⃣ **استلام من المتجر:** بدون مصاريف إضافية.\n"
-        "2️⃣ **دليفري داخل مركز البلينا:** يتم إضافة 30 ج إلى إجمالي الطلب."
-    )
-    
-    # إرسال الرسالة (سواء كان التحديث رسالة نصية أو callback)
-    if update.callback_query:
-        # حذف الرسالة السابقة إن وجدت لتجنب التكرار
-        try:
-            update.callback_query.message.delete()
-        except:
-            pass
-        context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=msg_text,
-            reply_markup=reply_markup,
-            parse_mode="Markdown"
-        )
-    else:
-        update.effective_message.reply_text(
-            msg_text,
-            reply_markup=reply_markup,
-            parse_mode="Markdown"
-        )
-
-    return GET_DELIVERY_METHOD
-
-
-def handle_delivery_selection(update, context):
-    """
-    تعالج اختيار المستخدم لطريقة الاستلام، وتنتقل للدفع
-    """
-    query = update.callback_query
-    data = query.data
-    query.answer()
-    
-    if data == "cancel":
-        return cancel_and_end(update, context)
-        
-    delivery_cost = 0
-    delivery_text = ""
-    
-    if data == "deliv_store":
-        delivery_cost = 0
-        delivery_text = "استلام من المتجر (مجاناً)"
-    elif data == "deliv_balyana":
-        delivery_cost = 30
-        delivery_text = "دليفري داخل مركز البلينا (+30 ج)"
-    else:
-        # إذا ضغط زر غير متوقع
-        return GET_DELIVERY_METHOD
-        
-    # حفظ بيانات التوصيل
-    context.user_data['delivery_cost'] = delivery_cost
-    context.user_data['delivery_method_name'] = delivery_text
-    
-    # استرجاع نوع المنتج المحفوظ
-    product_type = context.user_data.get('temp_product_type_for_delivery', 'منتج')
-    
-    # الانتقال لخطوة الدفع
-    return prompt_for_payment_and_receipt(update, context, product_type)
-
-
-# --------------------------------------------------------------------------------
-# 🔥 دالة طلب الدفع (تم التعديل لتمكين النسخ المباشر وإضافة الملحوظة)
+# 🔥 دالة طلب الدفع (تم التعديل لتمكين النسخ المباشر)
 # --------------------------------------------------------------------------------
 def prompt_for_payment_and_receipt(update, context, product_type):
     """
-    الدالة التي تطلب من العميل الدفع وتحويل الحالة إلى انتظار صورة الإيصال.
+    الدالة الجديدة التي تطلب من العميل الدفع وتحويل الحالة إلى انتظار صورة الإيصال.
     """
     
     # 1. إعداد تفاصيل الطلب حسب نوع المنتج
@@ -2158,17 +2050,14 @@ def prompt_for_payment_and_receipt(update, context, product_type):
         product_data = context.user_data.get('tissue_product')
         names_details = context.user_data.get('tissue_names')
         date_details = context.user_data.get('tissue_date')
-    elif "محافظ" in str(product_type) or product_type == "محافظ": # Check partially as name might change
-         # Reset logic for simpler check if coming from direct handler
+    elif product_type == "محافظ":
         product_data = context.user_data.get('wallet_data')
         names_details = context.user_data.get('wallet_engraving_name')
-        if not " - " in str(product_type): # Add label if not added before
-             product_type = f"محافظ - {product_data['label']}"
-    elif "اقلام" in str(product_type) or product_type == "اقلام":
+        product_type = f"{product_type} - {product_data['label']}"
+    elif product_type == "اقلام":
         product_data = context.user_data.get('pen_data')
         names_details = context.user_data.get('pen_engraving_name')
-        if not " - " in str(product_type):
-             product_type = f"اقلام - {product_data['label']}"
+        product_type = f"{product_type} - {product_data['label']}"
     elif product_type == "بوكس كتب كتاب":
         product_data = context.user_data.get('box_product')
         names_details = context.user_data.get('box_names')
@@ -2194,37 +2083,33 @@ def prompt_for_payment_and_receipt(update, context, product_type):
         product_data = context.user_data.get('digital_mug_product')
         names_details = context.user_data.get('digital_mug_name')
         # product_type remains "مج ديجتال"
-    elif "مرايا" in str(product_type) or product_type == "مرايا": # 🔥 إضافة حالة المرايا
+    elif product_type == "مرايا": # 🔥 إضافة حالة المرايا
         product_data = context.user_data.get('mirror_product')
         size_label = context.user_data.get('mirror_size')
         names_details = context.user_data.get('mirror_name')
-        if not " - " in str(product_type):
-             product_type = f"مرايا - {size_label}"
+        product_type = f"{product_type} - {size_label}"
     elif product_type == "يد هوايا": # 🔥 إضافة حالة يد الهوايا
         product_data = context.user_data.get('fan_product')
         names_details = context.user_data.get('fan_name')
         # product_type remains "يد هوايا"
-    elif "ساعة زجاج" in str(product_type) or product_type == "ساعة زجاج": # 🔥 إضافة حالة ساعات الزجاج
+    elif product_type == "ساعة زجاج": # 🔥 إضافة حالة ساعات الزجاج
         product_data = context.user_data.get('clock_product')
         size_label = context.user_data.get('clock_size')
-        if not " - " in str(product_type):
-             product_type = f"ساعة زجاج - {size_label}"
-    elif "تابلوه" in str(product_type) or product_type == "تابلوه": # 🔥 إضافة حالة التابلوهات (جديد)
+        product_type = f"{product_type} - {size_label}"
+    elif product_type == "تابلوه": # 🔥 إضافة حالة التابلوهات (جديد)
         size_label = context.user_data.get('tabloh_size')
         price = context.user_data.get('tabloh_price')
         product_data = {'label': 'تابلوه', 'price': price, 'callback': 'tablohat', 'image': 'غير متوفر'}
-        if not " - " in str(product_type):
-             product_type = f"تابلوه - {size_label}"
+        product_type = f"{product_type} - {size_label}"
     elif product_type == "مبخرة": # 🔥 إضافة حالة المباخر
         product_data = context.user_data.get('mabkhara_product')
         names_details = context.user_data.get('mabkhara_details')
         # product_type remains "مبخرة"
-    elif "حصالة" in str(product_type) or product_type == "حصالة": # 🔥 إضافة حالة الحصالات
+    elif product_type == "حصالة": # 🔥 إضافة حالة الحصالات
         product_data = context.user_data.get('hasala_product')
         type_label = context.user_data.get('hasala_type')
         names_details = context.user_data.get('hasala_name')
-        if not " - " in str(product_type):
-             product_type = f"حصالة - {type_label}"
+        product_type = f"{product_type} - {type_label}"
     elif 'direct_product' in context.user_data: # الأهرامات، الدروع، المجات، الأباجورات، السبلميشن
         product_data = context.user_data.get('direct_product')
         # product_type is already set from prepare_whatsapp_link_for_direct_buy
@@ -2233,15 +2118,10 @@ def prompt_for_payment_and_receipt(update, context, product_type):
         context.user_data.clear()
         return ConversationHandler.END
 
-    # حساب السعر النهائي مع التوصيل
-    delivery_cost = context.user_data.get('delivery_cost', 0)
-    original_price = product_data.get('price', 'غير محدد')
-    final_price_str = get_total_price_string(original_price, delivery_cost)
-
     # 2. حفظ تفاصيل الطلب بشكل موحد لـ handle_payment_photo
     context.user_data['final_product_type'] = product_type
     context.user_data['final_product_label'] = product_data.get('label', product_type)
-    context.user_data['final_price'] = final_price_str # السعر شامل التوصيل
+    context.user_data['final_price'] = product_data.get('price', 'غير محدد')
     # سيتم استخدام names_details هنا لتخزين اسم الحفر في حالة المج الديجتال أو المرايا أو يد الهوايا
     context.user_data['final_names'] = names_details if names_details else 'غير مطلوب'
     context.user_data['final_date'] = date_details if date_details else 'غير مطلوب'
@@ -2249,38 +2129,25 @@ def prompt_for_payment_and_receipt(update, context, product_type):
     # 🔥 حفظ رابط صورة المنتج
     context.user_data['final_product_image'] = product_data.get('image', 'غير متوفر') 
     
-    # 3. إرسال رسالة الدفع (تم التعديل لإضافة الملحوظة)
-    
-    delivery_msg = f"\n🚚 *طريقة الاستلام:* {context.user_data.get('delivery_method_name', '')}"
-    
+    # 3. إرسال رسالة الدفع (تم التعديل)
     payment_message = (
         f"✅ *طلبك جاهز:* {context.user_data['final_product_label']}\n"
-        f"{delivery_msg}\n"
         f"💰 *السعر الإجمالي:* {context.user_data['final_price']}\n\n"
-        f"⚠️ **ملحوظة : سيتم تجهيز الاوردر الخاص بك خلال يومين من تاكيد عملية الدفع**\n\n"
         f"من فضلك قم بتحويل المبلغ على محفظة فودافون كاش علي رقم <u><code>{VODAFONE_CASH_NUMBER}</code></u>.\n\n"
         f"👇 **اضغط على زر النسخ بالأسفل ليظهر الرقم في خانة الرسالة لنسخه بسهولة**.\n\n"
         f"بعد التحويل، **يرجى إرسال صورة إيصال التحويل في رسالة بالأسفل** لإتمام الطلب.\n\n"
         f"أو اضغط إلغاء للعودة للقائمة الرئيسية."
     )
     
-    # 🔥 استخدام switch_inline_query_current_chat لتمكين النسخ المباشر
+    # 🔥 التعديل الرئيسي: استخدام switch_inline_query_current_chat لتمكين النسخ المباشر
     keyboard = [
         # هذا الزر سيضع الرقم مباشرة في خانة إدخال المستخدم
         [InlineKeyboardButton("📞 نسخ رقم المحفظة مباشرة (اضغط هنا)", switch_inline_query_current_chat=f" {VODAFONE_CASH_NUMBER}")],
         [InlineKeyboardButton("❌ إلغاء الطلب", callback_data="cancel")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    
-    # حذف الرسالة السابقة (رسالة اختيار الدليفري)
-    if update.callback_query:
-        try:
-            update.callback_query.message.delete()
-        except:
-            pass
 
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
+    update.effective_chat.send_message(
         text=payment_message,
         reply_markup=reply_markup,
         parse_mode="HTML"
@@ -2328,9 +2195,6 @@ def handle_payment_photo(update, context):
     names_text = context.user_data.get('final_names', 'غير مطلوب')
     date_text = context.user_data.get('final_date', 'غير مطلوب')
     product_code = context.user_data.get('final_code', 'N/A')
-    # 🔥 استرجاع بيانات التوصيل
-    delivery_info = context.user_data.get('delivery_method_name', 'غير محدد')
-    
     # 🔥 استرجاع رابط صورة المنتج
     product_image_url = context.user_data.get('final_product_image', 'غير متوفر') 
 
@@ -2356,7 +2220,6 @@ def handle_payment_photo(update, context):
         f"🔔 *طلب شراء جديد (مدفوع)* 🔔\n\n"
         f"نوع المنتج: {product_type.replace('-', ' - ')}\n"
         f"المنتج: {product_label}\n"
-        f"طريقة الاستلام: {delivery_info}\n"
         f"السعر المدفوع: *{paid_amount}*\n\n"
         f"الأسماء (أو الحفر): {names_text}\n"
         f"التاريخ: {date_text}\n"
@@ -2379,7 +2242,7 @@ def handle_payment_photo(update, context):
 
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text=f"تم استلام إيصال الدفع بنجاح. تفاصيل الطلب جاهزة:\n\nالمنتج: {product_label}\nالاستلام: {delivery_info}\nالسعر: {paid_amount}\n\nلإتمام الطلب، اضغط على الزر التالي:",
+        text=f"تم استلام إيصال الدفع بنجاح. تفاصيل الطلب جاهزة:\n\nالمنتج: {product_label}\nالسعر: {paid_amount}\n\nلإتمام الطلب، اضغط على الزر التالي:",
         reply_markup=reply_markup
     )
     
@@ -2511,7 +2374,7 @@ def main():
     dp = updater.dispatcher
 
     # تعريف معالجات المحادثات
-    # جميع المحادثات تمر بحالة GET_DELIVERY_METHOD ثم GET_PAYMENT_RECEIPT
+    # جميع المحادثات تنتهي في حالة GET_PAYMENT_RECEIPT
     
     # 1. بوكس كتب الكتاب
     box_handler = ConversationHandler(
@@ -2522,7 +2385,6 @@ def main():
                 MessageHandler(Filters.text & ~Filters.command, receive_box_names_and_finish),
                 CallbackQueryHandler(back_to_box_menu, pattern='^katb_kitab_box$')
             ],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2544,7 +2406,6 @@ def main():
                 CallbackQueryHandler(button, pattern='^sawany_akerik$') 
             ],
             GET_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tray_date_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2566,7 +2427,6 @@ def main():
                 CallbackQueryHandler(button, pattern='^sawany_khashab$') 
             ],
             GET_KHASHAB_TRAY_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_tray_date_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2588,7 +2448,6 @@ def main():
                 CallbackQueryHandler(button, pattern='^taarat_akerik$')
             ],
             GET_AKRILIK_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_akerik_taarat_date_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2610,7 +2469,6 @@ def main():
                 CallbackQueryHandler(button, pattern='^taarat_khashab$')
             ],
             GET_KHASHAB_TAARAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_khashab_taarat_date_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2632,7 +2490,6 @@ def main():
                 CallbackQueryHandler(button, pattern='^bsamat$')
             ],
             GET_BSAMAT_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_bsamat_date_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2654,7 +2511,6 @@ def main():
                 CallbackQueryHandler(button, pattern='^wedding_tissues$') 
             ],
             GET_TISSUE_DATE: [MessageHandler(Filters.text & ~Filters.command, receive_tissue_date_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2673,7 +2529,6 @@ def main():
         entry_points=[CallbackQueryHandler(prompt_for_name, pattern='^wallet_.*$')],
         states={
             GET_WALLET_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_wallet_name_and_prepare_whatsapp)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2693,7 +2548,6 @@ def main():
         entry_points=[CallbackQueryHandler(prompt_for_pen_name, pattern='^aqlam_metal$|^aqlam_luminous$')],
         states={
             GET_PEN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_pen_name_and_prepare_whatsapp)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2712,7 +2566,6 @@ def main():
         entry_points=[CallbackQueryHandler(start_mug_photos_purchase, pattern='^buy_mugat_(white|magic)_.*')],
         states={
             GET_MUG_PHOTOS: [MessageHandler(Filters.photo, receive_mug_photos)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2732,7 +2585,6 @@ def main():
                 MessageHandler(Filters.text & ~Filters.command, receive_digital_mug_name),
                 CallbackQueryHandler(button, pattern='^mugat_digital$') # زر الرجوع في الرسالة
             ],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2750,7 +2602,6 @@ def main():
         states={
             GET_MIRROR_SIZE: [CallbackQueryHandler(save_mirror_size_ask_name, pattern='^size_.*')],
             GET_MIRROR_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_mirror_name_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2768,7 +2619,6 @@ def main():
         entry_points=[CallbackQueryHandler(start_fan_purchase, pattern='^buy_fan_.*')],
         states={
             GET_FAN_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_fan_name_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2787,7 +2637,6 @@ def main():
         states={
             GET_CLOCK_SIZE: [CallbackQueryHandler(save_clock_size_ask_photo, pattern='^clock_size_.*')],
             GET_CLOCK_PHOTO: [MessageHandler(Filters.photo, receive_clock_photo_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2805,7 +2654,6 @@ def main():
         entry_points=[CallbackQueryHandler(start_tabloh_purchase, pattern='^tablohat$')],
         states={
             GET_TABLOH_SIZE: [CallbackQueryHandler(save_tabloh_size_and_finish, pattern='^tabloh_.*')],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2822,7 +2670,6 @@ def main():
         entry_points=[CallbackQueryHandler(start_mabkhara_purchase, pattern='^buy_mabkhara_.*')],
         states={
             GET_MABKHARA_DETAILS: [MessageHandler(Filters.text & ~Filters.command, receive_mabkhara_details_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2841,7 +2688,6 @@ def main():
         states={
             GET_HASALA_TYPE: [CallbackQueryHandler(save_hasala_type_ask_name, pattern='^hasala_.*')],
             GET_HASALA_NAME: [MessageHandler(Filters.text & ~Filters.command, receive_hasala_name_and_finish)],
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
@@ -2860,7 +2706,6 @@ def main():
     direct_buy_handler = ConversationHandler(
         entry_points=[CallbackQueryHandler(prepare_whatsapp_link_for_direct_buy, pattern='^buy_(abajora|haram|doro3|subli)_.*')], 
         states={
-            GET_DELIVERY_METHOD: [CallbackQueryHandler(handle_delivery_selection, pattern='^deliv_.*$|^cancel$')],
             GET_PAYMENT_RECEIPT: [
                 MessageHandler(Filters.photo, handle_payment_photo),
                 CallbackQueryHandler(handle_payment_buttons, pattern='^cancel$') 
