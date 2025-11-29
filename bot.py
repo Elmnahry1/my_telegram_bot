@@ -1241,7 +1241,7 @@ def save_hasala_type_ask_name(update, context):
     context.user_data['state'] = GET_HASALA_NAME
     
     # زر رجوع
-    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="hasalat")]
+    back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="hasalat")]] # تم إصلاح القوس هنا
     reply_markup = InlineKeyboardMarkup(back_keyboard)
     
     try:
