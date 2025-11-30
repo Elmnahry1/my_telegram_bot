@@ -126,13 +126,13 @@ aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", 
         "callback": "aqlam_metal", 
-        "image": "https://instagram.fcai17-1.fna.fbcdn.net/v/t51.29350-15/469489804_558427536910090_6244832033802616988_n.webp?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0uaW1hZ2VfdXJsZ2VuLjEwODB4MTA4MC5zZHIuZjI5MzUwLmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=instagram.fcai17-1.fna.fbcdn.net&_nc_cat=110&_nc_oc=Q6cZ2QEv1Z3QLfB8iF1DqV4UOohEqOeWCOudYmrDOVct4UhOUBy5mGVp9ixk8PBZ0e05AWQ&_nc_ohc=y0KDwmDicIQQ7kNvwGt-trw&_nc_gid=NMNKuwn67_oNmN6Kpv7dRg&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzUxNzM5ODI2NjY2NjI2MjY3Ng%3D%3D.3-ccb7-5&oh=00_Afi2fCP-T5-Yu1en7IxAseMfRj4ePL5qG26VQHgtFRjtjQ&oe=692D99FE&_nc_sid=10d13b", 
+        "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
         "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر.", "price": "120 ج"
     },
     {
         "label": "قلم تاتش مضئ", 
         "callback": "aqlam_luminous", 
-        "image": "https://scontent.fcai24-1.fna.fbcdn.net/v/t39.30808-6/489809156_1164483322357054_6286791651911010777_n.jpg?stp=dst-jpg_s590x590_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_ohc=ELb9pciSoD0Q7kNvwG_rdLE&_nc_oc=AdkDWLOZBcjZp9AbNO2Fs-zK-suPtGc1D-KC3JP7NlzhwgJB3WZeGQQfCQIsfxZgvrg&_nc_zt=23&_nc_ht=scontent.fcai24-1.fna&_nc_gid=U5_JMOw_cSsgrQQLv77j7g&oh=00_Afg-wJrTmoGZo5m1kVVh2IU0227UQ7pUtKSjRx_YEFoGWg&oe=6923B3BA", 
+        "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
         "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر.", "price": "150 ج"
     }
 ]
