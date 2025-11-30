@@ -81,7 +81,7 @@ fans_submenu = [
 
 # 🔥🔥🔥 قائمة ساعات الزجاج
 clocks_submenu = [
-    {"label": "ساعة زجاج مطبوعة", "callback": "clock_glass", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "ساعة زجاجية أنيقة يمكن طباعة صورتك المفضلة عليها، متوفرة بمقاسين.", "price": "حسب المقاس"}
+    {"label": "ساعة زجاج مطبوعة", "callback": "clock_glass", "image": "https://elmnahry.page.gd/pic/clocks/clock.jpg", "description": "ساعة زجاجية أنيقة يمكن طباعة صورتك المفضلة عليها، متوفرة بمقاسين.", "price": "حسب المقاس"}
 ]
 
 abajorat_submenu = [
@@ -109,9 +109,9 @@ abajorat_submenu = [
     {"label": "أباجورة مضيئة بقاعدة ليد موديل 22", "callback": "abajora_m22", "image": "https://elmnahry.page.gd/pic/abajorat/abajora22.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 22 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"}
 ]
 engraved_wallet_submenu = [
-    {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان).", "price": "120 ج"},
-    {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني.", "price": "120 ج"},
-    {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود.", "price": "120 ج"}
+    {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://elmnahry.page.gd/pic/engraved_wallet/wallet1.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان).", "price": "120 ج"},
+    {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://elmnahry.page.gd/pic/engraved_wallet/wallet2.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني.", "price": "120 ج"},
+    {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://elmnahry.page.gd/pic/engraved_wallet/wallet3.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود.", "price": "120 ج"}
 ]
 
 # 🔥 قائمة المباخر
@@ -137,7 +137,7 @@ hasalat_submenu = [
     {
         "label": "حصالة خشبية مميزة", 
         "callback": "hasala_product", 
-        "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
+        "image": "https://elmnahry.page.gd/pic/hasalat/hasalat.jpg", 
         "description": "حصالة خشبية أنيقة لتوفير المال، متوفرة بعدة فئات (5000 - 1000 - 2000) مع إمكانية كتابة الاسم.", 
         "price": "75 ج"
     }
@@ -147,13 +147,13 @@ aqlam_submenu = [
     {
         "label": "قلم تاتش معدن", 
         "callback": "aqlam_metal", 
-        "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
+        "image": "https://elmnahry.page.gd/pic/aqlam/pen2.jpg", 
         "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر.", "price": "55 ج"
     },
     {
         "label": "قلم تاتش مضئ", 
         "callback": "aqlam_luminous", 
-        "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
+        "image": "https://elmnahry.page.gd/pic/aqlam/pen1.jpg", 
         "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر.", "price": "55 ج"
     }
 ]
@@ -245,17 +245,17 @@ doro3_submenu = [
 mugat_submenu = [
     {
         "label": "مج ابيض", "callback": "mugat_white", "items": [
-             {"label": "مج ابيض مطبوع", "callback": "mugat_white_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "مج ابيض مطبوع", "price": "80 ج"}
+             {"label": "مج ابيض مطبوع", "callback": "mugat_white_m1", "image": "https://elmnahry.page.gd/pic/mugat/1.jpg", "description": "مج ابيض مطبوع", "price": "80 ج"}
         ]
     },
     {
         "label": "مج سحري", "callback": "mugat_magic", "items": [
-             {"label": "مج سحري مطبوع", "callback": "mugat_magic_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "مج سحري مطبوع", "price": "120 ج"}
+             {"label": "مج سحري مطبوع", "callback": "mugat_magic_m1", "image": "https://elmnahry.page.gd/pic/mugat/2.jpg", "description": "مج سحري مطبوع", "price": "120 ج"}
         ]
     },
     {
         "label": "مج ديجتال", "callback": "mugat_digital", "items": [
-             {"label": "مج ديجتال", "callback": "mugat_digital_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "مج ديجتال محفور", "price": "130 ج"}
+             {"label": "مج ديجتال", "callback": "mugat_digital_m2", "image": "https://elmnahry.page.gd/pic/mugat/3.jpg", "description": "مج ديجتال محفور", "price": "130 ج"}
         ]
     }
 ]
