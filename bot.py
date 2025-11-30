@@ -75,8 +75,8 @@ mirrors_submenu = [
 
 # 🔥🔥🔥 قائمة يد الهوايا
 fans_submenu = [
-    {"label": "يد هوايا موديل 1", "callback": "fan_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "يد هوايا مميزة موديل 1.", "price": "150 ج"},
-    {"label": "يد هوايا موديل 2", "callback": "fan_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "يد هوايا مميزة موديل 2.", "price": "180 ج"}
+    {"label": "يد هوايا موديل 1", "callback": "fan_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "يد هوايا مميزة موديل 1.", "price": "50 ج"},
+    {"label": "يد هوايا موديل 2", "callback": "fan_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "يد هوايا مميزة موديل 2.", "price": "50 ج"}
 ]
 
 # 🔥🔥🔥 قائمة ساعات الزجاج
@@ -85,8 +85,28 @@ clocks_submenu = [
 ]
 
 abajorat_submenu = [
-    {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 1.", "price": "260 ج"},
-    {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2.", "price": "260 ج"}
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 1", "callback": "abajora_m1", "image": "https://elmnahry.page.gd/pic/abajorat/abajora1.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 1 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 2", "callback": "abajora_m2", "image": "https://elmnahry.page.gd/pic/abajorat/abajora2.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 2 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 3", "callback": "abajora_m3", "image": "https://elmnahry.page.gd/pic/abajorat/abajora3.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 3 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 4", "callback": "abajora_m4", "image": "https://elmnahry.page.gd/pic/abajorat/abajora4.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 4 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 5", "callback": "abajora_m5", "image": "https://elmnahry.page.gd/pic/abajorat/abajora5.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 5 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 6", "callback": "abajora_m6", "image": "https://elmnahry.page.gd/pic/abajorat/abajora6.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 6 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 7", "callback": "abajora_m7", "image": "https://elmnahry.page.gd/pic/abajorat/abajora7.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 7 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 8", "callback": "abajora_m8", "image": "https://elmnahry.page.gd/pic/abajorat/abajora8.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 8 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 9", "callback": "abajora_m9", "image": "https://elmnahry.page.gd/pic/abajorat/abajora9.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 9 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 10", "callback": "abajora_m10", "image": "https://elmnahry.page.gd/pic/abajorat/abajora10.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 10 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 11", "callback": "abajora_m11", "image": "https://elmnahry.page.gd/pic/abajorat/abajora11.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 11 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 12", "callback": "abajora_m12", "image": "https://elmnahry.page.gd/pic/abajorat/abajora12.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 12 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 13", "callback": "abajora_m13", "image": "https://elmnahry.page.gd/pic/abajorat/abajora13.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 13 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 14", "callback": "abajora_m14", "image": "https://elmnahry.page.gd/pic/abajorat/abajora14.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 14بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 15", "callback": "abajora_m15", "image": "https://elmnahry.page.gd/pic/abajorat/abajora15.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 15 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 16", "callback": "abajora_m16", "image": "https://elmnahry.page.gd/pic/abajorat/abajora16.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 16 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 17", "callback": "abajora_m17", "image": "https://elmnahry.page.gd/pic/abajorat/abajora17.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 17 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 18", "callback": "abajora_m18", "image": "https://elmnahry.page.gd/pic/abajorat/abajora18.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 18 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 19", "callback": "abajora_m19", "image": "https://elmnahry.page.gd/pic/abajorat/abajora19.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 18 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 20", "callback": "abajora_m20", "image": "https://elmnahry.page.gd/pic/abajorat/abajora20.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 20 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 21", "callback": "abajora_m21", "image": "https://elmnahry.page.gd/pic/abajorat/abajora21.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 21 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"},
+    {"label": "أباجورة مضيئة بقاعدة ليد موديل 22", "callback": "abajora_m22", "image": "https://elmnahry.page.gd/pic/abajorat/abajora22.jpg", "description": "أباجورة مضيئة بقاعدة ليد موديل 22 بتصميم عصري وفريد مزودة بريموت 16 لون تعمل بحجارة او وصله شاحن", "price": "260 ج"}
 ]
 engraved_wallet_submenu = [
     {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان).", "price": "120 ج"},
@@ -119,7 +139,7 @@ hasalat_submenu = [
         "callback": "hasala_product", 
         "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
         "description": "حصالة خشبية أنيقة لتوفير المال، متوفرة بعدة فئات (5000 - 1000 - 2000) مع إمكانية كتابة الاسم.", 
-        "price": "حسب الفئة"
+        "price": "75 ج"
     }
 ]
 
@@ -1037,7 +1057,7 @@ def prompt_for_name(update, context):
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_wallets_color")]]
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
     
-    caption_text = (f"**اختيارك: {selected_wallet_data['label']}** (السعر: *{selected_wallet_data.get('price', 'غير متوفر')}*)\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير لون المحفظة.")
+    caption_text = (f"**اختيارك: {selected_wallet_data['label']}** (السعر: *{selected_wallet_data.get('price', 'غير متوفر')}*)\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على المحفظة في رسالة نصية بالأسفل.\nأو اضغط زر الرجوع لتغيير لون المحفظة.")
     
     try:
         update.effective_chat.bot.send_photo(chat_id=update.effective_chat.id, photo=selected_wallet_data['image'], caption=caption_text, reply_markup=back_reply_markup, parse_mode="Markdown")
@@ -1080,7 +1100,7 @@ def prompt_for_pen_name(update, context):
     back_keyboard = [[InlineKeyboardButton("🔙 رجوع", callback_data="back_to_pen_types")]] 
     back_reply_markup = InlineKeyboardMarkup(back_keyboard)
     
-    caption_text = (f"**اختيارك: {selected_pen_data['label']}** (السعر: *{selected_pen_data.get('price', 'غير متوفر')}*)\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.او اضغط زر رجوع للعودة الي القائمة السابقة\nأو اضغط زر الرجوع لتغيير نوع القلم.")
+    caption_text = (f"**اختيارك: {selected_pen_data['label']}** (السعر: *{selected_pen_data.get('price', 'غير متوفر')}*)\n\nمن فضلك، **اكتب الاسم الذي تريد حفره** على القلم في رسالة نصية بالأسفل.\nأو اضغط زر الرجوع لتغيير نوع القلم.")
     
     try:
         update.effective_chat.bot.send_photo(chat_id=update.effective_chat.id, photo=selected_pen_data['image'], caption=caption_text, reply_markup=back_reply_markup, parse_mode="Markdown")
