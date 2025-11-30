@@ -58,12 +58,13 @@ bsamat_submenu = [
     {"label": "بصامة موديل 2", "callback": "bsamat_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف البصامة موديل 2.", "price": "220 ج"}
 ]
 wedding_tissues_submenu = [
-    {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 1.", "price": "350 ج"},
-    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف منديل كتب الكتاب موديل 2.", "price": "400 ج"}
+    {"label": "منديل موديل 1", "callback": "tissue_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "منديل كتب الكتاب موديل 1", "price": "80 ج"},
+    {"label": "منديل موديل 2", "callback": "tissue_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "منديل كتب الكتاب موديل 2", "price": "80 ج"}
 ]
 katb_kitab_box_submenu = [
-    {"label": "بوكس كتب كتاب موديل 1", "callback": "box_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 1، يحتوي على تصميم مميز.", "price": "550 ج"},
-    {"label": "بوكس كتب كتاب موديل 2", "callback": "box_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف بوكس كتب الكتاب موديل 2، خامة عالية الجودة.", "price": "620 ج"}
+    {"label": "بوكس كتب كتاب موديل 1", "callback": "box_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "بوكس كتب الكتاب موديل 1", "price": "130 ج"},
+    {"label": "بوكس كتب كتاب موديل 1", "callback": "box_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "بوكس كتب الكتاب موديل 2", "price": "130 ج"},
+    {"label": "بوكس كتب كتاب موديل 2", "callback": "box_m3", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "بوكس كتب الكتاب موديل 3", "price": "130 ج"}
 ]
 
 # 🔥 قائمة المرايا
@@ -84,13 +85,13 @@ clocks_submenu = [
 ]
 
 abajorat_submenu = [
-    {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 1.", "price": "450 ج"},
-    {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2.", "price": "480 ج"}
+    {"label": "أباجورة موديل 1", "callback": "abajora_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 1.", "price": "260 ج"},
+    {"label": "أباجورة موديل 2", "callback": "abajora_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف الأباجورة موديل 2.", "price": "260 ج"}
 ]
 engraved_wallet_submenu = [
-    {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان).", "price": "200 ج"},
-    {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني.", "price": "200 ج"},
-    {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود.", "price": "200 ج"}
+    {"label": "محفظة بيج (هافان)", "callback": "wallet_bege", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بيج (هافان).", "price": "120 ج"},
+    {"label": "محفظة بني", "callback": "wallet_brown", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون بني.", "price": "120 ج"},
+    {"label": "محفظة سوداء", "callback": "wallet_black", "image": "https://m.media-amazon.com/images/I/41DrZIhSyiL._AC_SX300_SY300_QL70_ML2_.jpg", "description": "محفظة سافوكس الاصلية تقيلة، لون أسود.", "price": "120 ج"}
 ]
 
 # 🔥 قائمة المباخر
@@ -127,13 +128,13 @@ aqlam_submenu = [
         "label": "قلم تاتش معدن", 
         "callback": "aqlam_metal", 
         "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
-        "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر.", "price": "120 ج"
+        "description": "قلم تاتش معدن عالي الجودة ومناسب للحفر بالليزر.", "price": "55 ج"
     },
     {
         "label": "قلم تاتش مضئ", 
         "callback": "aqlam_luminous", 
         "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", 
-        "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر.", "price": "150 ج"
+        "description": "قلم تاتش مضئ بتقنية متطورة ومناسب للحفر بالليزر.", "price": "55 ج"
     }
 ]
 
@@ -224,20 +225,17 @@ doro3_submenu = [
 mugat_submenu = [
     {
         "label": "مج ابيض", "callback": "mugat_white", "items": [
-             {"label": "مج ابيض موديل 1", "callback": "mugat_white_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 1", "price": "100 ج"},
-             {"label": "مج ابيض موديل 2", "callback": "mugat_white_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ابيض موديل 2", "price": "120 ج"}
+             {"label": "مج ابيض مطبوع", "callback": "mugat_white_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "مج ابيض مطبوع", "price": "80 ج"}
         ]
     },
     {
         "label": "مج سحري", "callback": "mugat_magic", "items": [
-             {"label": "مج سحري موديل 1", "callback": "mugat_magic_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 1", "price": "150 ج"},
-             {"label": "مج سحري موديل 2", "callback": "mugat_magic_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج سحري موديل 2", "price": "180 ج"}
+             {"label": "مج سحري مطبوع", "callback": "mugat_magic_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "مج سحري مطبوع", "price": "120 ج"}
         ]
     },
     {
         "label": "مج ديجتال", "callback": "mugat_digital", "items": [
-             {"label": "مج ديجتال موديل 1", "callback": "mugat_digital_m1", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 1", "price": "220 ج"},
-             {"label": "مج ديجتال موديل 2", "callback": "mugat_digital_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "وصف مج ديجتال موديل 2", "price": "250 ج"}
+             {"label": "مج ديجتال", "callback": "mugat_digital_m2", "image": "https://png.pngtree.com/png-vector/20230531/ourmid/pngtree-banana-coloring-page-vector-png-image_6787674.png", "description": "مج ديجتال محفور", "price": "130 ج"}
         ]
     }
 ]
@@ -583,9 +581,9 @@ def start_mirror_purchase(update, context):
     context.user_data['state'] = GET_MIRROR_SIZE
     
     keyboard = [
-        [InlineKeyboardButton("مقاس 1 (سعر 100 ج)", callback_data="size_1")],
-        [InlineKeyboardButton("مقاس 2 (سعر 200 ج)", callback_data="size_2")],
-        [InlineKeyboardButton("مقاس 3 (سعر 300 ج)", callback_data="size_3")],
+        [InlineKeyboardButton("مقاس 15*30 (سعر 60 ج)", callback_data="size_1")],
+        [InlineKeyboardButton("مقاس 18*35 (سعر 80 ج)", callback_data="size_2")],
+        [InlineKeyboardButton("مقاس 20*40 (سعر 100 ج)", callback_data="size_3")],
         [InlineKeyboardButton("🔙 رجوع", callback_data="mirrors")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -621,14 +619,14 @@ def save_mirror_size_ask_name(update, context):
     size_label = ""
     
     if data == "size_1":
-        size_price = "100 ج"
-        size_label = "مقاس 1"
+        size_price = "60 ج"
+        size_label = "مقاس 15*30"
     elif data == "size_2":
-        size_price = "200 ج"
-        size_label = "مقاس 2"
+        size_price = "80 ج"
+        size_label = "مقاس 18*35"
     elif data == "size_3":
-        size_price = "300 ج"
-        size_label = "مقاس 3"
+        size_price = "100 ج"
+        size_label = "مقاس 20*40"
     else:
         return GET_MIRROR_SIZE
 
@@ -726,8 +724,8 @@ def start_clock_purchase(update, context):
     context.user_data['state'] = GET_CLOCK_SIZE
     
     keyboard = [
-        [InlineKeyboardButton("مقاس 1 (سعر 100 ج)", callback_data="clock_size_1")],
-        [InlineKeyboardButton("مقاس 2 (سعر 200 ج)", callback_data="clock_size_2")],
+        [InlineKeyboardButton("مقاس 20*30 (سعر 130 ج)", callback_data="clock_size_1")],
+        [InlineKeyboardButton("مقاس 30*40 (سعر 190 ج)", callback_data="clock_size_2")],
         [InlineKeyboardButton("🔙 رجوع", callback_data="clocks")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -764,11 +762,11 @@ def save_clock_size_ask_photo(update, context):
     size_label = ""
     
     if data == "clock_size_1":
-        size_price = "100 ج"
-        size_label = "مقاس 1"
+        size_price = "130 ج"
+        size_label = "مقاس 20*30"
     elif data == "clock_size_2":
-        size_price = "200 ج"
-        size_label = "مقاس 2"
+        size_price = "190 ج"
+        size_label = "مقاس 30*40"
     else:
         return GET_CLOCK_SIZE
 
@@ -809,10 +807,10 @@ def start_tabloh_purchase(update, context):
     context.user_data['state'] = GET_TABLOH_SIZE
     
     keyboard = [
-        [InlineKeyboardButton("مقاس 1 (سعر 100 ج)", callback_data="tabloh_100")],
-        [InlineKeyboardButton("مقاس 2 (سعر 200 ج)", callback_data="tabloh_200")],
-        [InlineKeyboardButton("مقاس 3 (سعر 300 ج)", callback_data="tabloh_300")],
-        [InlineKeyboardButton("مقاس 4 (سعر 400 ج)", callback_data="tabloh_400")],
+        [InlineKeyboardButton("مقاس 30*40 (سعر 170 ج)", callback_data="tabloh_1")],
+        [InlineKeyboardButton("مقاس 40*50 (سعر 280 ج)", callback_data="tabloh_2")],
+        [InlineKeyboardButton("مقاس 50*60 (سعر 350 ج)", callback_data="tabloh_3")],
+        [InlineKeyboardButton("مقاس 50*70 (سعر 420 ج)", callback_data="tabloh_4")],
         [InlineKeyboardButton("🔙 رجوع", callback_data="main_menu")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -833,18 +831,18 @@ def save_tabloh_size_and_finish(update, context):
     price = ""
     size_label = ""
     
-    if data == "tabloh_100":
-        price = "100 ج"
-        size_label = "مقاس 1"
-    elif data == "tabloh_200":
-        price = "200 ج"
-        size_label = "مقاس 2"
-    elif data == "tabloh_300":
-        price = "300 ج"
-        size_label = "مقاس 3"
-    elif data == "tabloh_400":
-        price = "400 ج"
-        size_label = "مقاس 4"
+    if data == "tabloh_1":
+        price = "170 ج"
+        size_label = "مقاس 30*40"
+    elif data == "tabloh_2":
+        price = "280 ج"
+        size_label = "مقاس 40*50"
+    elif data == "tabloh_3":
+        price = "350 ج"
+        size_label = "مقاس 50*60"
+    elif data == "tabloh_4":
+        price = "420 ج"
+        size_label = "مقاس 50*70"
     else:
         if data == "main_menu":
             start(update, context)
@@ -941,9 +939,9 @@ def start_hasala_purchase(update, context):
     context.user_data['state'] = GET_HASALA_TYPE
     
     keyboard = [
-        [InlineKeyboardButton("حصالة 5000 (سعر 150 ج)", callback_data="hasala_5000")],
-        [InlineKeyboardButton("حصالة 1000 (سعر 100 ج)", callback_data="hasala_1000")],
-        [InlineKeyboardButton("حصالة 2000 (سعر 120 ج)", callback_data="hasala_2000")],
+        [InlineKeyboardButton("حصالة 5000 (سعر 75 ج)", callback_data="hasala_1")],
+        [InlineKeyboardButton("حصالة 1000 (سعر 75 ج)", callback_data="hasala_2")],
+        [InlineKeyboardButton("حصالة 2000 (سعر 75 ج)", callback_data="hasala_3")],
         [InlineKeyboardButton("🔙 رجوع", callback_data="hasalat")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -979,14 +977,14 @@ def save_hasala_type_ask_name(update, context):
     price = ""
     type_label = ""
     
-    if data == "hasala_5000":
-        price = "150 ج"
+    if data == "hasala_1":
+        price = "75 ج"
         type_label = "حصالة 5000"
-    elif data == "hasala_1000":
-        price = "100 ج"
+    elif data == "hasala_2":
+        price = "75 ج"
         type_label = "حصالة 1000"
-    elif data == "hasala_2000":
-        price = "120 ج"
+    elif data == "hasala_3":
+        price = "75 ج"
         type_label = "حصالة 2000"
     else:
         return GET_HASALA_TYPE
@@ -1883,12 +1881,12 @@ def handle_payment_photo(update, context):
         f"الأسماء (أو الحفر): {names_text}\n"
         f"التاريخ: {date_text}\n"
         f"{mug_photos_text}\n" 
-        f"🔗 رابط صورة المنتج: {product_image_url}\n" 
-        f"🔗 رابط إيصال الدفع: {receipt_url}\n" 
+        f"صورة المنتج: {product_image_url}\n" 
+        f"إيصال الدفع: {receipt_url}\n" 
         f"الكود: {product_code}\n\n"
         f"اسم العميل: {user_info.first_name}\n"
         f"اليوزر: @{user_info.username if user_info.username else 'غير متوفر'}\n"
-        f"رابط التواصل عبر التليجرام: {telegram_contact_link}" 
+        f"رابط تليجرام: {telegram_contact_link}" 
     )
     
     encoded_text = quote_plus(message_body)
