@@ -81,7 +81,7 @@ fans_submenu = [
 
 # 🔥🔥🔥 قائمة ساعات الزجاج
 clocks_submenu = [
-    {"label": "ساعة زجاج مطبوعة", "callback": "clock_glass", "image": "https://elmnahry.page.gd/pic/clocks/clock.jpg", "description": "ساعة زجاجية أنيقة يمكن طباعة صورتك المفضلة عليها، متوفرة بمقاسين.", "price": "حسب المقاس"}
+    {"label": "ساعة زجاج مطبوعة", "callback": "clock_glass", "image": "https://elmnahry.page.gd/pic/clocks/clock.jpeg", "description": "ساعة زجاجية أنيقة يمكن طباعة صورتك المفضلة عليها، متوفرة بمقاسين.", "price": "حسب المقاس"}
 ]
 
 abajorat_submenu = [
