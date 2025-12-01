@@ -245,17 +245,17 @@ doro3_submenu = [
 mugat_submenu = [
     {
         "label": "مج ابيض", "callback": "mugat_white", "items": [
-             {"label": "مج ابيض مطبوع", "callback": "mugat_white_m1", "image": "https://elmnahry.page.gd/pic/mugat/1.jpg", "description": "مج ابيض مطبوع", "price": "80 ج"}
+             {"label": "مج ابيض مطبوع", "callback": "mugat_white_m1", "image": "https://elmnahry.page.gd/pic/mugat/1.jpeg", "description": "مج ابيض مطبوع", "price": "80 ج"}
         ]
     },
     {
         "label": "مج سحري", "callback": "mugat_magic", "items": [
-             {"label": "مج سحري مطبوع", "callback": "mugat_magic_m1", "image": "https://elmnahry.page.gd/pic/mugat/2.jpg", "description": "مج سحري مطبوع", "price": "120 ج"}
+             {"label": "مج سحري مطبوع", "callback": "mugat_magic_m1", "image": "https://elmnahry.page.gd/pic/mugat/2.jpeg", "description": "مج سحري مطبوع", "price": "120 ج"}
         ]
     },
     {
         "label": "مج ديجتال", "callback": "mugat_digital", "items": [
-             {"label": "مج ديجتال", "callback": "mugat_digital_m2", "image": "https://elmnahry.page.gd/pic/mugat/3.jpg", "description": "مج ديجتال محفور", "price": "130 ج"}
+             {"label": "مج ديجتال", "callback": "mugat_digital_m2", "image": "https://elmnahry.page.gd/pic/mugat/3.jpeg", "description": "مج ديجتال محفور", "price": "130 ج"}
         ]
     }
 ]
